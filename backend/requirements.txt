@@ -1,8 +1,12 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
-asyncpg
+alembic
 aiosqlite
+asyncpg
 pydantic
 pydantic-settings
 python-dotenv
+email-validator
+greenlet
+httpx
