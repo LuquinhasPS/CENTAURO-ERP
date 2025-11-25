@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { X, Users, Wrench, Truck, ShoppingCart, Plus, Trash2, Calendar } from 'lucide-react';
+import { X, Users, Wrench, Truck, ShoppingCart, Plus, Trash2, Calendar, DollarSign } from 'lucide-react';
 import {
   getProjectCollaborators, addProjectCollaborator, removeProjectCollaborator,
   getProjectTools, addProjectTool, removeProjectTool,
   getProjectVehicles, addProjectVehicle, removeProjectVehicle,
   getPurchases, createPurchase, updatePurchase, deletePurchase,
-  getCollaborators, getTools, getFleet
+  getCollaborators, getTools, getFleet, getClients,
+  getProject, createProjectBilling, deleteProjectBilling
 } from '../services/api';
 import './ProjectModal.css';
 
@@ -18,17 +19,21 @@ const ProjectModal = ({ project, onClose }) => {
   const [projectTools, setProjectTools] = useState([]);
   const [projectVehicles, setProjectVehicles] = useState([]);
   const [purchases, setPurchases] = useState([]);
+  const [billings, setBillings] = useState([]);
+  const [projectDetails, setProjectDetails] = useState(project);
 
   // Available resources for selection
   const [availableCollaborators, setAvailableCollaborators] = useState([]);
   const [availableTools, setAvailableTools] = useState([]);
   const [availableVehicles, setAvailableVehicles] = useState([]);
+  const [availableClients, setAvailableClients] = useState([]);
 
   // Forms
   const [showCollabForm, setShowCollabForm] = useState(false);
   const [showToolForm, setShowToolForm] = useState(false);
   const [showVehicleForm, setShowVehicleForm] = useState(false);
   const [showPurchaseForm, setShowPurchaseForm] = useState(false);
+  const [showBillingForm, setShowBillingForm] = useState(false);
   const [editingPurchaseId, setEditingPurchaseId] = useState(null);
 
   const [collabFormData, setCollabFormData] = useState({
@@ -63,8 +68,16 @@ const ProjectModal = ({ project, onClose }) => {
     notes: ''
   });
 
+  const [billingFormData, setBillingFormData] = useState({
+    value: '',
+    date: '',
+    invoice_number: '',
+    description: ''
+  });
+
   useEffect(() => {
     if (project) {
+      setProjectDetails(project);
       loadAllData();
     }
   }, [project, activeTab]);
@@ -73,14 +86,21 @@ const ProjectModal = ({ project, onClose }) => {
     setLoading(true);
     try {
       // Load available resources
-      const [collabsRes, toolsRes, vehiclesRes] = await Promise.all([
+      const [collabsRes, toolsRes, vehiclesRes, clientsRes] = await Promise.all([
         getCollaborators(),
         getTools(),
-        getFleet()
+        getFleet(),
+        getClients()
       ]);
       setAvailableCollaborators(collabsRes.data);
       setAvailableTools(toolsRes.data);
       setAvailableVehicles(vehiclesRes.data);
+      setAvailableClients(clientsRes.data);
+
+      // Always fetch fresh project details (including billings)
+      const projectRes = await getProject(project.id);
+      setProjectDetails(projectRes.data);
+      setBillings(projectRes.data.billings || []);
 
       // Load project resources based on active tab
       if (activeTab === 'team') {
@@ -252,6 +272,46 @@ const ProjectModal = ({ project, onClose }) => {
     setShowPurchaseForm(true);
   };
 
+  const handleAddBilling = async (e) => {
+    e.preventDefault();
+
+    // Validation: Check if billing would exceed budget
+    const billingValue = parseFloat(billingFormData.value);
+    const currentInvoiced = billings.reduce((sum, b) => sum + parseFloat(b.value), 0);
+    const budget = parseFloat(projectDetails.budget) || 0;
+    const remaining = budget - currentInvoiced;
+
+    if (billingValue > remaining) {
+      alert(`Valor excede o orçamento disponível!\nRestante: R$ ${remaining.toFixed(2)}\nValor digitado: R$ ${billingValue.toFixed(2)}`);
+      return;
+    }
+
+    try {
+      await createProjectBilling(project.id, {
+        ...billingFormData,
+        value: billingValue,
+        project_id: project.id
+      });
+      setShowBillingForm(false);
+      setBillingFormData({ value: '', date: '', invoice_number: '', description: '' });
+      loadAllData();
+    } catch (error) {
+      console.error('Error adding billing:', error);
+      alert('Erro ao adicionar faturamento');
+    }
+  };
+
+  const handleDeleteBilling = async (id) => {
+    if (window.confirm('Excluir este faturamento?')) {
+      try {
+        await deleteProjectBilling(id);
+        loadAllData();
+      } catch (error) {
+        console.error('Error deleting billing:', error);
+      }
+    }
+  };
+
   const getCollaboratorName = (id) => {
     const collab = availableCollaborators.find(c => c.id === id);
     return collab ? collab.name : 'N/A';
@@ -265,6 +325,11 @@ const ProjectModal = ({ project, onClose }) => {
   const getVehicleName = (id) => {
     const vehicle = availableVehicles.find(v => v.id === id);
     return vehicle ? `${vehicle.model} - ${vehicle.license_plate}` : 'N/A';
+  };
+
+  const getClientName = (id) => {
+    const client = availableClients.find(c => c.id === id);
+    return client ? client.name : 'N/A';
   };
 
   const statusColors = {
@@ -318,46 +383,74 @@ const ProjectModal = ({ project, onClose }) => {
           >
             <ShoppingCart size={16} /> Compras
           </button>
+          <button
+            className={`tab ${activeTab === 'billing' ? 'active' : ''}`}
+            onClick={() => setActiveTab('billing')}
+          >
+            <DollarSign size={16} /> Faturamento
+          </button>
         </div>
-
         <div className="project-modal-content">
           {/* TAB: INFO */}
           {activeTab === 'info' && (
             <div className="tab-content">
               <div className="info-grid">
                 <div className="info-item">
+                  <label>Nº Projeto:</label>
+                  <span>{project.project_number || 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <label>Tag:</label>
+                  <span>{project.tag || 'N/A'}</span>
+                </div>
+                <div className="info-item">
                   <label>Cliente:</label>
-                  <span>{project.client || 'N/A'}</span>
+                  <span>{getClientName(project.client_id)}</span>
                 </div>
                 <div className="info-item">
-                  <label>Tipo:</label>
-                  <span>{project.type || 'N/A'}</span>
+                  <label>Coordenador:</label>
+                  <span>{project.coordinator || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <label>Localização:</label>
-                  <span>{project.location || 'N/A'}</span>
+                  <label>Escopo:</label>
+                  <span className="scope-text">{project.scope || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <label>Data Início:</label>
+                  <label>Tamanho Equipe:</label>
+                  <span>{project.team_size || 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <label>Início Estimado:</label>
+                  <span>{project.estimated_start_date ? new Date(project.estimated_start_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <label>Fim Estimado:</label>
+                  <span>{project.estimated_end_date ? new Date(project.estimated_end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <label>Início Real:</label>
                   <span>{project.start_date ? new Date(project.start_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <label>Data Fim:</label>
+                  <label>Fim Real:</label>
                   <span>{project.end_date ? new Date(project.end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
                 </div>
                 <div className="info-item">
                   <label>Orçamento:</label>
-                  <span>R$ {project.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                  <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
                 </div>
                 <div className="info-item">
-                  <label>Status:</label>
-                  <span className={`status-badge status-${project.status}`}>{project.status}</span>
+                  <label>Faturado:</label>
+                  <span>R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                </div>
+                <div className="info-item">
+                  <label>A Faturar:</label>
+                  <span>R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB: TEAM */}
           {activeTab === 'team' && (
             <div className="tab-content">
               <div className="tab-header">
@@ -681,6 +774,90 @@ const ProjectModal = ({ project, onClose }) => {
                 ))}
                 {purchases.length === 0 && !showPurchaseForm && (
                   <p className="empty-message">Nenhuma solicitação de compra para este projeto.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: BILLING */}
+          {activeTab === 'billing' && (
+            <div className="tab-content">
+              <div className="tab-header">
+                <h3>Histórico de Faturamento</h3>
+                <button className="btn btn-primary btn-sm" onClick={() => setShowBillingForm(!showBillingForm)}>
+                  <Plus size={16} /> Novo Faturamento
+                </button>
+              </div>
+
+              <div className="billing-summary card">
+                <div className="summary-item">
+                  <label>Total Orçado</label>
+                  <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                </div>
+                <div className="summary-item">
+                  <label>Total Faturado</label>
+                  <span className="text-success">R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                </div>
+                <div className="summary-item">
+                  <label>Restante</label>
+                  <span className="text-warning">R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              </div>
+
+              {showBillingForm && (
+                <form className="resource-form" onSubmit={handleAddBilling}>
+                  <input
+                    type="number"
+                    placeholder="Valor (R$)"
+                    step="0.01"
+                    value={billingFormData.value}
+                    onChange={(e) => setBillingFormData({ ...billingFormData, value: e.target.value })}
+                    required
+                  />
+                  <input
+                    type="date"
+                    value={billingFormData.date}
+                    onChange={(e) => setBillingFormData({ ...billingFormData, date: e.target.value })}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Nº da Nota"
+                    value={billingFormData.invoice_number}
+                    onChange={(e) => setBillingFormData({ ...billingFormData, invoice_number: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Descrição (ex: 1ª Medição)"
+                    value={billingFormData.description}
+                    onChange={(e) => setBillingFormData({ ...billingFormData, description: e.target.value })}
+                  />
+                  <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowBillingForm(false)}>Cancelar</button>
+                </form>
+              )}
+
+              <div className="resource-list">
+                {billings.map(billing => (
+                  <div key={billing.id} className="resource-item">
+                    <div className="resource-info">
+                      <DollarSign size={20} />
+                      <div>
+                        <strong>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+                        <p className="resource-role">
+                          {new Date(billing.date).toLocaleDateString('pt-BR')}
+                          {billing.invoice_number && ` - NF ${billing.invoice_number}`}
+                          {billing.description && ` - ${billing.description}`}
+                        </p>
+                      </div>
+                    </div>
+                    <button className="btn-icon-small danger" onClick={() => handleDeleteBilling(billing.id)}>
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                {billings.length === 0 && !showBillingForm && (
+                  <p className="empty-message">Nenhum faturamento lançado.</p>
                 )}
               </div>
             </div>

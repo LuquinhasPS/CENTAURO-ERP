@@ -13,7 +13,7 @@ sys.path.append(os.getcwd())
 from app.database import AsyncSessionLocal
 from app.models.roles import Role
 from app.models.operational import Collaborator, Certification
-from app.models.commercial import Client
+from app.models.commercial import Client, Contract, Project, ProjectBilling
 from sqlalchemy import select
 
 async def seed_roles(db):
@@ -272,6 +272,129 @@ async def seed_fleet(db, insurances):
     
     print(f"✅ Criando {len(new_vehicles)} veículos fictícios...")
 
+async def seed_contracts(db, clients):
+    """Cria contratos fictícios para os clientes"""
+    print("🔍 Verificando contratos...")
+    
+    result = await db.execute(select(Contract))
+    existing_count = len(result.scalars().all())
+    
+    if existing_count >= 5:
+        print(f"✅ Já existem {existing_count} contratos. Pulando criação.")
+        result = await db.execute(select(Contract))
+        return result.scalars().all()
+    
+    # Pegar primeiros 5 clientes
+    limited_clients = clients[:5] if len(clients) >= 5 else clients
+    
+    contract_descriptions = [
+        "Contrato de prestação de serviços de engenharia elétrica",
+        "Contrato de manutenção preventiva de instalações",
+        "Contrato de projeto e execução de obras civis",
+        "Contrato de consultoria técnica especializada",
+        "Contrato de fornecimento e instalação de equipamentos"
+    ]
+    
+    created_contracts = []
+    for i, client in enumerate(limited_clients):
+        contract = Contract(
+            client_id=client.id,
+            description=contract_descriptions[i % len(contract_descriptions)]
+        )
+        db.add(contract)
+        created_contracts.append(contract)
+    
+    await db.flush()  # Get IDs
+    print(f"✅ Criando {len(created_contracts)} contratos fictícios...")
+    return created_contracts
+
+async def seed_projects(db, clients, contracts):
+    """Cria projetos fictícios com billings"""
+    print("🔍 Verificando projetos...")
+    
+    result = await db.execute(select(Project))
+    existing_count = len(result.scalars().all())
+    
+    if existing_count >= 10:
+        print(f"✅ Já existem {existing_count} projetos. Pulando criação.")
+        return
+    
+    from decimal import Decimal
+    
+    project_names = [
+        "Retrofit Elétrico Edifício Comercial",
+        "Instalação SPDA Industrial",
+        "Modernização Subestação 15kV",
+        "Projeto Fotovoltaico Residencial",
+        "Automação Sistema de Iluminação",
+        "Manutenção Preventiva Anual",
+        "Upgrade Sistema de Climatização",
+        "Instalação Grupo Gerador 500kVA",
+        "Regularização Elétrica Prédio",
+        "Construção Quadro Geral BT"
+    ]
+    
+    coordinators = ["João Silva", "Maria Santos", "Carlos Oliveira", "Ana Costa", "Pedro Almeida"]
+    
+    created_projects = []
+    
+    for i, name in enumerate(project_names):
+        # Alternar entre clientes
+        client = clients[i % len(clients)]
+        # Alguns projetos têm contrato, outros não
+        contract = contracts[i % len(contracts)] if i % 3 != 0 and contracts else None
+        
+        # Valores aleatórios mas realistas
+        service_value = Decimal(random.randint(50000, 500000)) / 100  # R$ 500 a R$ 5.000
+        material_value = Decimal(random.randint(20000, 300000)) / 100  # R$ 200 a R$ 3.000
+        budget = service_value + material_value
+        
+        # Datas
+        start_offset = random.randint(-180, -30)  # Iniciou entre 1-6 meses atrás
+        duration = random.randint(30, 180)  # Duração de 1 a 6 meses
+        
+        start_date = date.today() + timedelta(days=start_offset)
+        end_date = start_date + timedelta(days=duration)
+        
+        project = Project(
+            tag=f"PRJ-{2024}-{i+1:03d}",
+            project_number=i+1,
+            name=name,
+            scope=f"Escopo detalhado do projeto {name}. Inclui projeto, fornecimento e instalação.",
+            coordinator=coordinators[i % len(coordinators)],
+            contract_id=contract.id if contract else None,
+            client_id=client.id,
+            team_size=random.randint(2, 8),
+            service_value=service_value,
+            material_value=material_value,
+            budget=budget,
+            start_date=start_date,
+            end_date=end_date,
+            estimated_start_date=start_date - timedelta(days=7),
+            estimated_end_date=end_date + timedelta(days=7)
+        )
+        db.add(project)
+        await db.flush()  # Para pegar o ID do projeto
+        
+        # Criar billings para alguns projetos
+        if i % 2 == 0:  # 50% dos projetos têm billings
+            num_billings = random.randint(1, 4)
+            billing_value = budget / num_billings
+            
+            for b in range(num_billings):
+                billing_date = start_date + timedelta(days=30 * b)
+                billing = ProjectBilling(
+                    project_id=project.id,
+                    value=billing_value,
+                    date=billing_date,
+                    invoice_number=f"NF-{random.randint(1000, 9999)}",
+                    description=f"Faturamento parcela {b+1}/{num_billings}"
+                )
+                db.add(billing)
+        
+        created_projects.append(name)
+    
+    print(f"✅ Criando {len(created_projects)} projetos fictícios com billings...")
 
 
 async def main():
@@ -291,6 +414,19 @@ async def main():
             
             insurances = await seed_insurances(db)
             await seed_fleet(db, insurances)
+            
+            # Fetch clients for contracts and projects
+            result = await db.execute(select(Client))
+            clients = result.scalars().all()
+            
+            if clients:
+                contracts = await seed_contracts(db, clients)
+                if contracts:
+                    await seed_projects(db, clients, contracts)
+                else:
+                    print("⚠️ Nenhum contrato disponível, projetos não serão criados.")
+            else:
+                print("⚠️ Nenhum cliente disponível, contratos e projetos não serão criados.")
             
             await db.commit()
             print("✨ Concluído com sucesso!")

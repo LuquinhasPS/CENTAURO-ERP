@@ -15,9 +15,12 @@ export const createContract = (data) => api.post('/commercial/contracts', data);
 export const deleteContract = (id) => api.delete(`/commercial/contracts/${id}`);
 
 export const getProjects = () => api.get('/commercial/projects');
+export const getProject = (id) => api.get(`/commercial/projects/${id}`);
 export const createProject = (data) => api.post('/commercial/projects', data);
 export const updateProject = (id, data) => api.put(`/commercial/projects/${id}`, data);
 export const deleteProject = (id) => api.delete(`/commercial/projects/${id}`);
+export const createProjectBilling = (projectId, data) => api.post(`/commercial/projects/${projectId}/billings`, data);
+export const deleteProjectBilling = (id) => api.delete(`/commercial/projects/billings/${id}`);
 
 // Assets
 export const getInsurances = () => api.get('/assets/insurances');

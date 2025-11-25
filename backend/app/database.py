@@ -7,6 +7,7 @@ import os
 # In production, switch back to: "postgresql+asyncpg://postgres:password@localhost/centauro_erp"
 DATABASE_URL = "sqlite+aiosqlite:///./centauro.db"
 
+
 engine = create_async_engine(DATABASE_URL, echo=True)
 
 AsyncSessionLocal = sessionmaker(
