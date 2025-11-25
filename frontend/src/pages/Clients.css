@@ -1,0 +1,158 @@
+.clients {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.clients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.clients-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.clients-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.clients-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.clients-form {
+  max-width: 600px;
+  width: 90%;
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.clients-form h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.client-card {
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.client-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.client-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 12px;
+}
+
+.client-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.client-number-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.client-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.client-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.client-cnpj {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  font-family: monospace;
+}
+
+.client-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.detail-item span {
+  flex: 1;
+  word-break: break-word;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 3rem;
+  text-align: center;
+}
+
+.empty-state p {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+}
+
+.loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}

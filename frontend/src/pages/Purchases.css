@@ -1,0 +1,265 @@
+.purchases {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.purchases-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.purchases-header h1 {
+  font-size: 32px;
+  color: #1e293b;
+  margin: 0;
+}
+
+.purchases-header p {
+  color: #64748b;
+  margin: 4px 0 0 0;
+}
+
+.purchases-filters {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-group svg {
+  color: #64748b;
+}
+
+.filter-group select {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-group select:hover {
+  border-color: #cbd5e1;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.purchases-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.purchases-form {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.purchases-form .form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.purchases-form .form-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #1e293b;
+}
+
+.purchases-form form {
+  padding: 24px;
+}
+
+.purchases-form .form-group {
+  margin-bottom: 16px;
+}
+
+.purchases-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.purchases-form .label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.purchases-form .input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.purchases-form .input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.purchases-form textarea.input {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.purchases-form .form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.purchases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.purchase-card {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e2e8f0;
+}
+
+.purchase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-card-header {
+  padding: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+}
+
+.purchase-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.purchase-project {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0 0 0;
+}
+
+.purchase-card-body {
+  padding: 20px;
+}
+
+.purchase-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-row {
+  font-size: 14px;
+  color: #64748b;
+  display: flex;
+  gap: 8px;
+}
+
+.info-row strong {
+  color: #475569;
+  min-width: 100px;
+}
+
+.purchase-notes {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.purchase-notes strong {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.purchase-notes p {
+  font-size: 14px;
+  color: #1e293b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.purchase-card-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  grid-column: 1 / -1;
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  color: #94a3b8;
+  font-size: 16px;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  font-size: 16px;
+  grid-column: 1 / -1;
+}

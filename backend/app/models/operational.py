@@ -1,0 +1,62 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Enum
+from sqlalchemy.orm import relationship
+from app.database import Base
+import enum
+
+class ResourceType(str, enum.Enum):
+    CAR = "CAR"
+    PERSON = "PERSON"
+
+class AllocationType(str, enum.Enum):
+    RESERVATION = "RESERVATION"
+    JUSTIFICATION = "JUSTIFICATION"
+
+class Collaborator(Base):
+    __tablename__ = "collaborators"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)  # Nome completo
+    cpf = Column(String, unique=True, nullable=True)
+    rg = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    salary = Column(String, nullable=True)  # Salário como string para manter formatação
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
+    role = Column(String, nullable=True)  # Mantendo por compatibilidade
+
+class Allocation(Base):
+    __tablename__ = "allocations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    date = Column(Date, index=True)
+    
+    resource_type = Column(Enum(ResourceType))
+    resource_id = Column(Integer)  # ID of Fleet or Collaborator
+    
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
+    contract_id = Column(Integer, ForeignKey("contracts.id"), nullable=True)
+    
+    description = Column(String)
+    type = Column(Enum(AllocationType))
+
+    project = relationship("app.models.commercial.Project")
+    contract = relationship("app.models.commercial.Contract")
+
+class CertificationType(str, enum.Enum):
+    NR = "NR"
+    ASO = "ASO"
+    TRAINING = "TRAINING"
+
+class Certification(Base):
+    __tablename__ = "certifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)  # Ex: "NR-10", "ASO Admissional", "Treinamento Altura"
+    type = Column(Enum(CertificationType))
+    validity = Column(Date)
+    collaborator_id = Column(Integer, ForeignKey("collaborators.id"))
+
+    collaborator = relationship("Collaborator", back_populates="certifications")
+
+# Update Collaborator to include certifications relationship
+Collaborator.certifications = relationship("Certification", back_populates="collaborator", cascade="all, delete-orphan")

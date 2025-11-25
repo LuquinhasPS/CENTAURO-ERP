@@ -1,0 +1,146 @@
+.roles {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.roles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.roles-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.roles-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.roles-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.roles-form {
+  max-width: 500px;
+  width: 90%;
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.roles-form h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.role-card {
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.role-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.role-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.role-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.role-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.role-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.role-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.role-stats {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.collaborator-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.collaborator-count svg {
+  color: #8b5cf6;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 3rem;
+  text-align: center;
+}
+
+.empty-state p {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+}
+
+.loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
