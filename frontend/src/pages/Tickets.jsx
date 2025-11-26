@@ -20,6 +20,17 @@ const Tickets = () => {
   });
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
+  useEffect(() => {
     loadTickets();
     loadContracts();
   }, []);
@@ -101,6 +112,7 @@ const Tickets = () => {
       await deleteTicket(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false); // Close edit modal
       loadTickets();
     } catch (error) {
       console.error('Error deleting ticket:', error);
@@ -162,9 +174,21 @@ const Tickets = () => {
       </header>
 
       {showForm && (
-        <div className="tickets-form-modal">
-          <div className="tickets-form card">
-            <h3>{editingId ? 'Editar Ticket' : 'Criar Ticket'}</h3>
+        <div className="tickets-form-modal" onClick={() => setShowForm(false)}>
+          <div className="tickets-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingId ? 'Editar Ticket' : 'Criar Ticket'}</h3>
+              {editingId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingId)}
+                  title="Excluir Ticket"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="form-grid">
                 <div className="form-group full-width">
@@ -250,7 +274,12 @@ const Tickets = () => {
           </div>
         ) : (
           tickets.map((ticket) => (
-            <div key={ticket.id} className="ticket-card card">
+            <div
+              key={ticket.id}
+              className="ticket-card card clickable"
+              onClick={() => handleEdit(ticket)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="ticket-header">
                 <div className="ticket-icon">
                   <TicketIcon size={20} />
@@ -272,14 +301,6 @@ const Tickets = () => {
               </div>
               <h3 className="ticket-title">{ticket.title}</h3>
               <p className="ticket-id">#{ticket.id}</p>
-              <div className="ticket-actions">
-                <button className="btn-icon-small" onClick={() => handleEdit(ticket)}>
-                  <Edit size={16} />
-                </button>
-                <button className="btn-icon-small danger" onClick={() => handleDelete(ticket.id)}>
-                  <Trash2 size={16} />
-                </button>
-              </div>
             </div>
           ))
         )}

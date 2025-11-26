@@ -20,6 +20,17 @@ const Tools = () => {
   });
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
+  useEffect(() => {
     loadTools();
   }, []);
 
@@ -80,6 +91,7 @@ const Tools = () => {
       await deleteTool(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false); // Close edit modal
       loadTools();
     } catch (error) {
       console.error('Error deleting tool:', error);
@@ -126,9 +138,21 @@ const Tools = () => {
       </header>
 
       {showForm && (
-        <div className="tools-form-modal">
-          <div className="tools-form card">
-            <h3>{editingId ? 'Editar Ferramenta' : 'Cadastrar Ferramenta'}</h3>
+        <div className="tools-form-modal" onClick={() => setShowForm(false)}>
+          <div className="tools-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingId ? 'Editar Ferramenta' : 'Cadastrar Ferramenta'}</h3>
+              {editingId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingId)}
+                  title="Excluir Ferramenta"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="form-grid">
                 <div className="form-group">
@@ -216,7 +240,12 @@ const Tools = () => {
           </div>
         ) : (
           tools.map((tool) => (
-            <div key={tool.id} className="tool-card card">
+            <div
+              key={tool.id}
+              className="tool-card card clickable"
+              onClick={() => handleEdit(tool)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="tool-card-header">
                 <div className="tool-icon">
                   <Wrench size={24} />
@@ -247,14 +276,6 @@ const Tools = () => {
                     </div>
                   </div>
                 )}
-              </div>
-              <div className="tool-actions">
-                <button className="btn-icon-small" onClick={() => handleEdit(tool)}>
-                  <Edit size={16} />
-                </button>
-                <button className="btn-icon-small danger" onClick={() => handleDelete(tool.id)}>
-                  <Trash2 size={16} />
-                </button>
               </div>
             </div>
           ))

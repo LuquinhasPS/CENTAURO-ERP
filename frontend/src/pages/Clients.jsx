@@ -25,6 +25,17 @@ const Clients = () => {
     loadClients();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
   const loadClients = async () => {
     try {
       const response = await getClients();
@@ -126,6 +137,7 @@ const Clients = () => {
       await deleteClient(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false); // Close edit modal if open
       loadClients();
     } catch (error) {
       console.error('Error deleting client:', error);
@@ -140,16 +152,40 @@ const Clients = () => {
           <h1>Gestão de Clientes</h1>
           <p>Cadastro e controle de clientes</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+        <button className="btn btn-primary" onClick={() => {
+          setEditingId(null);
+          setFormData({
+            name: '',
+            client_number: '',
+            cnpj: '',
+            contact_person: '',
+            email: '',
+            phone: '',
+            address: '',
+          });
+          setShowForm(true);
+        }}>
           <Plus size={20} />
           Novo Cliente
         </button>
       </header>
 
       {showForm && (
-        <div className="clients-form-modal">
-          <div className="clients-form card">
-            <h3>{editingId ? 'Editar Cliente' : 'Cadastrar Cliente'}</h3>
+        <div className="clients-form-modal" onClick={() => setShowForm(false)}>
+          <div className="clients-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingId ? 'Editar Cliente' : 'Cadastrar Cliente'}</h3>
+              {editingId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingId)}
+                  title="Excluir Cliente"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="form-grid">
                 <div className="form-group">
@@ -255,7 +291,12 @@ const Clients = () => {
           </div>
         ) : (
           clients.map((client) => (
-            <div key={client.id} className="client-card card">
+            <div
+              key={client.id}
+              className="client-card card clickable"
+              onClick={() => handleEdit(client)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="client-card-header">
                 <div className="client-icon">
                   <Users size={24} />
@@ -263,14 +304,6 @@ const Clients = () => {
                 {client.client_number && (
                   <span className="client-number-badge">#{client.client_number}</span>
                 )}
-                <div className="client-actions">
-                  <button className="btn-icon-small" onClick={() => handleEdit(client)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn-icon-small danger" onClick={() => handleDelete(client.id)}>
-                    <Trash2 size={16} />
-                  </button>
-                </div>
               </div>
               <h3 className="client-name">{client.name}</h3>
               <p className="client-cnpj">{client.cnpj}</p>

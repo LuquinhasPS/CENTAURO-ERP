@@ -22,6 +22,17 @@ const Roles = () => {
   });
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -88,6 +99,7 @@ const Roles = () => {
       await api.delete(`/roles/roles/${itemToDelete}`);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false); // Close edit modal
       loadData();
     } catch (error) {
       console.error('Error deleting role:', error);
@@ -111,9 +123,21 @@ const Roles = () => {
       </header>
 
       {showForm && (
-        <div className="roles-form-modal">
-          <div className="roles-form card">
-            <h3>{editingId ? 'Editar Cargo' : 'Cadastrar Cargo'}</h3>
+        <div className="roles-form-modal" onClick={() => setShowForm(false)}>
+          <div className="roles-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingId ? 'Editar Cargo' : 'Cadastrar Cargo'}</h3>
+              {editingId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingId)}
+                  title="Excluir Cargo"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="label">Nome do Cargo *</label>
@@ -161,18 +185,15 @@ const Roles = () => {
           </div>
         ) : (
           roles.map((role) => (
-            <div key={role.id} className="role-card card">
+            <div
+              key={role.id}
+              className="role-card card clickable"
+              onClick={() => handleEdit(role)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="role-card-header">
                 <div className="role-icon">
                   <Briefcase size={24} />
-                </div>
-                <div className="role-actions">
-                  <button className="btn-icon-small" onClick={() => handleEdit(role)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn-icon-small danger" onClick={() => handleDelete(role.id)}>
-                    <Trash2 size={16} />
-                  </button>
                 </div>
               </div>
               <h3 className="role-name">{role.name}</h3>

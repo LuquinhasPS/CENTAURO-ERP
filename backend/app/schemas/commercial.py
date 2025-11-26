@@ -59,6 +59,7 @@ class ProjectBase(BaseModel):
     name: str
     scope: Optional[str] = None
     coordinator: Optional[str] = None
+    status: Optional[str] = "Em Andamento"
     contract_id: Optional[int] = None
     client_id: int
     team_size: Optional[int] = None
@@ -76,6 +77,7 @@ class ProjectCreate(ProjectBase):
 class ProjectResponse(ProjectBase):
     id: int
     project_number: Optional[int] = None
+    client_name: Optional[str] = None  # Client name for display
     billings: list[ProjectBillingResponse] = []
     invoiced: Optional[Decimal] = None # Calculated field
     

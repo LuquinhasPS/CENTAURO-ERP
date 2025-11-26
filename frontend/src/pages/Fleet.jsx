@@ -43,6 +43,18 @@ const Fleet = () => {
   const [deleteType, setDeleteType] = useState(null); // 'fleet' or 'insurance'
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && !showConfirmModal) {
+        if (showFleetForm) setShowFleetForm(false);
+        if (showInsuranceForm) setShowInsuranceForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showFleetForm, showInsuranceForm, showConfirmModal]);
+
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -169,8 +181,10 @@ const Fleet = () => {
     try {
       if (deleteType === 'fleet') {
         await deleteFleet(itemToDelete);
+        setShowFleetForm(false); // Close fleet form if open
       } else {
         await deleteInsurance(itemToDelete);
+        setShowInsuranceForm(false); // Close insurance form if open
       }
       setShowConfirmModal(false);
       setItemToDelete(null);
@@ -235,9 +249,21 @@ const Fleet = () => {
 
       {/* Fleet Form Modal */}
       {showFleetForm && (
-        <div className="fleet-form-modal">
-          <div className="fleet-form card">
-            <h3>{editingFleetId ? 'Editar Veículo' : 'Cadastrar Veículo'}</h3>
+        <div className="fleet-form-modal" onClick={() => setShowFleetForm(false)}>
+          <div className="fleet-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingFleetId ? 'Editar Veículo' : 'Cadastrar Veículo'}</h3>
+              {editingFleetId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingFleetId, 'fleet')}
+                  title="Excluir Veículo"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleFleetSubmit}>
               <div className="form-grid">
                 <div className="form-group">
@@ -376,9 +402,21 @@ const Fleet = () => {
 
       {/* Insurance Form Modal */}
       {showInsuranceForm && (
-        <div className="fleet-form-modal">
-          <div className="fleet-form card">
-            <h3>{editingInsuranceId ? 'Editar Seguro' : 'Cadastrar Seguro'}</h3>
+        <div className="fleet-form-modal" onClick={() => setShowInsuranceForm(false)}>
+          <div className="fleet-form card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>{editingInsuranceId ? 'Editar Seguro' : 'Cadastrar Seguro'}</h3>
+              {editingInsuranceId && (
+                <button
+                  type="button"
+                  className="btn-icon-small danger"
+                  onClick={() => handleDelete(editingInsuranceId, 'insurance')}
+                  title="Excluir Seguro"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+            </div>
             <form onSubmit={handleInsuranceSubmit}>
               <div className="form-grid">
                 <div className="form-group">
@@ -458,7 +496,12 @@ const Fleet = () => {
             </div>
           ) : (
             fleet.map((vehicle) => (
-              <div key={vehicle.id} className="fleet-card card">
+              <div
+                key={vehicle.id}
+                className="fleet-card card clickable"
+                onClick={() => handleFleetEdit(vehicle)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="fleet-card-header">
                   <div className="vehicle-icon">
                     <Car size={24} />
@@ -519,14 +562,6 @@ const Fleet = () => {
                     </div>
                   )}
                 </div>
-                <div className="fleet-actions">
-                  <button className="btn-icon-small" onClick={() => handleFleetEdit(vehicle)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn-icon-small danger" onClick={() => handleDelete(vehicle.id, 'fleet')}>
-                    <Trash2 size={16} />
-                  </button>
-                </div>
               </div>
             ))
           )
@@ -539,7 +574,12 @@ const Fleet = () => {
             </div>
           ) : (
             insurances.map((insurance) => (
-              <div key={insurance.id} className="fleet-card card">
+              <div
+                key={insurance.id}
+                className="fleet-card card clickable"
+                onClick={() => handleInsuranceEdit(insurance)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="fleet-card-header">
                   <div className="vehicle-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
                     <Shield size={24} />
@@ -561,14 +601,6 @@ const Fleet = () => {
                       <span style={{ fontSize: '0.85rem', whiteSpace: 'pre-wrap' }}>{insurance.claims_info}</span>
                     </div>
                   )}
-                </div>
-                <div className="fleet-actions">
-                  <button className="btn-icon-small" onClick={() => handleInsuranceEdit(insurance)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn-icon-small danger" onClick={() => handleDelete(insurance.id, 'insurance')}>
-                    <Trash2 size={16} />
-                  </button>
                 </div>
               </div>
             ))

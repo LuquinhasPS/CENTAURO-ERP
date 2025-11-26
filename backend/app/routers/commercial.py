@@ -77,7 +77,12 @@ async def delete_contract(contract_id: int, db: AsyncSession = Depends(get_db)):
 # Projects
 @router.get("/projects", response_model=List[schemas.ProjectResponse])
 async def get_projects(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Project).options(selectinload(models.Project.billings)))
+    result = await db.execute(
+        select(models.Project).options(
+            selectinload(models.Project.billings),
+            selectinload(models.Project.client)
+        )
+    )
     projects = result.scalars().all()
     
     # Convert each project to dict to avoid Pydantic triggering lazy loads
@@ -93,6 +98,7 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
             "coordinator": p.coordinator,
             "contract_id": p.contract_id,
             "client_id": p.client_id,
+            "client_name": p.client.name if p.client else None,
             "team_size": p.team_size,
             "service_value": p.service_value,
             "material_value": p.material_value,
@@ -101,6 +107,7 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
             "end_date": p.end_date,
             "estimated_start_date": p.estimated_start_date,
             "estimated_end_date": p.estimated_end_date,
+            "status": p.status,
             "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in p.billings],
             "invoiced": invoiced
         }
@@ -161,6 +168,7 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
         "end_date": db_project.end_date,
         "estimated_start_date": db_project.estimated_start_date,
         "estimated_end_date": db_project.estimated_end_date,
+        "status": db_project.status,
         "billings": [],
         "invoiced": 0
     }
@@ -233,6 +241,7 @@ async def update_project(project_id: int, project: schemas.ProjectCreate, db: As
         "end_date": db_project.end_date,
         "estimated_start_date": db_project.estimated_start_date,
         "estimated_end_date": db_project.estimated_end_date,
+        "status": db_project.status,
         "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in billings],
         "invoiced": invoiced
     }

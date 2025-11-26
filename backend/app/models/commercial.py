@@ -41,6 +41,7 @@ class Project(Base):
     scope = Column(String) # Text
     coordinator = Column(String)
     team_size = Column(Integer, nullable=True)
+    status = Column(String, default="Em Andamento")
     
     # Financials
     service_value = Column(Numeric(10, 2))

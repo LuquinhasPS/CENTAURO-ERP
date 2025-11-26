@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Users, Wrench, Truck, ShoppingCart, Plus, Trash2, Calendar, DollarSign } from 'lucide-react';
+import { X, Users, Wrench, Truck, ShoppingCart, Plus, Trash2, Calendar, DollarSign, Edit } from 'lucide-react';
 import {
   getProjectCollaborators, addProjectCollaborator, removeProjectCollaborator,
   getProjectTools, addProjectTool, removeProjectTool,
@@ -10,9 +10,10 @@ import {
 } from '../services/api';
 import './ProjectModal.css';
 
-const ProjectModal = ({ project, onClose }) => {
+const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [loading, setLoading] = useState(false);
+  const [deleteUnlocked, setDeleteUnlocked] = useState(false);
 
   // Resources
   const [projectCollaborators, setProjectCollaborators] = useState([]);
@@ -74,6 +75,17 @@ const ProjectModal = ({ project, onClose }) => {
     invoice_number: '',
     description: ''
   });
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   useEffect(() => {
     if (project) {
@@ -389,11 +401,39 @@ const ProjectModal = ({ project, onClose }) => {
           >
             <DollarSign size={16} /> Faturamento
           </button>
+
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+            <button
+              className={`btn-icon-small ${deleteUnlocked ? 'danger' : ''}`}
+              onClick={() => {
+                if (deleteUnlocked) {
+                  onDelete(project.id);
+                  setDeleteUnlocked(false);
+                } else {
+                  setDeleteUnlocked(true);
+                }
+              }}
+              title={deleteUnlocked ? "Clique para excluir" : "Clique para desbloquear exclusão"}
+              style={{
+                backgroundColor: deleteUnlocked ? 'var(--danger)' : 'var(--bg-tertiary)',
+                color: deleteUnlocked ? 'white' : 'var(--text-secondary)',
+                transition: 'all 0.3s'
+              }}
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         </div>
         <div className="project-modal-content">
           {/* TAB: INFO */}
           {activeTab === 'info' && (
             <div className="tab-content">
+              <div className="tab-header">
+                <h3>Informações do Projeto</h3>
+                <button className="btn btn-primary btn-sm" onClick={() => onEdit(project)}>
+                  <Edit size={16} /> Editar
+                </button>
+              </div>
               <div className="info-grid">
                 <div className="info-item">
                   <label>Nº Projeto:</label>
@@ -408,16 +448,20 @@ const ProjectModal = ({ project, onClose }) => {
                   <span>{getClientName(project.client_id)}</span>
                 </div>
                 <div className="info-item">
+                  <label>Orçamento:</label>
+                  <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                </div>
+                <div className="info-item">
                   <label>Coordenador:</label>
                   <span>{project.coordinator || 'N/A'}</span>
                 </div>
                 <div className="info-item">
-                  <label>Escopo:</label>
-                  <span className="scope-text">{project.scope || 'N/A'}</span>
-                </div>
-                <div className="info-item">
                   <label>Tamanho Equipe:</label>
                   <span>{project.team_size || 'N/A'}</span>
+                </div>
+                <div className="info-item">
+                  <label>Faturado:</label>
+                  <span>R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
                 </div>
                 <div className="info-item">
                   <label>Início Estimado:</label>
@@ -428,6 +472,10 @@ const ProjectModal = ({ project, onClose }) => {
                   <span>{project.estimated_end_date ? new Date(project.estimated_end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
                 </div>
                 <div className="info-item">
+                  <label>A Faturar:</label>
+                  <span>R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div className="info-item">
                   <label>Início Real:</label>
                   <span>{project.start_date ? new Date(project.start_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
                 </div>
@@ -435,433 +483,434 @@ const ProjectModal = ({ project, onClose }) => {
                   <label>Fim Real:</label>
                   <span>{project.end_date ? new Date(project.end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
                 </div>
-                <div className="info-item">
-                  <label>Orçamento:</label>
-                  <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
-                </div>
-                <div className="info-item">
-                  <label>Faturado:</label>
-                  <span>R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
-                </div>
-                <div className="info-item">
-                  <label>A Faturar:</label>
-                  <span>R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <div className="info-item" style={{ gridColumn: '1 / -1' }}>
+                  <label>Escopo:</label>
+                  <span className="scope-text">{project.scope || 'N/A'}</span>
                 </div>
               </div>
             </div>
-          )}
+          )
+          }
 
-          {activeTab === 'team' && (
-            <div className="tab-content">
-              <div className="tab-header">
-                <h3>Colaboradores Alocados</h3>
-                <button className="btn btn-primary btn-sm" onClick={() => setShowCollabForm(!showCollabForm)}>
-                  <Plus size={16} /> Adicionar
-                </button>
-              </div>
-
-              {showCollabForm && (
-                <form className="resource-form" onSubmit={handleAddCollaborator}>
-                  <select
-                    value={collabFormData.collaborator_id}
-                    onChange={(e) => setCollabFormData({ ...collabFormData, collaborator_id: e.target.value })}
-                    required
-                  >
-                    <option value="">Selecione um colaborador</option>
-                    {availableCollaborators.map(c => (
-                      <option key={c.id} value={c.id}>{c.name} - {c.role}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="Função no projeto"
-                    value={collabFormData.role}
-                    onChange={(e) => setCollabFormData({ ...collabFormData, role: e.target.value })}
-                  />
-                  <input
-                    type="date"
-                    value={collabFormData.start_date}
-                    onChange={(e) => setCollabFormData({ ...collabFormData, start_date: e.target.value })}
-                  />
-                  <input
-                    type="date"
-                    value={collabFormData.end_date}
-                    onChange={(e) => setCollabFormData({ ...collabFormData, end_date: e.target.value })}
-                  />
-                  <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)}>Cancelar</button>
-                </form>
-              )}
-
-              <div className="resource-list">
-                {projectCollaborators.map(pc => (
-                  <div key={pc.id} className="resource-item">
-                    <div className="resource-info">
-                      <Users size={20} />
-                      <div>
-                        <strong>{getCollaboratorName(pc.collaborator_id)}</strong>
-                        {pc.role && <p className="resource-role">{pc.role}</p>}
-                        {pc.start_date && (
-                          <p className="resource-dates">
-                            <Calendar size={14} />
-                            {new Date(pc.start_date).toLocaleDateString('pt-BR')}
-                            {pc.end_date && ` - ${new Date(pc.end_date).toLocaleDateString('pt-BR')}`}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <button className="btn-icon-small danger" onClick={() => handleRemoveCollaborator(pc.id)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-                {projectCollaborators.length === 0 && !showCollabForm && (
-                  <p className="empty-message">Nenhum colaborador alocado neste projeto.</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* TAB: RESOURCES */}
-          {activeTab === 'resources' && (
-            <div className="tab-content">
-              {/* Tools */}
-              <div className="resource-section">
+          {
+            activeTab === 'team' && (
+              <div className="tab-content">
                 <div className="tab-header">
-                  <h3><Wrench size={20} /> Ferramentas</h3>
-                  <button className="btn btn-primary btn-sm" onClick={() => setShowToolForm(!showToolForm)}>
+                  <h3>Colaboradores Alocados</h3>
+                  <button className="btn btn-primary btn-sm" onClick={() => setShowCollabForm(!showCollabForm)}>
                     <Plus size={16} /> Adicionar
                   </button>
                 </div>
 
-                {showToolForm && (
-                  <form className="resource-form" onSubmit={handleAddTool}>
+                {showCollabForm && (
+                  <form className="resource-form" onSubmit={handleAddCollaborator}>
                     <select
-                      value={toolFormData.tool_id}
-                      onChange={(e) => setToolFormData({ ...toolFormData, tool_id: e.target.value })}
+                      value={collabFormData.collaborator_id}
+                      onChange={(e) => setCollabFormData({ ...collabFormData, collaborator_id: e.target.value })}
                       required
                     >
-                      <option value="">Selecione uma ferramenta</option>
-                      {availableTools.map(t => (
-                        <option key={t.id} value={t.id}>{t.name}</option>
+                      <option value="">Selecione um colaborador</option>
+                      {availableCollaborators.map(c => (
+                        <option key={c.id} value={c.id}>{c.name} - {c.role}</option>
                       ))}
                     </select>
                     <input
-                      type="number"
-                      placeholder="Quantidade"
-                      min="1"
-                      value={toolFormData.quantity}
-                      onChange={(e) => setToolFormData({ ...toolFormData, quantity: e.target.value })}
-                      required
-                    />
-                    <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowToolForm(false)}>Cancelar</button>
-                  </form>
-                )}
-
-                <div className="resource-list">
-                  {projectTools.map(pt => (
-                    <div key={pt.id} className="resource-item">
-                      <div className="resource-info">
-                        <Wrench size={20} />
-                        <div>
-                          <strong>{getToolName(pt.tool_id)}</strong>
-                          <p className="resource-role">Qtd: {pt.quantity}</p>
-                        </div>
-                      </div>
-                      <button className="btn-icon-small danger" onClick={() => handleRemoveTool(pt.id)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))}
-                  {projectTools.length === 0 && !showToolForm && (
-                    <p className="empty-message">Nenhuma ferramenta alocada.</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Vehicles */}
-              <div className="resource-section">
-                <div className="tab-header">
-                  <h3><Truck size={20} /> Veículos</h3>
-                  <button className="btn btn-primary btn-sm" onClick={() => setShowVehicleForm(!showVehicleForm)}>
-                    <Plus size={16} /> Adicionar
-                  </button>
-                </div>
-
-                {showVehicleForm && (
-                  <form className="resource-form" onSubmit={handleAddVehicle}>
-                    <select
-                      value={vehicleFormData.vehicle_id}
-                      onChange={(e) => setVehicleFormData({ ...vehicleFormData, vehicle_id: e.target.value })}
-                      required
-                    >
-                      <option value="">Selecione um veículo</option>
-                      {availableVehicles.map(v => (
-                        <option key={v.id} value={v.id}>{v.model} - {v.license_plate}</option>
-                      ))}
-                    </select>
-                    <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)}>Cancelar</button>
-                  </form>
-                )}
-
-                <div className="resource-list">
-                  {projectVehicles.map(pv => (
-                    <div key={pv.id} className="resource-item">
-                      <div className="resource-info">
-                        <Truck size={20} />
-                        <div>
-                          <strong>{getVehicleName(pv.vehicle_id)}</strong>
-                        </div>
-                      </div>
-                      <button className="btn-icon-small danger" onClick={() => handleRemoveVehicle(pv.id)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))}
-                  {projectVehicles.length === 0 && !showVehicleForm && (
-                    <p className="empty-message">Nenhum veículo alocado.</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB: PURCHASES */}
-          {activeTab === 'purchases' && (
-            <div className="tab-content">
-              <div className="tab-header">
-                <h3>Solicitações de Compra</h3>
-                <button className="btn btn-primary btn-sm" onClick={() => {
-                  setEditingPurchaseId(null);
-                  setPurchaseFormData({
-                    description: '',
-                    quantity: 1,
-                    unit_price: 0,
-                    total_price: 0,
-                    supplier: '',
-                    status: 'pending',
-                    expected_date: '',
-                    requester: '',
-                    notes: ''
-                  });
-                  setShowPurchaseForm(!showPurchaseForm);
-                }}>
-                  <Plus size={16} /> Nova Solicitação
-                </button>
-              </div>
-
-              {showPurchaseForm && (
-                <form className="purchase-form" onSubmit={handleSavePurchase}>
-                  <div className="form-row">
-                    <input
                       type="text"
-                      placeholder="Descrição *"
-                      value={purchaseFormData.description}
-                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, description: e.target.value })}
-                      required
+                      placeholder="Função no projeto"
+                      value={collabFormData.role}
+                      onChange={(e) => setCollabFormData({ ...collabFormData, role: e.target.value })}
                     />
-                  </div>
-                  <div className="form-row">
-                    <input
-                      type="number"
-                      placeholder="Quantidade"
-                      min="1"
-                      value={purchaseFormData.quantity}
-                      onChange={(e) => {
-                        const qty = parseInt(e.target.value);
-                        setPurchaseFormData({
-                          ...purchaseFormData,
-                          quantity: qty,
-                          total_price: qty * purchaseFormData.unit_price
-                        });
-                      }}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Preço Unitário"
-                      step="0.01"
-                      min="0"
-                      value={purchaseFormData.unit_price}
-                      onChange={(e) => {
-                        const price = parseFloat(e.target.value);
-                        setPurchaseFormData({
-                          ...purchaseFormData,
-                          unit_price: price,
-                          total_price: purchaseFormData.quantity * price
-                        });
-                      }}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Total"
-                      step="0.01"
-                      value={purchaseFormData.total_price}
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-row">
-                    <input
-                      type="text"
-                      placeholder="Fornecedor"
-                      value={purchaseFormData.supplier}
-                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, supplier: e.target.value })}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Solicitante"
-                      value={purchaseFormData.requester}
-                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, requester: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-row">
-                    <select
-                      value={purchaseFormData.status}
-                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, status: e.target.value })}
-                    >
-                      <option value="pending">Pendente</option>
-                      <option value="approved">Aprovado</option>
-                      <option value="rejected">Rejeitado</option>
-                      <option value="ordered">Pedido</option>
-                      <option value="received">Recebido</option>
-                    </select>
                     <input
                       type="date"
-                      placeholder="Data Esperada"
-                      value={purchaseFormData.expected_date}
-                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, expected_date: e.target.value })}
+                      value={collabFormData.start_date}
+                      onChange={(e) => setCollabFormData({ ...collabFormData, start_date: e.target.value })}
                     />
-                  </div>
-                  <textarea
-                    placeholder="Observações"
-                    rows="3"
-                    value={purchaseFormData.notes}
-                    onChange={(e) => setPurchaseFormData({ ...purchaseFormData, notes: e.target.value })}
-                  />
-                  <div className="form-actions">
-                    <button type="submit" className="btn btn-primary">Salvar</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowPurchaseForm(false)}>Cancelar</button>
-                  </div>
-                </form>
-              )}
+                    <input
+                      type="date"
+                      value={collabFormData.end_date}
+                      onChange={(e) => setCollabFormData({ ...collabFormData, end_date: e.target.value })}
+                    />
+                    <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)}>Cancelar</button>
+                  </form>
+                )}
 
-              <div className="purchases-list">
-                {purchases.map(purchase => (
-                  <div key={purchase.id} className="purchase-item">
-                    <div className="purchase-header">
-                      <strong>{purchase.description}</strong>
-                      <span
-                        className="status-badge"
-                        style={{ backgroundColor: `${statusColors[purchase.status]}20`, color: statusColors[purchase.status] }}
-                      >
-                        {statusLabels[purchase.status]}
-                      </span>
-                    </div>
-                    <div className="purchase-details">
-                      <p>Qtd: {purchase.quantity} | Preço Unit: R$ {purchase.unit_price.toFixed(2)} | Total: R$ {purchase.total_price.toFixed(2)}</p>
-                      {purchase.supplier && <p>Fornecedor: {purchase.supplier}</p>}
-                      {purchase.requester && <p>Solicitante: {purchase.requester}</p>}
-                      {purchase.expected_date && <p>Data Esperada: {new Date(purchase.expected_date).toLocaleDateString('pt-BR')}</p>}
-                    </div>
-                    <div className="purchase-actions">
-                      <button className="btn-icon-small" onClick={() => handleEditPurchase(purchase)}>Editar</button>
-                      <button className="btn-icon-small danger" onClick={() => handleDeletePurchase(purchase.id)}>
+                <div className="resource-list">
+                  {projectCollaborators.map(pc => (
+                    <div key={pc.id} className="resource-item">
+                      <div className="resource-info">
+                        <Users size={20} />
+                        <div>
+                          <strong>{getCollaboratorName(pc.collaborator_id)}</strong>
+                          {pc.role && <p className="resource-role">{pc.role}</p>}
+                          {pc.start_date && (
+                            <p className="resource-dates">
+                              <Calendar size={14} />
+                              {new Date(pc.start_date).toLocaleDateString('pt-BR')}
+                              {pc.end_date && ` - ${new Date(pc.end_date).toLocaleDateString('pt-BR')}`}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <button className="btn-icon-small danger" onClick={() => handleRemoveCollaborator(pc.id)}>
                         <Trash2 size={16} />
                       </button>
                     </div>
-                  </div>
-                ))}
-                {purchases.length === 0 && !showPurchaseForm && (
-                  <p className="empty-message">Nenhuma solicitação de compra para este projeto.</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* TAB: BILLING */}
-          {activeTab === 'billing' && (
-            <div className="tab-content">
-              <div className="tab-header">
-                <h3>Histórico de Faturamento</h3>
-                <button className="btn btn-primary btn-sm" onClick={() => setShowBillingForm(!showBillingForm)}>
-                  <Plus size={16} /> Novo Faturamento
-                </button>
-              </div>
-
-              <div className="billing-summary card">
-                <div className="summary-item">
-                  <label>Total Orçado</label>
-                  <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
-                </div>
-                <div className="summary-item">
-                  <label>Total Faturado</label>
-                  <span className="text-success">R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
-                </div>
-                <div className="summary-item">
-                  <label>Restante</label>
-                  <span className="text-warning">R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  ))}
+                  {projectCollaborators.length === 0 && !showCollabForm && (
+                    <p className="empty-message">Nenhum colaborador alocado neste projeto.</p>
+                  )}
                 </div>
               </div>
+            )
+          }
 
-              {showBillingForm && (
-                <form className="resource-form" onSubmit={handleAddBilling}>
-                  <input
-                    type="number"
-                    placeholder="Valor (R$)"
-                    step="0.01"
-                    value={billingFormData.value}
-                    onChange={(e) => setBillingFormData({ ...billingFormData, value: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="date"
-                    value={billingFormData.date}
-                    onChange={(e) => setBillingFormData({ ...billingFormData, date: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Nº da Nota"
-                    value={billingFormData.invoice_number}
-                    onChange={(e) => setBillingFormData({ ...billingFormData, invoice_number: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Descrição (ex: 1ª Medição)"
-                    value={billingFormData.description}
-                    onChange={(e) => setBillingFormData({ ...billingFormData, description: e.target.value })}
-                  />
-                  <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowBillingForm(false)}>Cancelar</button>
-                </form>
-              )}
-
-              <div className="resource-list">
-                {billings.map(billing => (
-                  <div key={billing.id} className="resource-item">
-                    <div className="resource-info">
-                      <DollarSign size={20} />
-                      <div>
-                        <strong>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
-                        <p className="resource-role">
-                          {new Date(billing.date).toLocaleDateString('pt-BR')}
-                          {billing.invoice_number && ` - NF ${billing.invoice_number}`}
-                          {billing.description && ` - ${billing.description}`}
-                        </p>
-                      </div>
-                    </div>
-                    <button className="btn-icon-small danger" onClick={() => handleDeleteBilling(billing.id)}>
-                      <Trash2 size={16} />
+          {/* TAB: RESOURCES */}
+          {
+            activeTab === 'resources' && (
+              <div className="tab-content">
+                {/* Tools */}
+                <div className="resource-section">
+                  <div className="tab-header">
+                    <h3><Wrench size={20} /> Ferramentas</h3>
+                    <button className="btn btn-primary btn-sm" onClick={() => setShowToolForm(!showToolForm)}>
+                      <Plus size={16} /> Adicionar
                     </button>
                   </div>
-                ))}
-                {billings.length === 0 && !showBillingForm && (
-                  <p className="empty-message">Nenhum faturamento lançado.</p>
-                )}
+
+                  {showToolForm && (
+                    <form className="resource-form" onSubmit={handleAddTool}>
+                      <select
+                        value={toolFormData.tool_id}
+                        onChange={(e) => setToolFormData({ ...toolFormData, tool_id: e.target.value })}
+                        required
+                      >
+                        <option value="">Selecione uma ferramenta</option>
+                        {availableTools.map(t => (
+                          <option key={t.id} value={t.id}>{t.name}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        placeholder="Quantidade"
+                        min="1"
+                        value={toolFormData.quantity}
+                        onChange={(e) => setToolFormData({ ...toolFormData, quantity: e.target.value })}
+                        required
+                      />
+                      <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowToolForm(false)}>Cancelar</button>
+                    </form>
+                  )}
+
+                  <div className="resource-list">
+                    {projectTools.map(pt => (
+                      <div key={pt.id} className="resource-item">
+                        <div className="resource-info">
+                          <Wrench size={20} />
+                          <div>
+                            <strong>{getToolName(pt.tool_id)}</strong>
+                            <p className="resource-role">Qtd: {pt.quantity}</p>
+                          </div>
+                        </div>
+                        <button className="btn-icon-small danger" onClick={() => handleRemoveTool(pt.id)}>
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                    {projectTools.length === 0 && !showToolForm && (
+                      <p className="empty-message">Nenhuma ferramenta alocada.</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Vehicles */}
+                <div className="resource-section">
+                  <div className="tab-header">
+                    <h3><Truck size={20} /> Veículos</h3>
+                    <button className="btn btn-primary btn-sm" onClick={() => setShowVehicleForm(!showVehicleForm)}>
+                      <Plus size={16} /> Adicionar
+                    </button>
+                  </div>
+
+                  {showVehicleForm && (
+                    <form className="resource-form" onSubmit={handleAddVehicle}>
+                      <select
+                        value={vehicleFormData.vehicle_id}
+                        onChange={(e) => setVehicleFormData({ ...vehicleFormData, vehicle_id: e.target.value })}
+                        required
+                      >
+                        <option value="">Selecione um veículo</option>
+                        {availableVehicles.map(v => (
+                          <option key={v.id} value={v.id}>{v.model} - {v.license_plate}</option>
+                        ))}
+                      </select>
+                      <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)}>Cancelar</button>
+                    </form>
+                  )}
+
+                  <div className="resource-list">
+                    {projectVehicles.map(pv => (
+                      <div key={pv.id} className="resource-item">
+                        <div className="resource-info">
+                          <Truck size={20} />
+                          <div>
+                            <strong>{getVehicleName(pv.vehicle_id)}</strong>
+                          </div>
+                        </div>
+                        <button className="btn-icon-small danger" onClick={() => handleRemoveVehicle(pv.id)}>
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                    {projectVehicles.length === 0 && !showVehicleForm && (
+                      <p className="empty-message">Nenhum veículo alocado.</p>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
+
+          {/* TAB: PURCHASES */}
+          {
+            activeTab === 'purchases' && (
+              <div className="tab-content">
+                <div className="tab-header">
+                  <h3>Solicitações de Compra</h3>
+                  <button className="btn btn-primary btn-sm" onClick={() => {
+                    setEditingPurchaseId(null);
+                    setPurchaseFormData({
+                      description: '',
+                      quantity: 1,
+                      unit_price: 0,
+                      total_price: 0,
+                      supplier: '',
+                      status: 'pending',
+                      expected_date: '',
+                      requester: '',
+                      notes: ''
+                    });
+                    setShowPurchaseForm(!showPurchaseForm);
+                  }}>
+                    <Plus size={16} /> Nova Solicitação
+                  </button>
+                </div>
+
+                {showPurchaseForm && (
+                  <form className="purchase-form" onSubmit={handleSavePurchase}>
+                    <div className="form-row">
+                      <input
+                        type="text"
+                        placeholder="Descrição *"
+                        value={purchaseFormData.description}
+                        onChange={(e) => setPurchaseFormData({ ...purchaseFormData, description: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-row">
+                      <input
+                        type="number"
+                        placeholder="Quantidade"
+                        min="1"
+                        value={purchaseFormData.quantity}
+                        onChange={(e) => {
+                          const qty = parseInt(e.target.value);
+                          setPurchaseFormData({
+                            ...purchaseFormData,
+                            quantity: qty,
+                            total_price: qty * purchaseFormData.unit_price
+                          });
+                        }}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Preço Unitário"
+                        step="0.01"
+                        min="0"
+                        value={purchaseFormData.unit_price}
+                        onChange={(e) => {
+                          const price = parseFloat(e.target.value);
+                          setPurchaseFormData({
+                            ...purchaseFormData,
+                            unit_price: price,
+                            total_price: purchaseFormData.quantity * price
+                          });
+                        }}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Total"
+                        step="0.01"
+                        value={purchaseFormData.total_price}
+                        readOnly
+                      />
+                    </div>
+                    <div className="form-row">
+                      <input
+                        type="text"
+                        placeholder="Fornecedor"
+                        value={purchaseFormData.supplier}
+                        onChange={(e) => setPurchaseFormData({ ...purchaseFormData, supplier: e.target.value })}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Solicitante"
+                        value={purchaseFormData.requester}
+                        onChange={(e) => setPurchaseFormData({ ...purchaseFormData, requester: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-row">
+                      <select
+                        value={purchaseFormData.status}
+                        onChange={(e) => setPurchaseFormData({ ...purchaseFormData, status: e.target.value })}
+                      >
+                        <option value="pending">Pendente</option>
+                        <option value="approved">Aprovado</option>
+                        <option value="rejected">Rejeitado</option>
+                        <option value="ordered">Pedido</option>
+                        <option value="received">Recebido</option>
+                      </select>
+                      <input
+                        type="date"
+                        placeholder="Data Esperada"
+                        value={purchaseFormData.expected_date}
+                        onChange={(e) => setPurchaseFormData({ ...purchaseFormData, expected_date: e.target.value })}
+                      />
+                    </div>
+                    <textarea
+                      placeholder="Observações"
+                      rows="3"
+                      value={purchaseFormData.notes}
+                      onChange={(e) => setPurchaseFormData({ ...purchaseFormData, notes: e.target.value })}
+                    />
+                    <div className="form-actions">
+                      <button type="submit" className="btn btn-primary">Salvar</button>
+                      <button type="button" className="btn btn-secondary" onClick={() => setShowPurchaseForm(false)}>Cancelar</button>
+                    </div>
+                  </form>
+                )}
+
+                <div className="purchases-list">
+                  {purchases.map(purchase => (
+                    <div key={purchase.id} className="purchase-item">
+                      <div className="purchase-header">
+                        <strong>{purchase.description}</strong>
+                        <span
+                          className="status-badge"
+                          style={{ backgroundColor: `${statusColors[purchase.status]}20`, color: statusColors[purchase.status] }}
+                        >
+                          {statusLabels[purchase.status]}
+                        </span>
+                      </div>
+                      <div className="purchase-details">
+                        <p>Qtd: {purchase.quantity} | Preço Unit: R$ {purchase.unit_price.toFixed(2)} | Total: R$ {purchase.total_price.toFixed(2)}</p>
+                        {purchase.supplier && <p>Fornecedor: {purchase.supplier}</p>}
+                        {purchase.requester && <p>Solicitante: {purchase.requester}</p>}
+                        {purchase.expected_date && <p>Data Esperada: {new Date(purchase.expected_date).toLocaleDateString('pt-BR')}</p>}
+                      </div>
+                      <div className="purchase-actions">
+                        <button className="btn-icon-small" onClick={() => handleEditPurchase(purchase)}>Editar</button>
+                        <button className="btn-icon-small danger" onClick={() => handleDeletePurchase(purchase.id)}>
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {purchases.length === 0 && !showPurchaseForm && (
+                    <p className="empty-message">Nenhuma solicitação de compra para este projeto.</p>
+                  )}
+                </div>
+              </div>
+            )
+          }
+
+          {/* TAB: BILLING */}
+          {
+            activeTab === 'billing' && (
+              <div className="tab-content">
+                <div className="tab-header">
+                  <h3>Histórico de Faturamento</h3>
+                  <button className="btn btn-primary btn-sm" onClick={() => setShowBillingForm(!showBillingForm)}>
+                    <Plus size={16} /> Novo Faturamento
+                  </button>
+                </div>
+
+                <div className="billing-summary card">
+                  <div className="summary-item">
+                    <label>Total Orçado</label>
+                    <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                  </div>
+                  <div className="summary-item">
+                    <label>Total Faturado</label>
+                    <span className="text-success">R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                  </div>
+                  <div className="summary-item">
+                    <label>Restante</label>
+                    <span className="text-warning">R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                </div>
+
+                {showBillingForm && (
+                  <form className="resource-form" onSubmit={handleAddBilling}>
+                    <input
+                      type="number"
+                      placeholder="Valor (R$)"
+                      step="0.01"
+                      value={billingFormData.value}
+                      onChange={(e) => setBillingFormData({ ...billingFormData, value: e.target.value })}
+                      required
+                    />
+                    <input
+                      type="date"
+                      value={billingFormData.date}
+                      onChange={(e) => setBillingFormData({ ...billingFormData, date: e.target.value })}
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Nº da Nota"
+                      value={billingFormData.invoice_number}
+                      onChange={(e) => setBillingFormData({ ...billingFormData, invoice_number: e.target.value })}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Descrição (ex: 1ª Medição)"
+                      value={billingFormData.description}
+                      onChange={(e) => setBillingFormData({ ...billingFormData, description: e.target.value })}
+                    />
+                    <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowBillingForm(false)}>Cancelar</button>
+                  </form>
+                )}
+
+                <div className="resource-list">
+                  {billings.map(billing => (
+                    <div key={billing.id} className="resource-item">
+                      <div className="resource-info">
+                        <DollarSign size={20} />
+                        <div>
+                          <strong>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+                          <p className="resource-role">
+                            {new Date(billing.date).toLocaleDateString('pt-BR')}
+                            {billing.invoice_number && ` - NF ${billing.invoice_number}`}
+                            {billing.description && ` - ${billing.description}`}
+                          </p>
+                        </div>
+                      </div>
+                      <button className="btn-icon-small danger" onClick={() => handleDeleteBilling(billing.id)}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {billings.length === 0 && !showBillingForm && (
+                    <p className="empty-message">Nenhum faturamento lançado.</p>
+                  )}
+                </div>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

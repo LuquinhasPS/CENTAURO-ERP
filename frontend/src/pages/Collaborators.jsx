@@ -50,6 +50,17 @@ const Collaborators = () => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
   const loadData = async () => {
     try {
       const [collabsRes, rolesRes] = await Promise.all([
@@ -283,38 +294,49 @@ const Collaborators = () => {
       </header>
 
       {showForm && (
-        <div className="clients-form-modal">
-          <div className="clients-form card" style={{ maxWidth: '800px' }}>
+        <div className="clients-form-modal" onClick={() => setShowForm(false)}>
+          <div className="clients-form card" style={{ maxWidth: '800px' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h3>{editingId ? 'Editar Colaborador' : 'Cadastrar Colaborador'}</h3>
-              {editingId && (
-                <div className="tab-switcher" style={{ background: '#f1f5f9', padding: '4px', borderRadius: '8px', display: 'flex', gap: '4px' }}>
-                  <button
-                    onClick={() => setActiveTab('general')}
-                    style={{
-                      padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
-                      background: activeTab === 'general' ? 'white' : 'transparent',
-                      color: activeTab === 'general' ? '#0f172a' : '#64748b',
-                      fontWeight: activeTab === 'general' ? '600' : '500',
-                      boxShadow: activeTab === 'general' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
-                    }}
-                  >
-                    Dados Gerais
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('certifications')}
-                    style={{
-                      padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
-                      background: activeTab === 'certifications' ? 'white' : 'transparent',
-                      color: activeTab === 'certifications' ? '#0f172a' : '#64748b',
-                      fontWeight: activeTab === 'certifications' ? '600' : '500',
-                      boxShadow: activeTab === 'certifications' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
-                    }}
-                  >
-                    Certificações (NR/ASO)
-                  </button>
-                </div>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {editingId && (
+                  <>
+                    <div className="tab-switcher" style={{ background: '#f1f5f9', padding: '4px', borderRadius: '8px', display: 'flex', gap: '4px' }}>
+                      <button
+                        onClick={() => setActiveTab('general')}
+                        style={{
+                          padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                          background: activeTab === 'general' ? 'white' : 'transparent',
+                          color: activeTab === 'general' ? '#0f172a' : '#64748b',
+                          fontWeight: activeTab === 'general' ? '600' : '500',
+                          boxShadow: activeTab === 'general' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                        }}
+                      >
+                        Dados Gerais
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('certifications')}
+                        style={{
+                          padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                          background: activeTab === 'certifications' ? 'white' : 'transparent',
+                          color: activeTab === 'certifications' ? '#0f172a' : '#64748b',
+                          fontWeight: activeTab === 'certifications' ? '600' : '500',
+                          boxShadow: activeTab === 'certifications' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                        }}
+                      >
+                        Certificações (NR/ASO)
+                      </button>
+                    </div>
+                    <button
+                      className="btn-icon-small danger"
+                      onClick={() => handleDelete(editingId)}
+                      title="Excluir Colaborador"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
 
             {activeTab === 'general' ? (
@@ -467,18 +489,15 @@ const Collaborators = () => {
           </div>
         ) : (
           filteredCollaborators.map((collaborator) => (
-            <div key={collaborator.id} className="client-card card">
+            <div
+              key={collaborator.id}
+              className="client-card card clickable"
+              onClick={() => handleEdit(collaborator)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="client-card-header">
                 <div className="client-icon" style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
                   <Users size={24} />
-                </div>
-                <div className="client-actions">
-                  <button className="btn-icon-small" onClick={() => handleEdit(collaborator)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn-icon-small danger" onClick={() => handleDelete(collaborator.id)}>
-                    <Trash2 size={16} />
-                  </button>
                 </div>
               </div>
               <h3 className="client-name">{collaborator.name}</h3>

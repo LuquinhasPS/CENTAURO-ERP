@@ -16,6 +16,10 @@ const Projects = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterClient, setFilterClient] = useState('');
+  const [filterCoordinator, setFilterCoordinator] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
   const [formData, setFormData] = useState({
     tag: '',
     name: '',
@@ -38,6 +42,17 @@ const Projects = () => {
     loadContracts();
     loadClients();
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm) {
+        handleCancelForm();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, editingId]); // Add dependencies needed for handleCancelForm logic
 
   const loadProjects = async () => {
     try {
@@ -87,14 +102,22 @@ const Projects = () => {
 
       if (editingId) {
         await updateProject(editingId, dataToSend);
+        // If we were editing, reload projects and reopen the modal with updated data
+        const response = await getProjects();
+        setProjects(response.data);
+        const updatedProject = response.data.find(p => p.id === editingId);
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+          setShowProjectModal(true);
+        }
       } else {
         await createProject(dataToSend);
+        loadProjects();
       }
 
       setShowForm(false);
       setEditingId(null);
       resetForm();
-      loadProjects();
     } catch (error) {
       console.error('Error saving project:', error);
       alert('Erro ao salvar projeto: ' + error.response?.data?.detail);
@@ -119,6 +142,7 @@ const Projects = () => {
       estimated_end_date: project.estimated_end_date || '',
       project_number: project.project_number,
       invoiced: project.invoiced,
+      status: project.status,
     });
     setEditingId(project.id);
     setShowForm(true);
@@ -141,6 +165,20 @@ const Projects = () => {
     }
   };
 
+  const handleCancelForm = () => {
+    if (editingId) {
+      // If cancelling edit, reopen the modal for the project being edited
+      const project = projects.find(p => p.id === editingId);
+      if (project) {
+        setSelectedProject(project);
+        setShowProjectModal(true);
+      }
+    }
+    setShowForm(false);
+    setEditingId(null);
+    resetForm();
+  };
+
   const resetForm = () => {
     setFormData({
       tag: '',
@@ -157,12 +195,21 @@ const Projects = () => {
       end_date: '',
       estimated_start_date: '',
       estimated_end_date: '',
+      status: 'Em Andamento',
     });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newFormData = { ...formData, [name]: value };
+
+    // If client changes, reset contract if it doesn't belong to the new client
+    if (name === 'client_id') {
+      const selectedContract = contracts.find(c => c.id === parseInt(formData.contract_id));
+      if (selectedContract && selectedContract.client_id !== parseInt(value)) {
+        newFormData.contract_id = ''; // Reset to "Sem contrato"
+      }
+    }
 
     // Auto-calculate budget
     if (name === 'service_value' || name === 'material_value') {
@@ -174,6 +221,39 @@ const Projects = () => {
     setFormData(newFormData);
   };
 
+  // Get unique coordinators for filter
+  const uniqueCoordinators = [...new Set(projects.map(p => p.coordinator).filter(Boolean))];
+
+  // Filter projects based on search and filters
+  const filteredProjects = projects.filter(project => {
+    // Search filter
+    const matchesSearch = !searchTerm ||
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.tag?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.client_name?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // Client filter
+    const matchesClient = !filterClient || project.client_id === parseInt(filterClient);
+
+    // Coordinator filter
+    const matchesCoordinator = !filterCoordinator || project.coordinator === filterCoordinator;
+
+    // Status filter
+    let matchesStatus = true;
+    if (filterStatus === 'em_andamento') {
+      matchesStatus = !project.end_date || new Date(project.end_date) > new Date();
+    } else if (filterStatus === 'concluido') {
+      matchesStatus = project.end_date && new Date(project.end_date) <= new Date();
+    }
+
+    return matchesSearch && matchesClient && matchesCoordinator && matchesStatus;
+  });
+
+  // Filter contracts based on selected client in form
+  const filteredContracts = formData.client_id
+    ? contracts.filter(contract => contract.client_id === parseInt(formData.client_id))
+    : [];
+
   const formatCurrency = (value) => {
     if (!value) return 'R$ 0,00';
     return new Intl.NumberFormat('pt-BR', {
@@ -183,7 +263,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="projects">
+    <div className="projects" >
       <header className="projects-header">
         <div>
           <h1>Gestão de Projetos</h1>
@@ -209,6 +289,7 @@ const Projects = () => {
                     value={formData.client_id}
                     onChange={handleChange}
                     required
+                    disabled={!!editingId}
                   >
                     <option value="">Selecione um cliente</option>
                     {clients.map((client) => (
@@ -262,9 +343,10 @@ const Projects = () => {
                     className="input"
                     value={formData.contract_id}
                     onChange={handleChange}
+                    disabled={!!editingId}
                   >
                     <option value="">Sem contrato</option>
-                    {contracts.map((contract) => (
+                    {filteredContracts.map((contract) => (
                       <option key={contract.id} value={contract.id}>
                         {contract.description}
                       </option>
@@ -290,6 +372,20 @@ const Projects = () => {
                     value={formData.coordinator}
                     onChange={handleChange}
                   />
+                </div>
+                <div className="form-group">
+                  <label className="label">Status</label>
+                  <select
+                    name="status"
+                    className="input"
+                    value={formData.status || 'Em Andamento'}
+                    onChange={handleChange}
+                  >
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluído">Concluído</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="Suspenso">Suspenso</option>
+                  </select>
                 </div>
                 <div className="form-group">
                   <label className="label">Tamanho da Equipe</label>
@@ -400,24 +496,85 @@ const Projects = () => {
                 </div>
               </div>
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
+                <button type="button" className="btn btn-secondary" onClick={handleCancelForm}>
                   Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Salvar Projeto
+                  {editingId ? 'Salvar Alterações' : 'Criar Projeto'}
                 </button>
               </div>
             </form>
           </div>
         </div>
-      )}
+      )
+      }
+
+      {/* Search and Filters */}
+      <div className="card" style={{ marginBottom: '1rem' }}>
+        <div className="search-filters">
+          <div className="search-bar">
+            <input
+              type="text"
+              className="input"
+              placeholder="Pesquisar por nome, tag ou cliente..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div className="filters-row">
+            <div className="filter-group">
+              <label className="label">Cliente</label>
+              <select
+                className="input"
+                value={filterClient}
+                onChange={(e) => setFilterClient(e.target.value)}
+              >
+                <option value="">Todos</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label className="label">Coordenador</label>
+              <select
+                className="input"
+                value={filterCoordinator}
+                onChange={(e) => setFilterCoordinator(e.target.value)}
+              >
+                <option value="">Todos</option>
+                {uniqueCoordinators.map((coord) => (
+                  <option key={coord} value={coord}>
+                    {coord}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label className="label">Status</label>
+              <select
+                className="input"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="em_andamento">Em Andamento</option>
+                <option value="concluido">Concluído</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="projects-table card">
         {loading ? (
           <div className="loading">Carregando projetos...</div>
-        ) : projects.length === 0 ? (
+        ) : filteredProjects.length === 0 ? (
           <div className="empty-state">
-            <p>Nenhum projeto cadastrado ainda.</p>
+            <p>{projects.length === 0 ? 'Nenhum projeto cadastrado ainda.' : 'Nenhum projeto encontrado com os filtros aplicados.'}</p>
           </div>
         ) : (
           <table>
@@ -426,21 +583,30 @@ const Projects = () => {
                 <th>Nº</th>
                 <th>Tag</th>
                 <th>Nome</th>
+                <th>Cliente</th>
                 <th>Coordenador</th>
                 <th>Orçamento</th>
                 <th>Faturado</th>
                 <th>A Faturar</th>
                 <th>Início</th>
                 <th>Fim</th>
-                <th>Ações</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {projects.map((project) => (
-                <tr key={project.id}>
+              {filteredProjects.map((project) => (
+                <tr
+                  key={project.id}
+                  onClick={() => {
+                    setSelectedProject(project);
+                    setShowProjectModal(true);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
                   <td>{project.project_number || '-'}</td>
                   <td><code>{project.tag}</code></td>
                   <td>{project.name}</td>
+                  <td>{project.client_name || '-'}</td>
                   <td>{project.coordinator || '-'}</td>
                   <td>{formatCurrency(project.budget)}</td>
                   <td>{formatCurrency(project.invoiced)}</td>
@@ -448,20 +614,9 @@ const Projects = () => {
                   <td>{project.start_date ? new Date(project.start_date).toLocaleDateString('pt-BR') : '-'}</td>
                   <td>{project.end_date ? new Date(project.end_date).toLocaleDateString('pt-BR') : '-'}</td>
                   <td>
-                    <div className="table-actions">
-                      <button className="btn-icon-small" onClick={() => {
-                        setSelectedProject(project);
-                        setShowProjectModal(true);
-                      }}>
-                        <Eye size={16} />
-                      </button>
-                      <button className="btn-icon-small" onClick={() => handleEdit(project)}>
-                        <Edit size={16} />
-                      </button>
-                      <button className="btn-icon-small danger" onClick={() => handleDelete(project.id)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                    <span className={`status-badge ${project.status?.toLowerCase().replace(' ', '-') || 'em-andamento'}`}>
+                      {project.status || 'Em Andamento'}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -478,16 +633,26 @@ const Projects = () => {
         message="Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita."
       />
 
-      {showProjectModal && selectedProject && (
-        <ProjectModal
-          project={selectedProject}
-          onClose={() => {
-            setShowProjectModal(false);
-            setSelectedProject(null);
-          }}
-        />
-      )}
-    </div>
+      {
+        showProjectModal && selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => {
+              setShowProjectModal(false);
+              setSelectedProject(null);
+            }}
+            onEdit={(p) => {
+              setShowProjectModal(false);
+              handleEdit(p);
+            }}
+            onDelete={(id) => {
+              setShowProjectModal(false);
+              handleDelete(id);
+            }}
+          />
+        )
+      }
+    </div >
   );
 };
 

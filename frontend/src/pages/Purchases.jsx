@@ -29,6 +29,17 @@ const Purchases = () => {
   });
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showForm && !showConfirmModal) {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showForm, showConfirmModal]);
+
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -129,6 +140,7 @@ const Purchases = () => {
       await deletePurchase(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false); // Close edit modal
       loadData();
     } catch (error) {
       console.error('Error deleting purchase:', error);
@@ -200,13 +212,24 @@ const Purchases = () => {
       </div>
 
       {showForm && (
-        <div className="purchases-form-modal">
-          <div className="purchases-form card">
+        <div className="purchases-form-modal" onClick={() => setShowForm(false)}>
+          <div className="purchases-form card" onClick={(e) => e.stopPropagation()}>
             <div className="form-header">
               <h3>{editingId ? 'Editar Solicitação' : 'Nova Solicitação'}</h3>
-              <button className="close-btn" onClick={() => setShowForm(false)}>
-                <X size={20} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {editingId && (
+                  <button
+                    className="btn-icon-small danger"
+                    onClick={() => handleDelete(editingId)}
+                    title="Excluir Solicitação"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                )}
+                <button className="close-btn" onClick={() => setShowForm(false)}>
+                  <X size={20} />
+                </button>
+              </div>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -358,7 +381,12 @@ const Purchases = () => {
           </div>
         ) : (
           filteredPurchases.map((purchase) => (
-            <div key={purchase.id} className="purchase-card card">
+            <div
+              key={purchase.id}
+              className="purchase-card card clickable"
+              onClick={() => handleEdit(purchase)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="purchase-card-header">
                 <div>
                   <h3>{purchase.description}</h3>
@@ -409,14 +437,6 @@ const Purchases = () => {
                     <p>{purchase.notes}</p>
                   </div>
                 )}
-              </div>
-              <div className="purchase-card-actions">
-                <button className="btn-icon-small" onClick={() => handleEdit(purchase)}>
-                  <Edit size={16} /> Editar
-                </button>
-                <button className="btn-icon-small danger" onClick={() => handleDelete(purchase.id)}>
-                  <Trash2 size={16} /> Excluir
-                </button>
               </div>
             </div>
           ))
