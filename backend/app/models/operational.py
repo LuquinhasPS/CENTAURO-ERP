@@ -23,6 +23,11 @@ class Collaborator(Base):
     salary = Column(String, nullable=True)  # Salário como string para manter formatação
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
     role = Column(String, nullable=True)  # Mantendo por compatibilidade
+    
+    # CNH Data
+    cnh_number = Column(String, nullable=True)
+    cnh_category = Column(String, nullable=True)
+    cnh_validity = Column(Date, nullable=True)
 
 class Allocation(Base):
     __tablename__ = "allocations"

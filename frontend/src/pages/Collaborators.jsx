@@ -33,6 +33,10 @@ const Collaborators = () => {
     salary: '',
     role_id: '',
     role: '',
+    // CNH Data
+    cnh_number: '',
+    cnh_category: '',
+    cnh_validity: '',
   });
 
   // Certification State
@@ -125,6 +129,7 @@ const Collaborators = () => {
       const dataToSend = {
         ...formData,
         role_id: formData.role_id ? parseInt(formData.role_id) : null,
+        cnh_validity: formData.cnh_validity || null, // Fix: Send null instead of empty string
       };
 
       if (editingId) {
@@ -194,6 +199,9 @@ const Collaborators = () => {
       salary: collaborator.salary || '',
       role_id: collaborator.role_id || '',
       role: collaborator.role || '',
+      cnh_number: collaborator.cnh_number || '',
+      cnh_category: collaborator.cnh_category || '',
+      cnh_validity: collaborator.cnh_validity || '',
     });
     setEditingId(collaborator.id);
     setActiveTab('general');
@@ -222,6 +230,7 @@ const Collaborators = () => {
   const resetForm = () => {
     setFormData({
       name: '', cpf: '', rg: '', email: '', phone: '', salary: '', role_id: '', role: '',
+      cnh_number: '', cnh_category: '', cnh_validity: '',
     });
     setCertFormData({ name: '', type: 'NR', validity: '' });
     setCertifications([]);
@@ -374,6 +383,35 @@ const Collaborators = () => {
                     <input type="text" name="salary" className="input" value={formData.salary} onChange={handleChange} placeholder="0,00" />
                   </div>
                 </div>
+
+                <h4 style={{ margin: '1.5rem 0 1rem', fontSize: '1rem', color: '#475569', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>
+                  Dados da CNH
+                </h4>
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label className="label">Número CNH</label>
+                    <input type="text" name="cnh_number" className="input" value={formData.cnh_number} onChange={handleChange} placeholder="Número da CNH" />
+                  </div>
+                  <div className="form-group">
+                    <label className="label">Categoria</label>
+                    <input type="text" name="cnh_category" className="input" value={formData.cnh_category} onChange={handleChange} placeholder="Ex: AB" />
+                  </div>
+                  <div className="form-group">
+                    <label className="label">Validade CNH</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input type="date" name="cnh_validity" className="input" value={formData.cnh_validity} onChange={handleChange} />
+                      {formData.cnh_validity && (() => {
+                        const status = getValidityStatus(formData.cnh_validity);
+                        const Icon = status.icon;
+                        return (
+                          <div title={status.text} style={{ color: status.color, display: 'flex', alignItems: 'center' }}>
+                            <Icon size={20} />
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                </div>
                 <div className="form-actions">
                   <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancelar</button>
                   <button type="submit" className="btn btn-primary">Salvar</button>
@@ -427,7 +465,16 @@ const Collaborators = () => {
                   {certifications.length === 0 ? (
                     <p style={{ textAlign: 'center', color: '#94a3b8', padding: '1rem' }}>Nenhuma certificação cadastrada.</p>
                   ) : (
-                    certifications.map(cert => {
+                    [...certifications].sort((a, b) => {
+                      // Custom order for types
+                      const typeOrder = { 'NR': 1, 'ASO': 2, 'TRAINING': 3 };
+                      const typeDiff = (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99);
+
+                      if (typeDiff !== 0) return typeDiff;
+
+                      // Alphabetical order for name
+                      return a.name.localeCompare(b.name);
+                    }).map(cert => {
                       const status = getValidityStatus(cert.validity);
                       const StatusIcon = status.icon;
 
@@ -505,6 +552,20 @@ const Collaborators = () => {
                 <Briefcase size={14} style={{ display: 'inline', marginRight: '6px' }} />
                 {collaborator.role}
               </p>
+              {collaborator.cnh_validity && (
+                (() => {
+                  const status = getValidityStatus(collaborator.cnh_validity);
+                  if (status.text !== 'Válido') {
+                    return (
+                      <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: status.color, fontWeight: '500' }}>
+                        <status.icon size={14} />
+                        <span>CNH: {status.text}</span>
+                      </div>
+                    )
+                  }
+                  return null;
+                })()
+              )}
               <div className="client-details">
                 {collaborator.cpf && (
                   <div className="detail-item">

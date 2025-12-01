@@ -66,7 +66,7 @@ async def create_collaborator(collaborator: schemas.CollaboratorCreate, db: Asyn
 
 @router.put("/collaborators/{collaborator_id}", response_model=schemas.CollaboratorResponse)
 async def update_collaborator(collaborator_id: int, collaborator: schemas.CollaboratorCreate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Collaborator).where(models.Collaborator.id == collaborator_id))
+    result = await db.execute(select(models.Collaborator).options(selectinload(models.Collaborator.certifications)).where(models.Collaborator.id == collaborator_id))
     db_collaborator = result.scalar_one_or_none()
     if not db_collaborator:
         raise HTTPException(status_code=404, detail="Collaborator not found")

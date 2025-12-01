@@ -28,6 +28,9 @@ class CollaboratorBase(BaseModel):
     salary: Optional[str] = None
     role_id: Optional[int] = None
     role: Optional[str] = None  # Mantendo por compatibilidade
+    cnh_number: Optional[str] = None
+    cnh_category: Optional[str] = None
+    cnh_validity: Optional[date] = None
 
 class CollaboratorCreate(CollaboratorBase):
     pass

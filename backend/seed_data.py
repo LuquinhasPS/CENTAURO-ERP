@@ -98,7 +98,10 @@ async def seed_collaborators(db, roles_map):
             rg=rg,
             email=email,
             phone=phone,
-            salary=salary
+            salary=salary,
+            cnh_number=f"{random.randint(100000000, 999999999)}",
+            cnh_category=random.choice(["A", "B", "AB", "C", "D", "E"]),
+            cnh_validity=date.today() + timedelta(days=random.randint(-30, 1000))
         )
         db.add(collab)
         new_collabs.append(name)
