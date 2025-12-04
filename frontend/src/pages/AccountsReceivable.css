@@ -100,6 +100,16 @@
   height: 48px;
   /* Taller input */
   font-size: 1rem;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
 .filters-row {
@@ -119,6 +129,15 @@
   font-weight: 500;
   color: var(--text-secondary);
   margin-bottom: 0.25rem;
+}
+
+.filter-group select {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: white;
+  font-size: 0.95rem;
+  width: 100%;
 }
 
 /* Table - Matched to Projects Style */
@@ -261,7 +280,8 @@
   background: white;
   border-radius: 0.75rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
+  /* Slightly narrower for better focus */
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
@@ -277,10 +297,12 @@
   align-items: center;
 }
 
-.modal-header h2 {
+.modal-header h2,
+.modal-header h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
+  margin: 0;
 }
 
 .close-btn {
@@ -289,6 +311,11 @@
   color: var(--text-secondary);
   transition: all 0.2s;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-btn:hover {
@@ -300,31 +327,42 @@
   padding: 1.5rem;
 }
 
-.form-section {
-  margin-bottom: 1.5rem;
-}
-
-.form-section h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+/* Form Styles inside Modal */
+.modal-content form {
+  padding: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
-.full-width {
-  grid-column: 1 / -1;
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .modal-footer {
@@ -333,4 +371,37 @@
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+  background: var(--bg-tertiary);
+  /* Subtle background for footer */
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.btn-secondary {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-secondary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
 }
