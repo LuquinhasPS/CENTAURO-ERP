@@ -74,14 +74,28 @@ class Project(Base):
     client = relationship("Client", back_populates="projects")
     billings = relationship("ProjectBilling", back_populates="project", cascade="all, delete-orphan")
 
+class BillingStatus(str, enum.Enum):
+    PREVISTO = "PREVISTO"
+    EMITIDA = "EMITIDA"
+    PAGO = "PAGO"
+    VENCIDA = "VENCIDA"
+    CANCELADA = "CANCELADA"
+    SUBSTITUIDA = "SUBSTITUIDA"
+
 class ProjectBilling(Base):
     __tablename__ = "project_billings"
 
     id = Column(Integer, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     value = Column(Numeric(10, 2))
-    date = Column(Date)
+    date = Column(Date, nullable=True) # Due Date (Vencimento)
+    issue_date = Column(Date, nullable=True) # Data de Emissão
+    payment_date = Column(Date, nullable=True) # Data de Pagamento
     invoice_number = Column(String, nullable=True)
     description = Column(String, nullable=True)
+    status = Column(Enum(BillingStatus), default=BillingStatus.PREVISTO)
+    attachment_url = Column(String, nullable=True)
+    replaced_by_id = Column(Integer, ForeignKey("project_billings.id"), nullable=True)
 
     project = relationship("Project", back_populates="billings")
+    replaced_by = relationship("ProjectBilling", remote_side=[id])

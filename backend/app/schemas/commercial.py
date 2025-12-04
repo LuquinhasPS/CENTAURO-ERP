@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date
+from datetime import date as DateType
 from decimal import Decimal
 
 # Client Schemas
@@ -27,8 +27,8 @@ class ContractBase(BaseModel):
     client_id: int
     description: str
     contract_number: Optional[str] = None
-    signature_date: Optional[date] = None
-    end_date: Optional[date] = None
+    signature_date: Optional[DateType] = None
+    end_date: Optional[DateType] = None
     value: Optional[Decimal] = None
     contract_type: Optional[str] = "LPU"
     monthly_value: Optional[Decimal] = None
@@ -48,12 +48,20 @@ class ContractResponse(ContractBase):
 # Project Billing Schemas
 class ProjectBillingBase(BaseModel):
     value: Decimal
-    date: date
+    date: Optional[DateType] = None # Due Date
+    issue_date: Optional[DateType] = None
+    payment_date: Optional[DateType] = None
     invoice_number: Optional[str] = None
     description: Optional[str] = None
+    status: Optional[str] = "PREVISTO"
+    attachment_url: Optional[str] = None
+    replaced_by_id: Optional[int] = None
 
 class ProjectBillingCreate(ProjectBillingBase):
-    pass
+    # Fields for substitution workflow
+    substitution_invoice_number: Optional[str] = None
+    substitution_issue_date: Optional[DateType] = None
+    substitution_due_date: Optional[DateType] = None
 
 class ProjectBillingResponse(ProjectBillingBase):
     id: int
@@ -75,10 +83,10 @@ class ProjectBase(BaseModel):
     service_value: Optional[Decimal] = None
     material_value: Optional[Decimal] = None
     budget: Optional[Decimal] = None
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
-    estimated_start_date: Optional[date] = None
-    estimated_end_date: Optional[date] = None
+    start_date: Optional[DateType] = None
+    end_date: Optional[DateType] = None
+    estimated_start_date: Optional[DateType] = None
+    estimated_end_date: Optional[DateType] = None
 
 class ProjectCreate(ProjectBase):
     project_number: Optional[int] = None

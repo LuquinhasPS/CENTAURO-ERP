@@ -11,6 +11,7 @@ import {
   Users,
   UserCircle,
   ShoppingCart,
+  DollarSign,
   Settings
 } from 'lucide-react';
 import './Layout.css';
@@ -29,6 +30,7 @@ const Layout = ({ children }) => {
     { path: '/purchases', icon: ShoppingCart, label: 'Compras' },
     { path: '/fleet', icon: Car, label: 'Frota' },
     { path: '/tools', icon: Wrench, label: 'Ferramentas' },
+    { path: '/accounts-receivable', icon: DollarSign, label: 'Contas a Receber' },
     { path: '/tickets', icon: Ticket, label: 'Chamados' },
     { path: '/roles', icon: Settings, label: 'Cargos' },
   ];

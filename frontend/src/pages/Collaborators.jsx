@@ -268,7 +268,7 @@ const Collaborators = () => {
             setEditingId(null);
             resetForm();
             setShowForm(true);
-          }}>
+          }} style={{ marginTop: '1rem' }}>
             <Plus size={20} />
             Novo Colaborador
           </button>

@@ -22,6 +22,8 @@ export const updateProject = (id, data) => api.put(`/commercial/projects/${id}`,
 export const deleteProject = (id) => api.delete(`/commercial/projects/${id}`);
 export const createProjectBilling = (projectId, data) => api.post(`/commercial/projects/${projectId}/billings`, data);
 export const deleteProjectBilling = (id) => api.delete(`/commercial/projects/billings/${id}`);
+export const getAllBillings = () => api.get('/commercial/billings');
+export const updateProjectBilling = (id, data) => api.put(`/commercial/billings/${id}`, data);
 
 // Assets
 export const getInsurances = () => api.get('/assets/insurances');

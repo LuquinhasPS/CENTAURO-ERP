@@ -78,9 +78,12 @@ async def create_contract(contract: schemas.ContractCreate, db: AsyncSession = D
     yy = ref_date.strftime("%y")
     mm = ref_date.strftime("%m")
 
-    # 3. Count existing contracts for this year to determine sequence
-    # Pattern: CEC_{YY}%
-    pattern = f"CEC_{yy}%"
+    # 3. Determine Prefix and Count existing contracts
+    # Prefix: CEL for LPU, CEC for Recorrente (or others)
+    prefix = "CEL" if contract.contract_type == "LPU" else "CEC"
+    
+    # Pattern: {PREFIX}_{YY}%
+    pattern = f"{prefix}_{yy}%"
     result = await db.execute(select(func.count(models.Contract.id)).where(models.Contract.contract_number.like(pattern)))
     count = result.scalar() or 0
     next_number = count + 1
@@ -89,7 +92,7 @@ async def create_contract(contract: schemas.ContractCreate, db: AsyncSession = D
     nn = f"{next_number:02d}"
     ccc = client.client_number if client.client_number else "00" # Default to 00 if missing
     
-    tag = f"CEC_{yy}{mm}_{nn}_{ccc}"
+    tag = f"{prefix}_{yy}{mm}_{nn}_{ccc}"
 
     # 5. Create Contract
     db_contract = models.Contract(**contract.model_dump())
@@ -176,7 +179,7 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
     # Convert each project to dict to avoid Pydantic triggering lazy loads
     project_list = []
     for p in projects:
-        invoiced = sum(b.value for b in p.billings) if p.billings else 0
+        invoiced = sum(b.value for b in p.billings if b.status == models.BillingStatus.PAGO) if p.billings else 0
         project_dict = {
             "id": p.id,
             "tag": p.tag,
@@ -284,24 +287,6 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
     
     return project_dict
 
-@router.post("/projects/{project_id}/billings", response_model=schemas.ProjectBillingResponse)
-async def create_project_billing(project_id: int, billing: schemas.ProjectBillingCreate, db: AsyncSession = Depends(get_db)):
-    db_billing = models.ProjectBilling(**billing.model_dump(), project_id=project_id)
-    db.add(db_billing)
-    await db.commit()
-    await db.refresh(db_billing)
-    return db_billing
-
-@router.delete("/projects/billings/{billing_id}")
-async def delete_project_billing(billing_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.ProjectBilling).where(models.ProjectBilling.id == billing_id))
-    billing = result.scalar_one_or_none()
-    if not billing:
-        raise HTTPException(status_code=404, detail="Billing not found")
-    await db.delete(billing)
-    await db.commit()
-    return {"message": "Billing deleted"}
-
 @router.get("/projects/{project_id}", response_model=schemas.ProjectResponse)
 async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Project).options(selectinload(models.Project.billings)).where(models.Project.id == project_id))
@@ -309,8 +294,22 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
+    # Apply Overdue Logic for Billings
+    today = date.today()
+    updated = False
+    if project.billings:
+        for b in project.billings:
+            if b.status == models.BillingStatus.EMITIDA and b.date and b.date < today:
+                b.status = models.BillingStatus.VENCIDA
+                db.add(b)
+                updated = True
+    
+    if updated:
+        await db.commit()
+        # No need to re-fetch as we modified the objects in session
+    
     # Calculate invoiced
-    project.invoiced = sum(b.value for b in project.billings) if project.billings else 0
+    project.invoiced = sum(b.value for b in project.billings if b.status == models.BillingStatus.PAGO) if project.billings else 0
     
     return project
 
@@ -331,7 +330,7 @@ async def update_project(project_id: int, project: schemas.ProjectCreate, db: As
     # Fetch billings to calculate invoiced
     result_billings = await db.execute(select(models.ProjectBilling).where(models.ProjectBilling.project_id == project_id))
     billings = result_billings.scalars().all()
-    invoiced = sum(b.value for b in billings) if billings else 0
+    invoiced = sum(b.value for b in billings if b.status == models.BillingStatus.PAGO) if billings else 0
     
     project_dict = {
         "id": db_project.id,
@@ -366,3 +365,95 @@ async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(project)
     await db.commit()
     return {"message": "Project deleted successfully"}
+
+# Billings
+@router.post("/projects/{project_id}/billings", response_model=schemas.ProjectBillingResponse)
+async def create_project_billing(project_id: int, billing: schemas.ProjectBillingCreate, db: AsyncSession = Depends(get_db)):
+    # Default status to PREVISTO if not provided (though schema might have default)
+    billing_data = billing.model_dump()
+    if 'status' not in billing_data or not billing_data['status']:
+        billing_data['status'] = models.BillingStatus.PREVISTO
+        
+    db_billing = models.ProjectBilling(**billing_data, project_id=project_id)
+    db.add(db_billing)
+    await db.commit()
+    await db.refresh(db_billing)
+    return db_billing
+
+@router.delete("/projects/billings/{billing_id}")
+async def delete_project_billing(billing_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.ProjectBilling).where(models.ProjectBilling.id == billing_id))
+    billing = result.scalar_one_or_none()
+    if not billing:
+        raise HTTPException(status_code=404, detail="Billing not found")
+    
+    if billing.status != models.BillingStatus.PREVISTO:
+        raise HTTPException(status_code=400, detail="Apenas faturamentos com status PREVISTO podem ser excluídos.")
+
+    await db.delete(billing)
+    await db.commit()
+    return {"message": "Billing deleted"}
+
+@router.get("/billings", response_model=List[schemas.ProjectBillingResponse])
+async def get_all_billings(db: AsyncSession = Depends(get_db)):
+    # 1. Fetch all billings
+    result = await db.execute(select(models.ProjectBilling))
+    billings = result.scalars().all()
+    
+    # 2. Apply Overdue Logic
+    today = date.today()
+    updated = False
+    for b in billings:
+        if b.status == models.BillingStatus.EMITIDA and b.date and b.date < today:
+            b.status = models.BillingStatus.VENCIDA
+            db.add(b)
+            updated = True
+            
+    if updated:
+        await db.commit()
+        # Re-fetch to get updated states
+        result = await db.execute(select(models.ProjectBilling))
+        billings = result.scalars().all()
+        
+    return billings
+
+@router.put("/billings/{billing_id}", response_model=schemas.ProjectBillingResponse)
+async def update_project_billing(billing_id: int, billing: schemas.ProjectBillingCreate, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.ProjectBilling).where(models.ProjectBilling.id == billing_id))
+    db_billing = result.scalar_one_or_none()
+    if not db_billing:
+        raise HTTPException(status_code=404, detail="Billing not found")
+    
+    # Validate dates if status is EMITIDA
+    if billing.status == models.BillingStatus.EMITIDA:
+        if not billing.date or not billing.issue_date:
+            raise HTTPException(status_code=400, detail="Data de Vencimento e Emissão são obrigatórias para status EMITIDA")
+            
+    # Handle Substitution
+    if billing.status == models.BillingStatus.SUBSTITUIDA:
+        if not billing.substitution_invoice_number or not billing.substitution_issue_date or not billing.substitution_due_date:
+             raise HTTPException(status_code=400, detail="Dados da nova nota (Número, Emissão, Vencimento) são obrigatórios para SUBSTITUIÇÃO")
+        
+        # Create new billing
+        new_billing = models.ProjectBilling(
+            project_id=db_billing.project_id,
+            value=db_billing.value, # Assuming same value
+            description=f"{db_billing.description} (Subst. {db_billing.invoice_number or 'Antiga'})",
+            invoice_number=billing.substitution_invoice_number,
+            issue_date=billing.substitution_issue_date,
+            date=billing.substitution_due_date,
+            status=models.BillingStatus.EMITIDA
+        )
+        db.add(new_billing)
+        await db.flush() # Get ID
+        
+        # Link old billing to new one
+        db_billing.replaced_by_id = new_billing.id
+        
+    for key, value in billing.model_dump(exclude_unset=True).items():
+        if key not in ['substitution_invoice_number', 'substitution_issue_date', 'substitution_due_date']:
+             setattr(db_billing, key, value)
+        
+    await db.commit()
+    await db.refresh(db_billing)
+    return db_billing

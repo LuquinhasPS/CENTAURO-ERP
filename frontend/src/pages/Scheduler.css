@@ -110,6 +110,13 @@
   z-index: 10;
 }
 
+.resource-header {
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+}
+
 .day-header {
   text-align: center;
 }

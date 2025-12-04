@@ -12,6 +12,8 @@ const Purchases = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterProject, setFilterProject] = useState('all');
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     loadData();
   }, []);
@@ -58,8 +60,22 @@ const Purchases = () => {
   };
 
   const filteredRequests = requests.filter(r => {
+    // Status Filter
     if (filterStatus !== 'all' && r.status !== filterStatus) return false;
+
+    // Project Filter
     if (filterProject !== 'all' && r.project_id !== parseInt(filterProject)) return false;
+
+    // Search Filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const description = r.description?.toLowerCase() || '';
+      const requester = r.requester?.toLowerCase() || '';
+      const projectName = getProjectName(r.project_id).toLowerCase();
+
+      return description.includes(term) || requester.includes(term) || projectName.includes(term);
+    }
+
     return true;
   });
 
@@ -81,23 +97,49 @@ const Purchases = () => {
         </button>
       </header>
 
-      <div className="purchases-filters">
-        <div className="filter-group">
-          <Filter size={16} />
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-            <option value="all">Todos os Status</option>
-            <option value="pending">Pendente</option>
-            <option value="approved">Aprovado</option>
-            <option value="rejected">Rejeitado</option>
-            <option value="ordered">Comprado</option>
-            <option value="received">Retirado</option>
-          </select>
-          <select value={filterProject} onChange={(e) => setFilterProject(e.target.value)}>
-            <option value="all">Todos os Projetos</option>
-            {projects.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
+      {/* Search and Filters */}
+      <div className="card" style={{ marginBottom: '1rem' }}>
+        <div className="search-filters">
+          <div className="search-bar">
+            <input
+              type="text"
+              className="input"
+              placeholder="Buscar por Descrição, Solicitante ou Projeto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div className="filters-row">
+            <div className="filter-group">
+              <label className="label">Status</label>
+              <select
+                className="input"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">Todos</option>
+                <option value="pending">Pendente</option>
+                <option value="approved">Aprovado</option>
+                <option value="rejected">Rejeitado</option>
+                <option value="ordered">Comprado</option>
+                <option value="received">Retirado</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <label className="label">Projeto</label>
+              <select
+                className="input"
+                value={filterProject}
+                onChange={(e) => setFilterProject(e.target.value)}
+              >
+                <option value="all">Todos</option>
+                {projects.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 

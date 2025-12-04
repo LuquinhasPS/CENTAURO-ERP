@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, FileText, Upload } from 'lucide-react';
+import { Plus, Trash2, FileText, Upload, Search } from 'lucide-react';
 import { getContracts, createContract, updateContract, deleteContract, getClients } from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
 import './Contracts.css';
@@ -26,6 +26,11 @@ const Contracts = () => {
 
   // State for editing
   const [editingId, setEditingId] = useState(null);
+
+  // Filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterClient, setFilterClient] = useState('');
+  const [filterType, setFilterType] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -147,21 +152,72 @@ const Contracts = () => {
     });
   };
 
+  const filteredContracts = contracts.filter(contract => {
+    const term = searchTerm.toLowerCase();
+    const matchesSearch =
+      contract.description.toLowerCase().includes(term) ||
+      (contract.contract_number && contract.contract_number.toLowerCase().includes(term));
+
+    const matchesClient = filterClient ? contract.client_id === parseInt(filterClient) : true;
+    const matchesType = filterType ? contract.contract_type === filterType : true;
+
+    return matchesSearch && matchesClient && matchesType;
+  });
+
   return (
     <div className="contracts">
       <header className="contracts-header">
-        <div>
-          <h1>Gestão de Contratos</h1>
-          <p>Contratos guarda-chuva vinculados a clientes</p>
+        <div className="header-content">
+          <div>
+            <h1>Gestão de Contratos</h1>
+            <p>Contratos guarda-chuva vinculados a clientes</p>
+          </div>
+          <button className="btn btn-primary" onClick={() => {
+            setEditingId(null);
+            resetForm();
+            setShowForm(true);
+          }} style={{ marginTop: '1rem' }}>
+            <Plus size={20} />
+            Novo Contrato
+          </button>
         </div>
-        <button className="btn btn-primary" onClick={() => {
-          setEditingId(null);
-          resetForm();
-          setShowForm(true);
-        }}>
-          <Plus size={20} />
-          Novo Contrato
-        </button>
+
+        <div className="filters-bar" style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="search-input-container" style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
+            <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <input
+              type="text"
+              className="input"
+              placeholder="Buscar por descrição ou número..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ paddingLeft: '40px', width: '100%' }}
+            />
+          </div>
+          <div className="filter-group" style={{ minWidth: '200px' }}>
+            <select
+              className="input"
+              value={filterClient}
+              onChange={(e) => setFilterClient(e.target.value)}
+            >
+              <option value="">Todos os Clientes</option>
+              {clients.map(client => (
+                <option key={client.id} value={client.id}>{client.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="filter-group" style={{ minWidth: '150px' }}>
+            <select
+              className="input"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+            >
+              <option value="">Todos os Tipos</option>
+              <option value="LPU">LPU</option>
+              <option value="RECORRENTE">Recorrente</option>
+            </select>
+          </div>
+        </div>
       </header>
 
       {showForm && (
@@ -395,7 +451,7 @@ const Contracts = () => {
             <p>Nenhum contrato cadastrado ainda.</p>
           </div>
         ) : (
-          contracts.map((contract) => (
+          filteredContracts.map((contract) => (
             <div
               key={contract.id}
               className="contract-card card clickable"

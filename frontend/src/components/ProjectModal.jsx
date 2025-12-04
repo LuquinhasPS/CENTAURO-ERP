@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
-import { X, Users, Wrench, Truck, ShoppingCart, Plus, Trash2, Calendar, DollarSign, Edit, Package } from 'lucide-react';
 import {
-  getProjectCollaborators, addProjectCollaborator, removeProjectCollaborator,
-  getProjectTools, addProjectTool, removeProjectTool,
-  getProjectVehicles, addProjectVehicle, removeProjectVehicle,
-  getPurchases, createPurchase, updatePurchase, deletePurchase,
-  getCollaborators, getTools, getFleet, getClients,
-  getProject, createProjectBilling, deleteProjectBilling
+  X, Users, Wrench, Truck, Plus, Trash2, Calendar, Edit,
+  DollarSign, ShoppingCart, Package, FileText
+} from 'lucide-react';
+import {
+  getCollaborators, getTools, getFleet, getClients, getProject,
+  addProjectCollaborator, removeProjectCollaborator,
+  addProjectTool, removeProjectTool,
+  addProjectVehicle, removeProjectVehicle,
+  createProjectBilling, deleteProjectBilling,
+  getPurchases, createPurchase,
+  getProjectCollaborators, getProjectTools, getProjectVehicles
 } from '../services/api';
 import RequestDetailsModal from './RequestDetailsModal';
+import ConfirmModal from './ConfirmModal';
 import './ProjectModal.css';
 
 const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
@@ -38,6 +43,10 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
 
   // Request Modal State
   const [selectedRequest, setSelectedRequest] = useState(null);
+
+  // Billing Deletion Confirmation Modal State
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [billingToDelete, setBillingToDelete] = useState(null);
 
   const [collabFormData, setCollabFormData] = useState({
     collaborator_id: '',
@@ -70,7 +79,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         // Only close if no stacked modal is open
-        if (!selectedRequest) {
+        if (!selectedRequest && !showConfirmModal) {
           onClose();
         }
       }
@@ -78,7 +87,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose, selectedRequest]);
+  }, [onClose, selectedRequest, showConfirmModal]);
 
   useEffect(() => {
     if (project) {
@@ -242,9 +251,24 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
 
     // Validation: Check if billing would exceed budget
     const billingValue = parseFloat(billingFormData.value);
-    const currentInvoiced = billings.reduce((sum, b) => sum + parseFloat(b.value), 0);
+
+    // Calculate total invoiced (only PAGO status)
+    const currentInvoiced = billings.reduce((sum, b) => {
+      if (b.status === 'PAGO') {
+        return sum + parseFloat(b.value);
+      }
+      return sum;
+    }, 0);
+
     const budget = parseFloat(projectDetails.budget) || 0;
-    const remaining = budget - currentInvoiced;
+    // Note: Remaining budget calculation might need adjustment if we only count PAGO as invoiced.
+    // Usually, "Remaining to Bill" should consider everything billed (even if not paid), 
+    // but the user specifically asked for "Total Faturado" to be PAGO only.
+    // I will keep the budget check against ALL billings to prevent over-billing, 
+    // but display "Total Faturado" as PAGO only.
+
+    const totalBilled = billings.reduce((sum, b) => sum + parseFloat(b.value), 0);
+    const remaining = budget - totalBilled;
 
     if (billingValue > remaining) {
       alert(`Valor excede o orçamento disponível!\nRestante: R$ ${remaining.toFixed(2)}\nValor digitado: R$ ${billingValue.toFixed(2)}`);
@@ -266,14 +290,24 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
     }
   };
 
-  const handleDeleteBilling = async (id) => {
-    if (window.confirm('Excluir este faturamento?')) {
-      try {
-        await deleteProjectBilling(id);
-        loadAllData();
-      } catch (error) {
-        console.error('Error deleting billing:', error);
-      }
+  const handleDeleteBilling = (billing) => {
+    if (billing.status !== 'PREVISTO') {
+      return; // Should be handled by UI hiding the button, but safety check
+    }
+    setBillingToDelete(billing);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDeleteBilling = async () => {
+    if (!billingToDelete) return;
+    try {
+      await deleteProjectBilling(billingToDelete.id);
+      setShowConfirmModal(false);
+      setBillingToDelete(null);
+      loadAllData();
+    } catch (error) {
+      console.error('Error deleting billing:', error);
+      alert(error.response?.data?.detail || 'Erro ao excluir faturamento');
     }
   };
 
@@ -296,6 +330,14 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
     const client = availableClients.find(c => c.id === id);
     return client ? client.name : 'N/A';
   };
+
+  // Calculate Total Faturado (PAGO only) for display
+  const totalFaturadoPago = billings.reduce((acc, curr) => {
+    if (curr.status === 'PAGO') {
+      return acc + Number(curr.value);
+    }
+    return acc;
+  }, 0);
 
   return (
     <div className="project-modal-overlay">
@@ -398,7 +440,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
                 </div>
                 <div className="info-item">
                   <label>Faturado:</label>
-                  <span>R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                  <span>R$ {totalFaturadoPago.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
                 <div className="info-item">
                   <label>Início Estimado:</label>
@@ -410,7 +452,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
                 </div>
                 <div className="info-item">
                   <label>A Faturar:</label>
-                  <span>R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span>R$ {((projectDetails.budget || 0) - totalFaturadoPago)?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
                 <div className="info-item">
                   <label>Início Real:</label>
@@ -681,11 +723,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
                   </div>
                   <div className="summary-item">
                     <label>Total Faturado</label>
-                    <span className="text-success">R$ {projectDetails.invoiced?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
+                    <span className="text-success">R$ {totalFaturadoPago.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div className="summary-item">
                     <label>Restante</label>
-                    <span className="text-warning">R$ {((projectDetails.budget || 0) - (projectDetails.invoiced || 0))?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                    <span className="text-warning">R$ {((projectDetails.budget || 0) - totalFaturadoPago)?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                   </div>
                 </div>
 
@@ -699,23 +741,13 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
                       onChange={(e) => setBillingFormData({ ...billingFormData, value: e.target.value })}
                       required
                     />
-                    <input
-                      type="date"
-                      value={billingFormData.date}
-                      onChange={(e) => setBillingFormData({ ...billingFormData, date: e.target.value })}
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Nº da Nota"
-                      value={billingFormData.invoice_number}
-                      onChange={(e) => setBillingFormData({ ...billingFormData, invoice_number: e.target.value })}
-                    />
+                    {/* Date removed as per simplified workflow */}
                     <input
                       type="text"
                       placeholder="Descrição (ex: 1ª Medição)"
                       value={billingFormData.description}
                       onChange={(e) => setBillingFormData({ ...billingFormData, description: e.target.value })}
+                      required
                     />
                     <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowBillingForm(false)}>Cancelar</button>
@@ -728,17 +760,32 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
                       <div className="resource-info">
                         <DollarSign size={20} />
                         <div>
-                          <strong>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <strong>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+                            <span className={`status-badge ${{
+                              'PREVISTO': 'badge-gray',
+                              'EMITIDA': 'badge-blue',
+                              'PAGO': 'badge-green',
+                              'VENCIDA': 'badge-red',
+                              'CANCELADA': 'badge-black',
+                              'SUBSTITUIDA': 'badge-orange'
+                            }[billing.status] || 'badge-gray'
+                              }`}>
+                              {billing.status}
+                            </span>
+                          </div>
                           <p className="resource-role">
-                            {new Date(billing.date).toLocaleDateString('pt-BR')}
+                            {billing.date ? new Date(billing.date).toLocaleDateString('pt-BR') : 'Data não definida'}
                             {billing.invoice_number && ` - NF ${billing.invoice_number}`}
                             {billing.description && ` - ${billing.description}`}
                           </p>
                         </div>
                       </div>
-                      <button className="btn-icon-small danger" onClick={() => handleDeleteBilling(billing.id)}>
-                        <Trash2 size={16} />
-                      </button>
+                      {billing.status === 'PREVISTO' && (
+                        <button className="btn-icon-small danger" onClick={() => handleDeleteBilling(billing)}>
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
                   ))}
                   {billings.length === 0 && !showBillingForm && (
@@ -759,6 +806,15 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
           onUpdate={loadAllData}
         />
       )}
+
+      {/* Confirm Modal for Billing Deletion */}
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={confirmDeleteBilling}
+        title="Confirmar Exclusão"
+        message="Tem certeza que deseja excluir este faturamento? Esta ação não pode ser desfeita."
+      />
     </div>
   );
 };

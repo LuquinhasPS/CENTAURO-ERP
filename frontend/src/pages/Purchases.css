@@ -22,42 +22,61 @@
   margin: 4px 0 0 0;
 }
 
-.purchases-filters {
-  background: white;
-  padding: 16px;
+/* Card Style */
+.card {
+  background-color: white;
   border-radius: 12px;
-  margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+/* Search and Filters */
+.search-filters {
+  padding: 0;
+}
+
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  font-size: 1rem;
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .filter-group {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
 }
 
-.filter-group svg {
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
   color: #64748b;
 }
 
-.filter-group select {
-  padding: 8px 16px;
+/* Input Styles */
+.input {
+  width: 100%;
+  padding: 0.75rem;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 14px;
+  background-color: white;
   color: #1e293b;
-  background: white;
-  cursor: pointer;
+  font-size: 0.95rem;
   transition: border-color 0.2s;
 }
 
-.filter-group select:hover {
-  border-color: #cbd5e1;
-}
-
-.filter-group select:focus {
+.input:focus {
   outline: none;
   border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 /* Table Styles */
@@ -151,6 +170,12 @@
   background-color: #f5f3ff;
   color: #7c3aed;
   border: 1px solid #ede9fe;
+}
+
+.status-badge.cancelled {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
 /* Empty State & Loading */

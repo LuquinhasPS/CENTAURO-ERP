@@ -291,12 +291,24 @@ async def seed_contracts(db, clients):
     # 3: RECORRENTE, Vencido
     # 4: LPU, Ativo
     
+    cel_count = 0
+    cec_count = 0
+    
     for i, client in enumerate(selected_clients):
-        seq = f"{i+1:02d}"
         client_num = client.client_number
-        tag = f"CEC_{yy}{mm}_{seq}_{client_num}"
         
         contract_type = "RECORRENTE" if i % 2 != 0 else "LPU"
+        
+        if contract_type == "LPU":
+            prefix = "CEL"
+            cel_count += 1
+            seq = f"{cel_count:02d}"
+        else:
+            prefix = "CEC"
+            cec_count += 1
+            seq = f"{cec_count:02d}"
+        
+        tag = f"{prefix}_{yy}{mm}_{seq}_{client_num}"
         
         # Date logic
         if i in [2, 3]: # Vencidos
@@ -475,7 +487,123 @@ async def seed_purchases(db, projects):
             db.add(item)
             
     await db.flush()
+    await db.flush()
     print("✅ Solicitações de compra criadas.")
+
+async def seed_billings(db, projects):
+    """Cria faturamentos com diversos status"""
+    print("🔍 Criando faturamentos (Contas a Receber)...")
+    
+    from app.models.commercial import BillingStatus
+    
+    created_billings = []
+    
+    for i, project in enumerate(projects):
+        # Create 3-5 billings per project
+        num_billings = random.randint(3, 5)
+        
+        for j in range(num_billings):
+            value = random.randint(1000, 10000)
+            description = f"Medição {j+1} - {project.name}"
+            
+            # Determine status based on random choice or logic
+            status_choice = random.choice(list(BillingStatus))
+            
+            # Initialize fields
+            date_due = None
+            issue_date = None
+            payment_date = None
+            invoice_number = None
+            replaced_by_id = None
+            
+            today = date.today()
+            
+            if status_choice == BillingStatus.PREVISTO:
+                # No dates required
+                pass
+                
+            elif status_choice == BillingStatus.EMITIDA:
+                # Future due date
+                issue_date = today - timedelta(days=random.randint(1, 10))
+                date_due = today + timedelta(days=random.randint(10, 30))
+                invoice_number = f"{random.randint(1000, 9999)}"
+                
+            elif status_choice == BillingStatus.PAGO:
+                # Past dates
+                issue_date = today - timedelta(days=random.randint(30, 60))
+                date_due = issue_date + timedelta(days=15)
+                payment_date = date_due - timedelta(days=random.randint(0, 5)) # Paid on time or early
+                invoice_number = f"{random.randint(1000, 9999)}"
+                
+            elif status_choice == BillingStatus.VENCIDA:
+                # Past due date, no payment
+                issue_date = today - timedelta(days=random.randint(40, 70))
+                date_due = today - timedelta(days=random.randint(1, 20)) # Overdue
+                invoice_number = f"{random.randint(1000, 9999)}"
+                
+            elif status_choice == BillingStatus.CANCELADA:
+                # Can have dates or not
+                issue_date = today - timedelta(days=random.randint(10, 20))
+                invoice_number = f"{random.randint(1000, 9999)}"
+                
+            elif status_choice == BillingStatus.SUBSTITUIDA:
+                # Needs a replacement. We'll handle this by creating a replacement first?
+                # Or just skip for now and handle manually if needed.
+                # Let's simplify: Create a "PAGO" billing and say this one was replaced by it.
+                # But we need the ID.
+                # Strategy: Create this as PREVISTO first, then update later?
+                # Or just skip SUBSTITUIDA in this random loop and do a specific case.
+                status_choice = BillingStatus.PREVISTO # Fallback
+            
+            billing = ProjectBilling(
+                project_id=project.id,
+                value=value,
+                description=description,
+                status=status_choice,
+                date=date_due,
+                issue_date=issue_date,
+                payment_date=payment_date,
+                invoice_number=invoice_number,
+                replaced_by_id=replaced_by_id
+            )
+            db.add(billing)
+            created_billings.append(billing)
+            
+    await db.flush()
+    
+    # Specific Case: Substitution
+    # Create a billing that is SUBSTITUIDA and one that replaces it (EMITIDA)
+    if len(projects) > 0:
+        p = projects[0]
+        
+        # Replacement
+        replacement = ProjectBilling(
+            project_id=p.id,
+            value=5000,
+            description="Medição Corrigida",
+            status=BillingStatus.EMITIDA,
+            date=date.today() + timedelta(days=15),
+            issue_date=date.today(),
+            invoice_number="9999"
+        )
+        db.add(replacement)
+        await db.flush()
+        
+        # Original (Substituted)
+        original = ProjectBilling(
+            project_id=p.id,
+            value=5000,
+            description="Medição Incorreta",
+            status=BillingStatus.SUBSTITUIDA,
+            date=date.today() + timedelta(days=15),
+            issue_date=date.today(),
+            invoice_number="9998",
+            replaced_by_id=replacement.id
+        )
+        db.add(original)
+        await db.flush()
+        
+    print(f"✅ {len(created_billings) + 2} faturamentos criados.")
 
 async def main():
     print("🌱 Iniciando seed de dados (REFAZENDO TUDO)...")
@@ -495,6 +623,7 @@ async def main():
             
             await seed_tickets(db, contracts, collaborators)
             await seed_purchases(db, projects)
+            await seed_billings(db, projects)
             
             await db.commit()
             print("✨ Seed concluído com sucesso!")

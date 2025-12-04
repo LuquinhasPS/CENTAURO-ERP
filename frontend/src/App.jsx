@@ -12,6 +12,7 @@ import Roles from './pages/Roles';
 import Fleet from './pages/Fleet';
 import Tools from './pages/Tools';
 import Tickets from './pages/Tickets';
+import AccountsReceivable from './pages/AccountsReceivable';
 import './index.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/fleet" element={<Fleet />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/tickets" element={<Tickets />} />
+          <Route path="/accounts-receivable" element={<AccountsReceivable />} />
         </Routes>
       </Layout>
     </Router>

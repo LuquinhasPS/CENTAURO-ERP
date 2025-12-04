@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit, Users, MapPin, Phone, Mail } from 'lucide-react';
+import { Plus, Trash2, Edit, Users, MapPin, Phone, Mail, Search } from 'lucide-react';
 import { getClients, createClient, deleteClient, updateClient } from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
 import './Clients.css';
@@ -20,6 +20,7 @@ const Clients = () => {
     phone: '',
     address: '',
   });
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadClients();
@@ -145,29 +146,56 @@ const Clients = () => {
     }
   };
 
+  const filteredClients = clients.filter(client => {
+    const term = searchTerm.toLowerCase();
+    return (
+      client.name.toLowerCase().includes(term) ||
+      (client.email && client.email.toLowerCase().includes(term)) ||
+      (client.phone && client.phone.includes(term)) ||
+      (client.cnpj && client.cnpj.includes(term)) ||
+      (client.contact_person && client.contact_person.toLowerCase().includes(term))
+    );
+  });
+
   return (
     <div className="clients">
       <header className="clients-header">
-        <div>
-          <h1>Gestão de Clientes</h1>
-          <p>Cadastro e controle de clientes</p>
+        <div className="header-content">
+          <div>
+            <h1>Gestão de Clientes</h1>
+            <p>Cadastro e controle de clientes</p>
+          </div>
+          <button className="btn btn-primary" onClick={() => {
+            setEditingId(null);
+            setFormData({
+              name: '',
+              client_number: '',
+              cnpj: '',
+              contact_person: '',
+              email: '',
+              phone: '',
+              address: '',
+            });
+            setShowForm(true);
+          }} style={{ marginTop: '1rem' }}>
+            <Plus size={20} />
+            Novo Cliente
+          </button>
         </div>
-        <button className="btn btn-primary" onClick={() => {
-          setEditingId(null);
-          setFormData({
-            name: '',
-            client_number: '',
-            cnpj: '',
-            contact_person: '',
-            email: '',
-            phone: '',
-            address: '',
-          });
-          setShowForm(true);
-        }}>
-          <Plus size={20} />
-          Novo Cliente
-        </button>
+
+        <div className="filters-bar" style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="search-input-container" style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
+            <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <input
+              type="text"
+              className="input"
+              placeholder="Buscar por nome, email, telefone ou CNPJ..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ paddingLeft: '40px', width: '100%' }}
+            />
+          </div>
+        </div>
       </header>
 
       {showForm && (
@@ -284,13 +312,13 @@ const Clients = () => {
       <div className="clients-grid">
         {loading ? (
           <div className="loading">Carregando clientes...</div>
-        ) : clients.length === 0 ? (
+        ) : filteredClients.length === 0 ? (
           <div className="empty-state card">
             <Users size={48} color="#94a3b8" />
-            <p>Nenhum cliente cadastrado ainda.</p>
+            <p>{clients.length === 0 ? "Nenhum cliente cadastrado ainda." : "Nenhum cliente encontrado."}</p>
           </div>
         ) : (
-          clients.map((client) => (
+          filteredClients.map((client) => (
             <div
               key={client.id}
               className="client-card card clickable"

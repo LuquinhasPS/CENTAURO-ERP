@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Wrench, MapPin, User, Edit } from 'lucide-react';
-import { getTools, createTool, deleteTool, updateTool } from '../services/api';
+import { getTools, createTool, deleteTool, updateTool, getCollaborators, getProjects } from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
+import SearchableSelect from '../components/SearchableSelect';
 import './Tools.css';
 
 const Tools = () => {
   const [tools, setTools] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -31,8 +34,37 @@ const Tools = () => {
   }, [showForm, showConfirmModal]);
 
   useEffect(() => {
-    loadTools();
+    loadData();
   }, []);
+
+  // Sync Location if Holder is Almoxarifado
+  useEffect(() => {
+    if (formData.current_holder === 'Almoxarifado') {
+      setFormData(prev => {
+        if (prev.current_location !== 'Almoxarifado') {
+          return { ...prev, current_location: 'Almoxarifado' };
+        }
+        return prev;
+      });
+    }
+  }, [formData.current_holder]);
+
+  const loadData = async () => {
+    try {
+      const [toolsRes, collabsRes, projectsRes] = await Promise.all([
+        getTools(),
+        getCollaborators(),
+        getProjects()
+      ]);
+      setTools(toolsRes.data);
+      setCollaborators(collabsRes.data);
+      setProjects(projectsRes.data);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadTools = async () => {
     try {
@@ -40,8 +72,6 @@ const Tools = () => {
       setTools(response.data);
     } catch (error) {
       console.error('Error loading tools:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,6 +154,17 @@ const Tools = () => {
     return labels[status] || status;
   };
 
+  const holderOptions = [
+    { value: 'Almoxarifado', label: 'Almoxarifado' },
+    ...collaborators.map(c => ({ value: c.name, label: c.name }))
+  ];
+
+  const locationOptions = [
+    { value: 'Almoxarifado', label: 'Almoxarifado' },
+    { value: 'Escritório', label: 'Escritório' },
+    ...projects.map(p => ({ value: p.name, label: p.name }))
+  ];
+
   return (
     <div className="tools">
       <header className="tools-header">
@@ -181,25 +222,23 @@ const Tools = () => {
                 </div>
                 <div className="form-group">
                   <label className="label">Com Quem Está *</label>
-                  <input
-                    type="text"
+                  <SearchableSelect
                     name="current_holder"
-                    className="input"
                     value={formData.current_holder}
                     onChange={handleChange}
+                    options={holderOptions}
+                    placeholder="Selecione ou digite..."
                     required
-                    placeholder="Nome do responsável"
                   />
                 </div>
                 <div className="form-group">
                   <label className="label">Onde Está (Opcional)</label>
-                  <input
-                    type="text"
+                  <SearchableSelect
                     name="current_location"
-                    className="input"
                     value={formData.current_location}
                     onChange={handleChange}
-                    placeholder="Almoxarifado, Obra, etc."
+                    options={locationOptions}
+                    placeholder="Selecione ou digite..."
                   />
                 </div>
                 <div className="form-group">
