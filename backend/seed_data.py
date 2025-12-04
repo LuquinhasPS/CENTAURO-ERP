@@ -251,11 +251,11 @@ async def seed_tools(db):
     print("🔍 Criando 5 ferramentas...")
     
     tools_data = [
-        {"name": "Furadeira de Impacto", "serial_number": "FUR-001", "current_holder": "Almoxarifado", "status": ToolStatus.AVAILABLE},
-        {"name": "Parafusadeira", "serial_number": "PAR-002", "current_holder": "João Silva", "status": ToolStatus.IN_USE},
-        {"name": "Multímetro Digital", "serial_number": "MUL-003", "current_holder": "Maria Santos", "status": ToolStatus.IN_USE},
-        {"name": "Alicate Amperímetro", "serial_number": "ALI-004", "current_holder": "Almoxarifado", "status": ToolStatus.MAINTENANCE},
-        {"name": "Jogo de Chaves", "serial_number": "JOG-005", "current_holder": "Almoxarifado", "status": ToolStatus.AVAILABLE},
+        {"name": "Furadeira de Impacto", "serial_number": "FUR-001", "current_holder": "Almoxarifado", "current_location": "Almoxarifado", "status": ToolStatus.AVAILABLE},
+        {"name": "Parafusadeira", "serial_number": "PAR-002", "current_holder": "João Silva", "current_location": "Projeto Vinculado 1", "status": ToolStatus.IN_USE},
+        {"name": "Multímetro Digital", "serial_number": "MUL-003", "current_holder": "Maria Santos", "current_location": "Projeto Vinculado 2", "status": ToolStatus.IN_USE},
+        {"name": "Alicate Amperímetro", "serial_number": "ALI-004", "current_holder": "Almoxarifado", "current_location": "Almoxarifado", "status": ToolStatus.MAINTENANCE},
+        {"name": "Jogo de Chaves", "serial_number": "JOG-005", "current_holder": "Almoxarifado", "current_location": "Escritório", "status": ToolStatus.AVAILABLE},
     ]
     
     for tool_data in tools_data:
