@@ -36,6 +36,18 @@ const AccountsReceivable = () => {
     loadData();
   }, []);
 
+  // Close modal on ESC key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && editingBilling) {
+        setEditingBilling(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [editingBilling]);
+
   const loadData = async () => {
     setLoading(true);
     try {
@@ -208,31 +220,29 @@ const AccountsReceivable = () => {
               <th>Cliente</th>
               <th>Descrição</th>
               <th>Vínculo (TAG)</th>
-              <th>Valor</th>
-              <th>Nº Nota</th>
-              <th>Ações</th>
+              <th className="text-right">Valor</th>
+              <th className="text-right">Nº Nota</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="8" className="text-center">Carregando...</td></tr>
+              <tr><td colSpan="7" className="text-center">Carregando...</td></tr>
             ) : filteredBillings.length === 0 ? (
-              <tr><td colSpan="8" className="text-center">Nenhum registro encontrado.</td></tr>
+              <tr><td colSpan="7" className="text-center">Nenhum registro encontrado.</td></tr>
             ) : (
               filteredBillings.map(billing => (
-                <tr key={billing.id}>
+                <tr
+                  key={billing.id}
+                  onClick={() => handleEdit(billing)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <td>{getStatusBadge(billing.status)}</td>
                   <td>{billing.date ? new Date(billing.date).toLocaleDateString('pt-BR') : '-'}</td>
                   <td>{getClientName(billing.project_id)}</td>
                   <td>{billing.description}</td>
                   <td><Tag size={14} /> {getProjectTag(billing.project_id)}</td>
-                  <td>R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td>{billing.invoice_number || '-'}</td>
-                  <td>
-                    <button className="btn-icon" onClick={() => handleEdit(billing)} title="Editar">
-                      <Edit size={16} />
-                    </button>
-                  </td>
+                  <td className="text-right font-medium">R$ {parseFloat(billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                  <td className="text-right">{billing.invoice_number || '-'}</td>
                 </tr>
               ))
             )}
