@@ -199,8 +199,8 @@ const AccountsReceivable = () => {
         </div>
       </div>
 
-      <div className="data-grid-container">
-        <table className="data-grid">
+      <div className="billings-table-container">
+        <table className="billings-table">
           <thead>
             <tr>
               <th>Status</th>
