@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Users, Mail, Phone, Briefcase, FileText, IdCard, Search, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
-import {
+import api, {
   getCollaborators, createCollaborator, updateCollaborator, deleteCollaborator,
   getCertifications, createCertification, deleteCertification
 } from '../services/api';
-import axios from 'axios';
 import ConfirmModal from '../components/ConfirmModal';
 import './Clients.css';
-
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
-});
 
 const Collaborators = () => {
   const [collaborators, setCollaborators] = useState([]);

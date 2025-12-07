@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles
+from app.routers import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles, auth
 from app.database import engine, Base
 
 app = FastAPI(title="Centauro ERP")
@@ -8,7 +8,7 @@ app = FastAPI(title="Centauro ERP")
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,7 +22,11 @@ app.include_router(tickets.router, prefix="/tickets", tags=["Tickets"])
 app.include_router(kanban.router, prefix="/kanban", tags=["Kanban"])
 app.include_router(project_resources.router, prefix="/project-resources", tags=["Project Resources"])
 app.include_router(purchases.router, prefix="/purchases", tags=["Purchases"])
+
 app.include_router(roles.router, prefix="/roles", tags=["Roles"])
+app.include_router(auth.router, tags=["Authentication"])
+from app.routers import dashboard
+app.include_router(dashboard.router, tags=["Dashboard"])
 
 @app.on_event("startup")
 async def startup():

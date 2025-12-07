@@ -19,10 +19,9 @@ const Scheduler = () => {
   const [formData, setFormData] = useState({
     resource_id: '',
     resource_type: 'PERSON',
-    project_id: 1, // Default project for now
+    project_id: '', // Default project
     start_date: '',
-    end_date: '',
-    status: 'CONFIRMED'
+    end_date: ''
   });
 
   useEffect(() => {
@@ -95,10 +94,10 @@ const Scheduler = () => {
     setFormData({
       resource_id: '',
       resource_type: 'PERSON',
-      project_id: 1,
+      project_id: '',
       start_date: new Date().toISOString().split('T')[0],
-      end_date: new Date().toISOString().split('T')[0],
-      status: 'CONFIRMED'
+      start_date: new Date().toISOString().split('T')[0],
+      end_date: new Date().toISOString().split('T')[0]
     });
     setEditingId(null);
     setShowForm(true);
@@ -109,9 +108,8 @@ const Scheduler = () => {
       resource_id: allocation.resource_id.toString(),
       resource_type: allocation.resource_type,
       project_id: allocation.project_id,
-      start_date: allocation.start_date.split('T')[0],
-      end_date: allocation.end_date.split('T')[0],
-      status: allocation.status
+      start_date: allocation.date,
+      end_date: allocation.date
     });
     setEditingId(allocation.id);
     setShowForm(true);
@@ -140,7 +138,8 @@ const Scheduler = () => {
       const dataToSend = {
         ...formData,
         resource_id: parseInt(formData.resource_id),
-        project_id: parseInt(formData.project_id)
+        project_id: parseInt(formData.project_id),
+        type: 'RESERVATION'
       };
 
       if (editingId) {
@@ -181,9 +180,8 @@ const Scheduler = () => {
   const getAllocationsForCell = (resourceId, resourceType, day) => {
     const dayStr = day.toISOString().split('T')[0];
     return allocations.filter(alloc => {
-      if (!alloc.start_date) return false;
-      const allocDate = new Date(alloc.start_date).toISOString().split('T')[0];
-      return allocDate === dayStr &&
+      if (!alloc.date) return false;
+      return alloc.date === dayStr &&
         alloc.resource_type === resourceType &&
         alloc.resource_id === resourceId;
     });
@@ -289,17 +287,21 @@ const Scheduler = () => {
                               return proj ? `${client?.name || 'Cliente'} | ${proj.tag}` : 'Clique para editar';
                             })()}
                           >
-                            <span className="allocation-label">
-                              {(() => {
-                                const proj = projects.find(p => p.id === alloc.project_id);
-                                if (proj) {
-                                  const client = clients.find(c => c.id === proj.client_id);
-                                  const clientName = client?.name?.split(' ')[0] || '';
-                                  return `${clientName} | ${proj.tag}`;
-                                }
-                                return `Proj #${alloc.project_id}`;
-                              })()}
-                            </span>
+                            {(() => {
+                              const proj = projects.find(p => p.id === alloc.project_id);
+                              if (!proj) return <span className="allocation-tag">Proj #{alloc.project_id}</span>;
+
+                              const client = clients.find(c => c.id === proj.client_id);
+                              // Show shorter client name
+                              const clientName = client?.name?.split(' ')[0] || '-';
+
+                              return (
+                                <>
+                                  <span className="allocation-tag">{proj.tag || proj.name}</span>
+                                  <span className="allocation-client">{clientName}</span>
+                                </>
+                              );
+                            })()}
                           </div>
                         );
                       })}
@@ -361,6 +363,26 @@ const Scheduler = () => {
                   )}
                 </select>
               </div>
+              <div className="form-group">
+                <label className="label">Projeto *</label>
+                <select
+                  name="project_id"
+                  className="input"
+                  value={formData.project_id}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Selecione...</option>
+                  {projects.map(p => {
+                    const client = clients.find(c => c.id === p.client_id);
+                    return (
+                      <option key={p.id} value={p.id}>
+                        {client ? `${client.name} - ` : ''}{p.tag} ({p.name})
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
               <div className="form-row">
                 <div className="form-group">
                   <label className="label">Data Início *</label>
@@ -385,18 +407,7 @@ const Scheduler = () => {
                   />
                 </div>
               </div>
-              <div className="form-group">
-                <label className="label">Status</label>
-                <select
-                  name="status"
-                  className="input"
-                  value={formData.status}
-                  onChange={handleChange}
-                >
-                  <option value="CONFIRMED">Confirmado</option>
-                  <option value="TENTATIVE">Provisório</option>
-                </select>
-              </div>
+
 
               <div className="form-actions">
                 {editingId && (

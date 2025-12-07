@@ -24,6 +24,8 @@ class Collaborator(Base):
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
     role = Column(String, nullable=True)  # Mantendo por compatibilidade
     
+    role_obj = relationship("app.models.roles.Role")
+    
     # CNH Data
     cnh_number = Column(String, nullable=True)
     cnh_category = Column(String, nullable=True)

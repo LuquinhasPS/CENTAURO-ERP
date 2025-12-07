@@ -39,12 +39,17 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .roles-form {
-  max-width: 500px;
+  max-width: 600px;
+  /* Increased from 500px for better grid layout */
   width: 90%;
   padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -52,6 +57,7 @@
 .roles-form h3 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -89,11 +95,6 @@
   color: white;
 }
 
-.role-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
 .role-name {
   font-size: 1.25rem;
   font-weight: 600;
@@ -127,20 +128,92 @@
   color: #8b5cf6;
 }
 
-.empty-state {
-  grid-column: 1 / -1;
-  padding: 3rem;
-  text-align: center;
-}
-
-.empty-state p {
-  margin-top: 1rem;
-  color: var(--text-secondary);
-}
-
+.empty-state,
 .loading {
   grid-column: 1 / -1;
-  text-align: center;
   padding: 3rem;
+  text-align: center;
   color: var(--text-secondary);
+}
+
+/* Permissions Section Styling */
+.permissions-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.permissions-section h4 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.permission-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.permission-item:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.module-label {
+  display: block;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #64748b;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 4px;
+  accent-color: #8b5cf6;
+  /* Matches role icon color */
+  cursor: pointer;
+}
+
+.toggle-label:hover {
+  color: #334155;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

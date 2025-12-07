@@ -6,7 +6,7 @@ import sys
 import os
 import random
 import traceback
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 
 # Adiciona o diretório atual ao path para importar app
 sys.path.append(os.getcwd())
@@ -18,6 +18,8 @@ from app.models.commercial import Client, Contract, Project, ProjectBilling
 from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus
 from app.models.tickets import Ticket, TicketStatus, TicketPriority
 from app.models.purchases import PurchaseRequest, PurchaseItem
+from app.models.users import User, UserRole
+from app.auth import get_password_hash
 from sqlalchemy import select, delete
 
 async def clear_data(db):
@@ -34,6 +36,7 @@ async def clear_data(db):
     await db.execute(delete(Contract))
     await db.execute(delete(Certification))
     await db.execute(delete(Tool))
+    await db.execute(delete(User)) # Delete users
     await db.execute(delete(Collaborator))
     await db.execute(delete(Fleet))
     await db.execute(delete(Insurance))
@@ -46,12 +49,37 @@ async def clear_data(db):
 async def seed_roles(db):
     """Cria os cargos padrão"""
     roles_data = [
-        {"name": "Coordenador", "description": "Coordenador de projetos"},
-        {"name": "Analista", "description": "Analista técnico"},
-        {"name": "Técnico", "description": "Técnico de campo"},
-        {"name": "Auxiliar", "description": "Auxiliar técnico"},
-        {"name": "Assistente", "description": "Assistente administrativo"},
-        {"name": "Supervisor", "description": "Supervisor de equipe"},
+        {
+            "name": "Coordenador", 
+            "description": "Coordenador de projetos", 
+            "permissions": {
+                "projects": ["read", "write"], 
+                "contracts": ["read", "write"], 
+                "finance": ["read", "write"],
+                "collaborators": ["read", "write"],
+                "fleet": ["read", "write"]
+            }
+        },
+        {
+            "name": "Analista", 
+            "description": "Analista técnico", 
+            "permissions": {
+                "projects": ["read", "write"], 
+                "contracts": ["read"], 
+                "fleet": ["read"]
+            }
+        },
+        {
+            "name": "Técnico", 
+            "description": "Técnico de campo", 
+            "permissions": {
+                "projects": ["read"], 
+                "tickets": ["read", "write"]
+            }
+        },
+        {"name": "Auxiliar", "description": "Auxiliar técnico", "permissions": {}},
+        {"name": "Assistente", "description": "Assistente administrativo", "permissions": {"finance": ["read"], "collaborators": ["read"]}},
+        {"name": "Supervisor", "description": "Supervisor de equipe", "permissions": {"projects": ["read"], "collaborators": ["read", "write"]}},
     ]
     
     print("🔍 Criando cargos...")
@@ -287,13 +315,6 @@ async def seed_contracts(db, clients):
         "Adequação NR-10",
         "Projeto de Automação Predial"
     ]
-    
-    # Mix of types and statuses
-    # 0: LPU, Ativo
-    # 1: RECORRENTE, Ativo
-    # 2: LPU, Vencido
-    # 3: RECORRENTE, Vencido
-    # 4: LPU, Ativo
     
     cel_count = 0
     cec_count = 0
@@ -673,10 +694,69 @@ async def seed_allocations(db, collaborators, fleet, projects):
     await db.flush()
     print(f"✅ {len(created_allocations)} alocações criadas.")
 
+async def seed_users(db):
+    print("🔍 Seeding Users...")
+    admin_email = "admin@centauro.com"
+    # Async query style
+    stmt = select(User).filter(User.email == admin_email)
+    result = await db.execute(stmt)
+    existing_admin = result.scalars().first()
+    
+    if not existing_admin:
+        hashed_password = get_password_hash("senha123")
+        admin = User(
+            email=admin_email,
+            password_hash=hashed_password,
+            role=UserRole.ADMIN,
+            is_superuser=True
+        )
+        db.add(admin)
+        await db.flush()
+        print(f"✅ Admin user created: {admin_email} / senha123")
+    else:
+        print("ℹ️ Admin user already exists.")
+
+    # Create User for Lucas Silva (Collaborator)
+    lucas_email = "lucas.silva@centauro.com.br"
+    stmt = select(User).filter(User.email == lucas_email)
+    result = await db.execute(stmt)
+    existing_lucas = result.scalars().first()
+
+    if not existing_lucas:
+        # Find the collaborator
+        stmt_collab = select(Collaborator).filter(Collaborator.name == "Lucas Silva")
+        result_collab = await db.execute(stmt_collab)
+        lucas_collab = result_collab.scalars().first()
+
+        if lucas_collab:
+            hashed_password = get_password_hash("senha123")
+            # Determine role based on collaborator's role? Or just set default.
+            # The permissions come from the collaborator linkage.
+            lucas_user = User(
+                email=lucas_email,
+                password_hash=hashed_password,
+                role=UserRole.VISUALIZADOR, # Role is determined by Collaborator linkage
+                is_superuser=False,
+                collaborator_id=lucas_collab.id
+            )
+            db.add(lucas_user)
+            await db.flush()
+            print(f"✅ User created for Lucas Silva: {lucas_email} / senha123")
+        else:
+            print("⚠️ Author Lucas Silva not found (unexpected).")
+    else:
+        print(f"ℹ️ User {lucas_email} already exists.")
+
 async def main():
     print("🌱 Iniciando seed de dados (REFAZENDO TUDO)...")
     try:
         async with AsyncSessionLocal() as db:
+            # Create tables if they don't exist (important for new User table)
+            from app.database import engine
+            from app.database import Base
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+
             await clear_data(db)
             
             roles_map = await seed_roles(db)
@@ -693,6 +773,8 @@ async def main():
             await seed_purchases(db, projects)
             await seed_billings(db, projects)
             await seed_allocations(db, collaborators, fleet, projects)
+            
+            await seed_users(db)
             
             await db.commit()
             print("✨ Seed concluído com sucesso!")

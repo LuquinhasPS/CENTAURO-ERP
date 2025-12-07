@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Briefcase, Plus, Edit, Trash2, Users } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
 import './Roles.css';
-
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
-});
 
 const Roles = () => {
   const [roles, setRoles] = useState([]);
@@ -19,6 +15,7 @@ const Roles = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    permissions: {}
   });
 
   useEffect(() => {
@@ -65,7 +62,7 @@ const Roles = () => {
       }
       setShowForm(false);
       setEditingId(null);
-      setFormData({ name: '', description: '' });
+      setFormData({ name: '', description: '', permissions: {} });
       loadData();
     } catch (error) {
       console.error('Error saving role:', error);
@@ -80,10 +77,40 @@ const Roles = () => {
     });
   };
 
+  const handlePermissionChange = (module, action, isChecked) => {
+    setFormData(prev => {
+      const currentPerms = prev.permissions[module] || [];
+      let newPerms;
+
+      if (isChecked) {
+        newPerms = [...currentPerms, action];
+        // If enabling 'write', auto-enable 'read' ? Maybe not mandatory but common UX.
+        if (action === 'write' && !currentPerms.includes('read')) {
+          newPerms.push('read');
+        }
+      } else {
+        newPerms = currentPerms.filter(p => p !== action);
+        // If disabling 'read', disable 'write' too?
+        if (action === 'read') {
+          newPerms = newPerms.filter(p => p !== 'write');
+        }
+      }
+
+      return {
+        ...prev,
+        permissions: {
+          ...prev.permissions,
+          [module]: newPerms
+        }
+      };
+    });
+  };
+
   const handleEdit = (role) => {
     setFormData({
       name: role.name,
       description: role.description || '',
+      permissions: role.permissions || {}
     });
     setEditingId(role.id);
     setShowForm(true);
@@ -151,17 +178,52 @@ const Roles = () => {
                   placeholder="Ex: Coordenador"
                 />
               </div>
-              <div className="form-group">
-                <label className="label">Descrição</label>
-                <textarea
-                  name="description"
-                  className="input"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows="3"
-                  placeholder="Descrição da função..."
-                />
+
+
+              <div className="permissions-section">
+                <h4>Permissões de Acesso</h4>
+                <div className="permissions-grid">
+                  {[
+                    { key: 'dashboard', label: 'Monitoramento' },
+                    { key: 'projects', label: 'Projetos' },
+                    { key: 'scheduler', label: 'Scheduler' },
+                    { key: 'kanban', label: 'Kanban' },
+                    { key: 'clients', label: 'Clientes' },
+                    { key: 'contracts', label: 'Contratos' },
+                    { key: 'collaborators', label: 'Colaboradores' },
+                    { key: 'roles', label: 'Cargos' },
+                    { key: 'finance', label: 'Financeiro' },
+                    { key: 'purchases', label: 'Compras' },
+                    { key: 'accounts_receivable', label: 'Contas a Receber' },
+                    { key: 'fleet', label: 'Frota' },
+                    { key: 'tools', label: 'Ferramentas' },
+                    { key: 'tickets', label: 'Chamados' },
+                  ].map((module) => (
+                    <div key={module.key} className="permission-item">
+                      <span className="module-label">{module.label}</span>
+                      <div className="toggles">
+                        <label className="toggle-label">
+                          <input
+                            type="checkbox"
+                            checked={formData.permissions?.[module.key]?.includes('read') || false}
+                            onChange={(e) => handlePermissionChange(module.key, 'read', e.target.checked)}
+                          />
+                          Visualizar
+                        </label>
+                        <label className="toggle-label">
+                          <input
+                            type="checkbox"
+                            checked={formData.permissions?.[module.key]?.includes('write') || false}
+                            onChange={(e) => handlePermissionChange(module.key, 'write', e.target.checked)}
+                          />
+                          Editar
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
                   Cancelar

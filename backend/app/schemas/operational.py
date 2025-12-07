@@ -43,8 +43,8 @@ class CollaboratorResponse(CollaboratorBase):
         from_attributes = True
 
 # Allocation Schemas
+# Allocation Schemas
 class AllocationBase(BaseModel):
-    date: date
     resource_type: str  # CAR or PERSON
     resource_id: int
     description: Optional[str] = None
@@ -53,10 +53,12 @@ class AllocationBase(BaseModel):
     contract_id: Optional[int] = None
 
 class AllocationCreate(AllocationBase):
-    pass
+    start_date: date
+    end_date: date
 
 class AllocationResponse(AllocationBase):
     id: int
+    date: date
     
     class Config:
         from_attributes = True

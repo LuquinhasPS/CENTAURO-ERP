@@ -1,4 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   Calendar,
@@ -12,28 +13,41 @@ import {
   UserCircle,
   ShoppingCart,
   DollarSign,
-  Settings
+  Settings,
+  LogOut
 } from 'lucide-react';
 import './Layout.css';
 
 const Layout = ({ children }) => {
   const location = useLocation();
+  const { logout, hasPermission } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const navItems = [
-    { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-    { path: '/scheduler', icon: Calendar, label: 'Scheduler' },
-    { path: '/kanban', icon: KanbanSquare, label: 'Kanban' },
-    { path: '/clients', icon: Users, label: 'Clientes' },
-    { path: '/collaborators', icon: UserCircle, label: 'Colaboradores' },
-    { path: '/contracts', icon: FileText, label: 'Contratos' },
-    { path: '/projects', icon: Briefcase, label: 'Projetos' },
-    { path: '/purchases', icon: ShoppingCart, label: 'Compras' },
-    { path: '/fleet', icon: Car, label: 'Frota' },
-    { path: '/tools', icon: Wrench, label: 'Ferramentas' },
-    { path: '/accounts-receivable', icon: DollarSign, label: 'Contas a Receber' },
-    { path: '/tickets', icon: Ticket, label: 'Chamados' },
-    { path: '/roles', icon: Settings, label: 'Cargos' },
+    { path: '/', icon: LayoutDashboard, label: 'Dashboard', permission: 'dashboard' }, // Added dashboard permission key
+    { path: '/scheduler', icon: Calendar, label: 'Scheduler', permission: 'scheduler' },
+    { path: '/kanban', icon: KanbanSquare, label: 'Kanban', permission: 'kanban' },
+    { path: '/clients', icon: Users, label: 'Clientes', permission: 'clients' },
+    { path: '/collaborators', icon: UserCircle, label: 'Colaboradores', permission: 'collaborators' },
+    { path: '/contracts', icon: FileText, label: 'Contratos', permission: 'contracts' },
+    { path: '/projects', icon: Briefcase, label: 'Projetos', permission: 'projects' },
+    { path: '/purchases', icon: ShoppingCart, label: 'Compras', permission: 'purchases' },
+    { path: '/fleet', icon: Car, label: 'Frota', permission: 'fleet' },
+    { path: '/tools', icon: Wrench, label: 'Ferramentas', permission: 'tools' },
+    { path: '/accounts-receivable', icon: DollarSign, label: 'Contas a Receber', permission: 'accounts_receivable' },
+    { path: '/tickets', icon: Ticket, label: 'Chamados', permission: 'tickets' },
+    { path: '/roles', icon: Settings, label: 'Cargos', permission: 'roles' },
   ];
+
+  const filteredNavItems = navItems.filter(item => {
+    if (!item.permission) return true;
+    return hasPermission(item.permission, 'read');
+  });
 
   return (
     <div className="layout">
@@ -43,7 +57,7 @@ const Layout = ({ children }) => {
           <p className="logo-subtitle">Engenharia & Telecom</p>
         </div>
         <nav className="nav">
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -53,6 +67,10 @@ const Layout = ({ children }) => {
               <span>{item.label}</span>
             </Link>
           ))}
+          <button onClick={handleLogout} className="nav-item logout-button">
+            <LogOut size={20} />
+            <span>Sair</span>
+          </button>
         </nav>
       </aside>
       <main className="main-content">

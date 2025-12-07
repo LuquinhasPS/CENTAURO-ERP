@@ -1,160 +1,221 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, DollarSign, Briefcase, AlertCircle } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getProjects, getTickets } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import {
+  DollarSign, Briefcase, FileText, ShoppingCart,
+  Users, AlertTriangle, TrendingUp, Wallet, CheckCircle, Clock
+} from 'lucide-react';
 import './Dashboard.css';
 
+const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
+  <div className="stat-card" style={{ borderLeft: `4px solid ${color}` }}>
+    <div className="stat-header">
+      <div className="stat-info">
+        <h3>{title}</h3>
+        <p className="stat-value">{value}</p>
+      </div>
+      <div className="stat-icon" style={{ backgroundColor: `${color}20`, color: color }}>
+        <Icon size={24} />
+      </div>
+    </div>
+    {subtext && <p className="stat-subtext">{subtext}</p>}
+  </div>
+);
+
+const CommercialWidget = ({ data }) => {
+  if (!data) return null;
+  return (
+    <div className="dashboard-widget commercial-widget">
+      <h4><FileText size={18} /> Comercial</h4>
+      <div className="widget-grid">
+        <StatCard
+          title="Contratos Próx. Vencimento"
+          value={data.expiring_contracts}
+          icon={Clock}
+          color="#f59e0b"
+        />
+        <StatCard
+          title="Novos Clientes"
+          value={data.total_clients}
+          icon={Users}
+          color="#3b82f6"
+          subtext="Total na base"
+        />
+      </div>
+      {data.budget_alerts && data.budget_alerts.length > 0 && (
+        <div className="alert-list">
+          <h5><AlertTriangle size={14} /> Alerta de Consumo LPU (&gt;90%)</h5>
+          <ul>
+            {data.budget_alerts.map((alert, idx) => (
+              <li key={idx}>
+                <span>{alert.contract_number}</span>
+                <span className="alert-value">{alert.percentage.toFixed(1)}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FinanceWidget = ({ data }) => {
+  if (!data) return null;
+  return (
+    <div className="dashboard-widget finance-widget">
+      <h4><DollarSign size={18} /> Financeiro</h4>
+      <div className="widget-grid">
+        <StatCard
+          title="Revenue (Mês)"
+          value={`R$ ${data.monthly_revenue?.toLocaleString('pt-BR')}`}
+          icon={TrendingUp}
+          color="#10b981"
+        />
+        <StatCard
+          title="Backlog Faturamento"
+          value={`R$ ${data.billing_backlog?.toLocaleString('pt-BR')}`}
+          icon={Wallet}
+          color="#8b5cf6"
+          subtext="Medições para Faturar"
+        />
+        <StatCard
+          title="Outflow (Aprovado)"
+          value={`R$ ${data.projected_outflow?.toLocaleString('pt-BR')}`}
+          icon={ShoppingCart}
+          color="#ef4444"
+        />
+      </div>
+    </div>
+  );
+};
+
+const OperationsWidget = ({ data }) => {
+  if (!data) return null;
+  return (
+    <div className="dashboard-widget operations-widget">
+      <h4><Briefcase size={18} /> Operacional</h4>
+      <div className="widget-grid">
+        <StatCard
+          title="Projetos Ativos"
+          value={data.active_projects}
+          icon={Briefcase}
+          color="#3b82f6"
+        />
+        <StatCard
+          title="Recursos Hoje"
+          value={data.allocations_today}
+          icon={Users}
+          color="#6366f1"
+          subtext="Colaboradores/Veículos Alocados"
+        />
+        <StatCard
+          title="Chamados Abertos"
+          value={data.open_tickets}
+          icon={AlertTriangle}
+          color="#f97316"
+        />
+      </div>
+    </div>
+  );
+};
+
+const HRWidget = ({ data }) => {
+  if (!data) return null;
+  return (
+    <div className="dashboard-widget hr-widget">
+      <h4><Users size={18} /> RH & Certificações</h4>
+      <div className="widget-content">
+        <div className="stat-row">
+          <span>Total Colaboradores:</span>
+          <strong>{data.total_collaborators}</strong>
+        </div>
+        {data.expiring_certifications && data.expiring_certifications.length > 0 ? (
+          <div className="expiring-list">
+            <h5>Vencimentos Próximos (45 dias):</h5>
+            <ul>
+              {data.expiring_certifications.map((item, idx) => (
+                <li key={idx}>
+                  <strong>{item.collaborator}</strong> - {item.certification} ({new Date(item.validity).toLocaleDateString('pt-BR')})
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p className="success-msg"><CheckCircle size={14} /> Nenhuma certificação vencendo.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
-  const [projects, setProjects] = useState([]);
-  const [tickets, setTickets] = useState([]);
+  const { user, hasPermission } = useAuth();
+  const [data, setData] = useState({
+    commercial: null,
+    finance: null,
+    operations: null,
+    hr: null,
+    fleet: null
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      const newData = {};
 
-  const loadData = async () => {
-    try {
-      const [projectsRes, ticketsRes] = await Promise.all([
-        getProjects(),
-        getTickets()
-      ]);
-      setProjects(projectsRes.data);
-      setTickets(ticketsRes.data);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        const promises = [];
 
-  // Calculate totals from real projects
-  const totalBudget = projects.reduce((sum, p) => sum + (parseFloat(p.budget) || 0), 0);
-  const totalInvoiced = projects.reduce((sum, p) => sum + (parseFloat(p.invoiced) || 0), 0);
-  const activeProjects = projects.filter(p => p.end_date === null || new Date(p.end_date) > new Date()).length;
-  const openTickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'IN_PROGRESS').length;
+        // Parallel fetching based on permissions
+        if (hasPermission('contracts', 'read')) {
+          promises.push(api.get('/dashboard/commercial').then(res => newData.commercial = res.data).catch(err => console.log('Commercial denied')));
+        }
+        if (hasPermission('finance', 'read') || hasPermission('accounts_receivable', 'read')) {
+          promises.push(api.get('/dashboard/finance').then(res => newData.finance = res.data).catch(err => console.log('Finance denied')));
+        }
+        if (hasPermission('projects', 'read') || hasPermission('scheduler', 'read')) {
+          promises.push(api.get('/dashboard/operations').then(res => newData.operations = res.data).catch(err => console.log('Ops denied')));
+        }
+        if (hasPermission('collaborators', 'read')) {
+          promises.push(api.get('/dashboard/hr').then(res => newData.hr = res.data).catch(err => console.log('HR denied')));
+        }
+        // Fleet later if needed
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
+        await Promise.all(promises);
+        setData(newData);
+      } catch (error) {
+        console.error("Error fetching dashboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Generate monthly data from projects
-  const getMonthlyData = () => {
-    const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const currentYear = new Date().getFullYear();
-    const monthlyData = [];
+    fetchDashboardData();
+  }, [hasPermission]);
 
-    for (let month = 0; month < 6; month++) {
-      const monthProjects = projects.filter(p => {
-        if (!p.start_date) return false;
-        const startDate = new Date(p.start_date);
-        return startDate.getMonth() === month && startDate.getFullYear() === currentYear;
-      });
-
-      const orcado = monthProjects.reduce((sum, p) => sum + (parseFloat(p.budget) || 0), 0);
-      const realizado = monthProjects.reduce((sum, p) => sum + (parseFloat(p.invoiced) || 0), 0);
-
-      monthlyData.push({
-        month: monthNames[month],
-        orcado,
-        realizado
-      });
-    }
-
-    // If no real data, add a placeholder
-    if (monthlyData.every(d => d.orcado === 0 && d.realizado === 0)) {
-      return [
-        { month: 'Jan', orcado: 0, realizado: 0 },
-        { month: 'Fev', orcado: 0, realizado: 0 },
-        { month: 'Mar', orcado: 0, realizado: 0 },
-        { month: 'Abr', orcado: 0, realizado: 0 },
-        { month: 'Mai', orcado: 0, realizado: 0 },
-        { month: 'Jun', orcado: 0, realizado: 0 },
-      ];
-    }
-
-    return monthlyData;
-  };
-
-  const financialData = getMonthlyData();
-
-  const stats = [
-    { label: 'Total Orçado', value: formatCurrency(totalBudget), icon: DollarSign, color: '#3b82f6' },
-    { label: 'Total Realizado', value: formatCurrency(totalInvoiced), icon: TrendingUp, color: '#10b981' },
-    { label: 'Projetos Ativos', value: activeProjects.toString(), icon: Briefcase, color: '#f59e0b' },
-    { label: 'Tickets Abertos', value: openTickets.toString(), icon: AlertCircle, color: '#ef4444' },
-  ];
+  if (loading) return <div className="dashboard-loading">Carregando indicadores...</div>;
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Dashboard</h1>
-        <p>Visão Geral de Projetos e Financeiro</p>
+        <p>Visão geral de indicadores</p>
       </header>
 
-      {loading ? (
-        <div className="loading">Carregando dados...</div>
-      ) : (
-        <>
-          <div className="stats-grid">
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-card" style={{ borderLeft: `4px solid ${stat.color}` }}>
-                <div className="stat-icon" style={{ background: `${stat.color}15` }}>
-                  <stat.icon size={24} color={stat.color} />
-                </div>
-                <div className="stat-content">
-                  <p className="stat-label">{stat.label}</p>
-                  <h3 className="stat-value">{stat.value}</h3>
-                </div>
-              </div>
-            ))}
+      <div className="dashboard-grid">
+        {data.finance && <FinanceWidget data={data.finance} />}
+        {data.commercial && <CommercialWidget data={data.commercial} />}
+        {data.operations && <OperationsWidget data={data.operations} />}
+        {data.hr && <HRWidget data={data.hr} />}
+
+        {!data.finance && !data.commercial && !data.operations && !data.hr && (
+          <div className="empty-dashboard">
+            <h3>Bem-vindo, {user?.email}</h3>
+            <p>Selecione um módulo no menu lateral para começar.</p>
           </div>
-
-          <div className="charts-grid">
-            <div className="chart-card">
-              <h3>Orçado vs Realizado</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={financialData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Legend />
-                  <Bar dataKey="orcado" fill="#3b82f6" name="Orçado" />
-                  <Bar dataKey="realizado" fill="#10b981" name="Realizado" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="chart-card">
-              <h3>Tendência Mensal</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={financialData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Legend />
-                  <Line type="monotone" dataKey="orcado" stroke="#3b82f6" name="Orçado" strokeWidth={2} />
-                  <Line type="monotone" dataKey="realizado" stroke="#10b981" name="Realizado" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {projects.length === 0 && (
-            <div className="empty-state">
-              <Briefcase size={48} color="#94a3b8" />
-              <p>Nenhum projeto cadastrado ainda. Comece criando um projeto!</p>
-            </div>
-          )}
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -16,27 +16,187 @@ async def get_allocations(db: AsyncSession = Depends(get_db)):
     allocations = result.scalars().all()
     return allocations
 
-@router.post("/allocations", response_model=schemas.AllocationResponse)
+@router.post("/allocations", response_model=List[schemas.AllocationResponse])
 async def create_allocation(allocation: schemas.AllocationCreate, db: AsyncSession = Depends(get_db)):
-    db_allocation = models.Allocation(**allocation.model_dump())
-    db.add(db_allocation)
-    await db.commit()
-    await db.refresh(db_allocation)
-    return db_allocation
+    from datetime import timedelta
+    from app.models.project_resources import ProjectCollaborator, ProjectVehicle
+    
+    created_allocations = []
+    
+    # 1. Iterate dates
+    current_date = allocation.start_date
+    while current_date <= allocation.end_date:
+        # Check if allocation exists for this resource/date?
+        # For checks we would need a query. Let's assume we can create (or overlapping allowed).
+        # Better: Delete existing for this resource/date if exists?
+        # Scheduler usually replaces.
+        # Let's delete existing allocation for this resource on this date to avoid duplicates/conflicts
+        await db.execute(
+            select(models.Allocation).filter(
+                models.Allocation.date == current_date,
+                models.Allocation.resource_id == allocation.resource_id,
+                models.Allocation.resource_type == allocation.resource_type
+            ).execution_options(synchronize_session=False)
+        )
+        # Note: delete via execute is tricky with async.
+        # Easier: Query and delete.
+        existing = await db.execute(select(models.Allocation).where(
+            models.Allocation.date == current_date,
+            models.Allocation.resource_id == allocation.resource_id,
+            models.Allocation.resource_type == allocation.resource_type
+        ))
+        for row in existing.scalars().all():
+            await db.delete(row)
+            
+        new_alloc = models.Allocation(
+            date=current_date,
+            resource_type=allocation.resource_type,
+            resource_id=allocation.resource_id,
+            description=allocation.description,
+            type=allocation.type,
+            project_id=allocation.project_id,
+            contract_id=allocation.contract_id
+            # status? Model doesn't seem to have status in lines 34-51 of operational.py view!
+            # Schema added status="CONFIRMED". I need to check if Model has status.
+            # Step 827 view shows NO status column in Allocation model.
+            # Only `type` (Reservation/Justification).
+            # So I skip status.
+        )
+        db.add(new_alloc)
+        created_allocations.append(new_alloc)
+        current_date += timedelta(days=1)
+        
+    # 2. Link to Project
+    if allocation.project_id:
+        if allocation.resource_type == "PERSON":
+            # Check if exists
+            q = select(ProjectCollaborator).where(
+                ProjectCollaborator.project_id == allocation.project_id,
+                ProjectCollaborator.collaborator_id == allocation.resource_id
+            )
+            res = await db.execute(q)
+            pc = res.scalars().first()
+            
+            if not pc:
+                # Create default entry covering this period
+                pc = ProjectCollaborator(
+                    project_id=allocation.project_id,
+                    collaborator_id=allocation.resource_id,
+                    role="Alocado via Scheduler",
+                    start_date=allocation.start_date,
+                    end_date=allocation.end_date,
+                    status="active"
+                )
+                db.add(pc)
+            else:
+                # Ideally extend dates if outside range?
+                # For now, safe to leave as is if already on project.
+                pass
+                
+        elif allocation.resource_type == "CAR":
+             # Check if exists
+            q = select(ProjectVehicle).where(
+                ProjectVehicle.project_id == allocation.project_id,
+                ProjectVehicle.vehicle_id == allocation.resource_id
+            )
+            res = await db.execute(q)
+            pv = res.scalars().first()
+            
+            if not pv:
+                pv = ProjectVehicle(
+                    project_id=allocation.project_id,
+                    vehicle_id=allocation.resource_id,
+                    start_date=allocation.start_date,
+                    end_date=allocation.end_date
+                )
+                db.add(pv)
 
-@router.put("/allocations/{allocation_id}", response_model=schemas.AllocationResponse)
+    await db.commit()
+    return created_allocations
+
+@router.put("/allocations/{allocation_id}", response_model=List[schemas.AllocationResponse])
 async def update_allocation(allocation_id: int, allocation: schemas.AllocationCreate, db: AsyncSession = Depends(get_db)):
+    from datetime import timedelta
+    from app.models.project_resources import ProjectCollaborator, ProjectVehicle
+
+    # 1. Delete the existing allocation
     result = await db.execute(select(models.Allocation).where(models.Allocation.id == allocation_id))
     db_allocation = result.scalar_one_or_none()
-    if not db_allocation:
+    if db_allocation:
+        await db.delete(db_allocation)
+        # Check permissions? Assuming open for now.
+    else:
+        # If not found, maybe just proceed to create? Or 404? 
+        # Standard HTTP PUT on ID should 404 if ID missing.
         raise HTTPException(status_code=404, detail="Allocation not found")
+
+    created_allocations = []
     
-    for key, value in allocation.model_dump().items():
-        setattr(db_allocation, key, value)
+    # 2. Iterate dates (Same logic as create)
+    current_date = allocation.start_date
+    while current_date <= allocation.end_date:
+        # Delete overlaps to avoid duplicates (clean slate approach for the range)
+        existing = await db.execute(select(models.Allocation).where(
+            models.Allocation.date == current_date,
+            models.Allocation.resource_id == allocation.resource_id,
+            models.Allocation.resource_type == allocation.resource_type
+        ))
+        for row in existing.scalars().all():
+            await db.delete(row)
+            
+        new_alloc = models.Allocation(
+            date=current_date,
+            resource_type=allocation.resource_type,
+            resource_id=allocation.resource_id,
+            description=allocation.description,
+            type=allocation.type,
+            project_id=allocation.project_id,
+            contract_id=allocation.contract_id
+        )
+        db.add(new_alloc)
+        created_allocations.append(new_alloc)
+        current_date += timedelta(days=1)
+
+    # 3. Link to Project (Same logic)
+    if allocation.project_id:
+        if allocation.resource_type == "PERSON":
+            res = await db.execute(
+                select(ProjectCollaborator).where(
+                    ProjectCollaborator.project_id == allocation.project_id,
+                    ProjectCollaborator.collaborator_id == allocation.resource_id
+                )
+            )
+            pc = res.scalars().first()
+            if not pc:
+                pc = ProjectCollaborator(
+                    project_id=allocation.project_id,
+                    collaborator_id=allocation.resource_id,
+                    role="Alocado via Scheduler",
+                    start_date=allocation.start_date,
+                    end_date=allocation.end_date,
+                    status="active"
+                )
+                db.add(pc)
+                
+        elif allocation.resource_type == "CAR":
+            res = await db.execute(
+                select(ProjectVehicle).where(
+                    ProjectVehicle.project_id == allocation.project_id,
+                    ProjectVehicle.vehicle_id == allocation.resource_id
+                )
+            )
+            pv = res.scalars().first()
+            if not pv:
+                pv = ProjectVehicle(
+                    project_id=allocation.project_id,
+                    vehicle_id=allocation.resource_id,
+                    start_date=allocation.start_date,
+                    end_date=allocation.end_date
+                )
+                db.add(pv)
     
     await db.commit()
-    await db.refresh(db_allocation)
-    return db_allocation
+    return created_allocations
 
 @router.delete("/allocations/{allocation_id}")
 async def delete_allocation(allocation_id: int, db: AsyncSession = Depends(get_db)):

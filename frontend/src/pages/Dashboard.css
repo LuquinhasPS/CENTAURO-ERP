@@ -1,5 +1,7 @@
 .dashboard {
-  max-width: 1400px;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .dashboard-header {
@@ -17,90 +19,164 @@
   color: var(--text-secondary);
 }
 
-.stats-grid {
+.dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  align-items: start;
 }
 
-.stat-card {
+/* Widget Card Styles */
+.dashboard-widget {
   background: white;
   padding: 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+}
+
+.dashboard-widget h4 {
   display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
-  box-shadow: var(--shadow);
-  transition: all 0.3s;
+}
+
+/* Stat Card */
+.stat-card {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.stat-info h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
 }
 
 .stat-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 0.75rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.stat-content {
-  flex: 1;
+.stat-subtext {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
 }
 
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.25rem;
+/* Specific Lists inside Widgets */
+.alert-list,
+.expiring-list {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-.stat-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.chart-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow);
-}
-
-.chart-card h3 {
-  margin-bottom: 1.5rem;
-  color: var(--text-primary);
-  font-size: 1.125rem;
-}
-
-.loading,
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow);
-}
-
-.empty-state {
+.alert-list h5,
+.expiring-list h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.75rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
-.empty-state p {
-  color: var(--text-secondary);
-  font-size: 1.125rem;
+.alert-list ul,
+.expiring-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.alert-list li,
+.expiring-list li {
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  color: #334155;
+}
+
+.alert-list li:last-child,
+.expiring-list li:last-child {
+  border-bottom: none;
+}
+
+.alert-value {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.success-msg {
+  color: #10b981;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.empty-dashboard {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+}
+
+.dashboard-loading {
+  padding: 3rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }

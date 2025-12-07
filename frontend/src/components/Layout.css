@@ -72,3 +72,19 @@
   background: var(--bg-secondary);
   min-height: 100vh;
 }
+
+.logout-button {
+  margin-top: 2rem;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #ef4444;
+  /* Red color for logout */
+}
+
+.logout-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  transform: translateX(4px);
+}
