@@ -66,13 +66,18 @@ const Scheduler = () => {
         days.push(day);
       }
     } else {
-      // Month view - show 4 weeks
-      start.setDate(1); // First day of month
-      start.setDate(start.getDate() - start.getDay()); // Start on Sunday before
-      for (let i = 0; i < 28; i++) {
-        const day = new Date(start);
-        day.setDate(start.getDate() + i);
-        days.push(day);
+      // Month view - full month weeks
+      start.setDate(1); // First day
+      start.setDate(start.getDate() - start.getDay()); // Start on Sunday
+
+      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      const endOfCalendar = new Date(endOfMonth);
+      endOfCalendar.setDate(endOfCalendar.getDate() + (6 - endOfCalendar.getDay())); // End on Saturday
+
+      let current = new Date(start);
+      while (current <= endOfCalendar) {
+        days.push(new Date(current));
+        current.setDate(current.getDate() + 1);
       }
     }
     return days;
@@ -172,7 +177,7 @@ const Scheduler = () => {
     if (viewMode === 'week') {
       return `${formatDate(start)} - ${formatDate(end)}`;
     } else {
-      return start.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+      return currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
     }
   };
 
@@ -229,19 +234,22 @@ const Scheduler = () => {
       </div>
 
       <div className="scheduler-grid-container">
-        <div className="scheduler-grid" style={{ gridTemplateColumns: viewMode === 'week' ? `200px repeat(7, 1fr)` : `200px repeat(28, 60px)` }}>
+        <div className="scheduler-grid" style={{ gridTemplateColumns: viewMode === 'week' ? `200px repeat(7, 1fr)` : `200px repeat(${days.length}, 60px)` }}>
           {/* Header */}
           <div className="grid-header">
             <div className="resource-header">Recurso</div>
             {days.map((day, index) => (
-              <div key={index} className="day-header">
+              <div key={index} className={`day-header ${day.getDay() === 0 || day.getDay() === 6 ? 'weekend-header' : ''}`}>
                 {viewMode === 'week' ? (
                   <>
                     <div className="day-name">{day.toLocaleDateString('pt-BR', { weekday: 'short' })}</div>
                     <div className="day-date">{day.getDate()}</div>
                   </>
                 ) : (
-                  <div className="day-date-small">{day.getDate()}</div>
+                  <>
+                    <div className="day-weekday-letter">{day.toLocaleDateString('pt-BR', { weekday: 'narrow' }).toUpperCase()}</div>
+                    <div className="day-date-small">{day.getDate()}</div>
+                  </>
                 )}
               </div>
             ))}
@@ -263,8 +271,9 @@ const Scheduler = () => {
                 </div>
                 {days.map((day, dayIndex) => {
                   const cellAllocations = getAllocationsForCell(resource.originalId, resource.type, day);
+                  const isWeekend = day.getDay() === 0 || day.getDay() === 6;
                   return (
-                    <div key={dayIndex} className="allocation-cell">
+                    <div key={dayIndex} className={`allocation-cell ${isWeekend ? 'weekend' : ''}`}>
                       {cellAllocations.map((alloc) => {
                         const left = 0;
                         const width = 100;

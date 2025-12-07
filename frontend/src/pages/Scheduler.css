@@ -236,3 +236,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Weekend Styling */
+.weekend {
+  background-color: #f8fafc;
+}
+
+.weekend-header {
+  background-color: #f1f5f9;
+}
+
+.day-weekday-letter {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+.allocation-cell.weekend {
+  background-color: #f1f5f9;
+}
