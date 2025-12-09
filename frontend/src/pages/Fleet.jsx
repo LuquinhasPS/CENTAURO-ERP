@@ -454,10 +454,24 @@ const Fleet = () => {
                 </div>
               </form>
             ) : (
-              <MaintenanceTab
-                vehicle={{ id: editingFleetId, odometer: fleetFormData.odometer }}
-                onUpdate={loadData}
-              />
+              <>
+                <MaintenanceTab
+                  vehicle={{ id: editingFleetId, odometer: fleetFormData.odometer }}
+                  onUpdate={loadData}
+                />
+                <div className="form-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowFleetForm(false);
+                      resetFleetForm();
+                    }}
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>
