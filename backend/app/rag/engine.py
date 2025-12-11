@@ -14,46 +14,56 @@ from operator import itemgetter
 
 class RAGEngine:
     def __init__(self):
-        # Debug: Print loaded API key status
-        self.api_key = os.getenv("GOOGLE_API_KEY")
+        self._load_api_key()
+        # If API key is critically missing, prevent further initialization
         if not self.api_key:
-            print("❌ RAG Engine: GOOGLE_API_KEY lookup failed. Checking .env file...")
-            from dotenv import find_dotenv
-            print(f"RAG Engine: .env found at: {find_dotenv()}")
-            load_dotenv(override=True) 
-            self.api_key = os.getenv("GOOGLE_API_KEY")
-            
-        if self.api_key:
-            masked_key = self.api_key[:4] + "..." + self.api_key[-4:] if len(self.api_key) > 8 else "****"
-            print(f"✅ RAG Engine: API Key loaded successfully: {masked_key}")
-        else:
-            print("❌ RAG Engine: CRITICAL - GOOGLE_API_KEY is still missing after reload.")
+            self.llm = None
+            self.db = None
             self.chain = None
             return
 
-        # Initialize LLM
-        # Note: gemini-2.5-flash quota exceeded (Limit 20). 
-        # Switching to gemini-1.5-flash which has higher limits.
-        self.llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash", 
+        self.llm = self._setup_llm()
+        self.db = self._connect_db()
+        self.chain = self._build_sql_chain()
+
+    def _load_api_key(self):
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            print("❌ RAG Engine: GOOGLE_API_KEY lookup failed. Checking .env file...")
+            from dotenv import find_dotenv
+            print(f"RAG Engine: .env found at: {find_dotenv()}")
+            load_dotenv(override=True)
+            api_key = os.getenv("GOOGLE_API_KEY")
+        
+        self.api_key = api_key
+        if self.api_key:
+            masked = self.api_key[:4] + "..." + self.api_key[-4:] if len(self.api_key) > 8 else "****"
+            print(f"✅ RAG Engine: API Key loaded successfully: {masked}")
+        else:
+            print("❌ RAG Engine: CRITICAL - GOOGLE_API_KEY is still missing after reload.")
+
+    def _setup_llm(self):
+        # Using gemini-2.5-flash as verified available model
+        return ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash",
             google_api_key=self.api_key,
             temperature=0
         )
-        
-        # Initialize Database
-        # We use standard sqlite driver for synchronous operations in LangChain
-        db_path = "sqlite:///./centauro.db"
-        self.db = SQLDatabase.from_uri(db_path)
-        print(f"✅ RAG Engine: Connected to database at {db_path}")
 
-        # Create SQL Chain (Manual Approach)
-        
-        # 1. Generate SQL
-        # Using a custom prompt instead of create_sql_query_chain
+    def _connect_db(self):
+        db_path = "sqlite:///./centauro.db"
+        print(f"✅ RAG Engine: Connected to database at {db_path}")
+        return SQLDatabase.from_uri(db_path)
+
+    def _build_sql_chain(self):
+        """
+        Builds the Text-to-SQL chain manually effectively replicating
+        'create_sql_query_chain' which is missing in this environment.
+        """
+        # 1. Prompt to generate SQL
         from langchain_core.prompts import PromptTemplate
-        
         sql_prompt = PromptTemplate.from_template(
-            """You are a SQLite expert. Given an input question, create a syntactically correct SQLite query to run.
+            """You are a SQLite expert. Generate a precise SQL query for the question.
             Unless the user specifies otherwise, obtain 5 results.
             Never query for all columns from a specific table, only ask for a the few relevant columns given the question.
             Pay attention to use only the column names you can see in the schema description. 
@@ -71,22 +81,27 @@ class RAGEngine:
             Question: {question}
             SQL Query:"""
         )
-        
-        def get_schema(_):
-            return self.db.get_table_info()
 
-        generate_query = (
-            RunnablePassthrough.assign(schema=get_schema)
-            | sql_prompt
-            | self.llm
-            | StrOutputParser()
-        )
-        
-        # 2. Execute SQL
-        pass_query = RunnablePassthrough.assign(query=generate_query)
-        execute_query = QuerySQLDataBaseTool(db=self.db)
-        
-        # 3. Answer Question
+        # 2. SQL Cleaner (Handles Markdown artifacts)
+        def clean_sql(text):
+            cleaned = text.replace("```sqlite", "").replace("```sql", "").replace("```", "").strip()
+            if cleaned.lower().startswith("sqlite"):
+                cleaned = cleaned[6:].strip()
+            print(f"🕵️ Generated SQL: {cleaned}")
+            return cleaned
+
+        # 3. Safe Executor
+        execute_tool = QuerySQLDataBaseTool(db=self.db)
+        def safe_execute(query):
+            try:
+                result = execute_tool.invoke(query)
+                print(f"🕵️ SQL Result: {result}")
+                return result
+            except Exception as e:
+                print(f"❌ SQL Execution Error: {e}")
+                return f"Error executing SQL: {e}"
+
+        # 4. Final Answer Prompt
         answer_prompt = ChatPromptTemplate.from_template(
             """Given the following user question, corresponding SQL query, and SQL result, answer the user question.
             
@@ -99,34 +114,18 @@ class RAGEngine:
             
             Answer: """
         )
-        
-        # Combine into full chain
-        # We need to clean the generated SQL (sometimes LLM adds ```sql ... ```)
-        def clean_sql(text):
-            # Remove markdown code blocks
-            cleaned = text.replace("```sqlite", "").replace("```sql", "").replace("```", "").strip()
-            
-            # Sometimes the LLM puts "sqlite" at the start without backticks if prompted poorly?
-            if cleaned.lower().startswith("sqlite"):
-                cleaned = cleaned[6:].strip()
-                
-            print(f"🕵️ Generated SQL: {cleaned}")
-            return cleaned
 
-        def execute_and_log(query):
-            try:
-                result = execute_query.invoke(query)
-                print(f"🕵️ SQL Result: {result}")
-                return result
-            except Exception as e:
-                print(f"❌ SQL Execution Error: {e}")
-                return f"Error executing SQL: {e}"
+        # Chain Assembly
+        generate_query = (
+            RunnablePassthrough.assign(schema=lambda _: self.db.get_table_info())
+            | sql_prompt
+            | self.llm
+            | StrOutputParser()
+        )
 
-        self.chain = (
-            pass_query.assign(
-                # Run query on the result of generate_query (cleaned)
-                result=lambda x: execute_and_log(clean_sql(x["query"]))
-            )
+        return (
+            RunnablePassthrough.assign(query=generate_query)
+            .assign(result=lambda x: safe_execute(clean_sql(x["query"])))
             | answer_prompt
             | self.llm
             | StrOutputParser()
@@ -137,14 +136,10 @@ class RAGEngine:
             return "Erro: Agente não inicializado corretamente (Verifique API Key)."
             
         try:
-            # The chain expects 'question' input
-            response = self.chain.invoke({"question": message})
-            return response
+            return self.chain.invoke({"question": message})
         except Exception as e:
             print(f"❌ RAG Error: {e}")
             return f"Erro ao processar sua solicitação: {str(e)}"
-
-    # Removed duplicate chat method
 
 # Singleton instance
 try:
