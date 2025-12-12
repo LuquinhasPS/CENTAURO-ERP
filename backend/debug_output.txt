@@ -1,3 +1,0 @@
-Debugging get_all_billings...
-Got 41 billings from router.
-Validation Successful!

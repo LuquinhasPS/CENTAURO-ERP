@@ -1,2 +1,0 @@
-Billings count: 41
-First Billing: ID=1, Value=2850.00 (Type: <class 'decimal.Decimal'>), Status=BillingStatus.PAGO, ProjectID=1
