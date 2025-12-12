@@ -84,13 +84,27 @@ const AICopilotWidget = () => {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - Premium Style */}
       {!isOpen && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-6 right-6 p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:-translate-y-1 z-50 animate-bounce-slow"
+          className="group relative flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-full shadow-[0_8px_30px_rgb(79,70,229,0.3)] hover:shadow-[0_8px_40px_rgb(79,70,229,0.5)] hover:-translate-y-1 transition-all duration-300 border-4 border-white/20"
+          style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999 }}
         >
-          <MessageSquare size={24} />
+          {/* Ping animation */}
+          <div className="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-20"></div>
+
+          {/* Star/Sparkles icon */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:rotate-12 transition-transform drop-shadow-md">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+            <path d="M5 3v4" />
+            <path d="M19 17v4" />
+            <path d="M3 5h4" />
+            <path d="M17 19h4" />
+          </svg>
+
+          {/* Notification Badge */}
+          <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white pointer-events-none"></span>
         </button>
       )}
 
@@ -131,29 +145,23 @@ const AICopilotWidget = () => {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} `}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`ai - message - bubble ${msg.role === 'user' ? 'ai-message-user' : 'ai-message-bot'
-                    } `}
+                  className={`ai-message-bubble ${msg.role === 'user' ? 'ai-message-user' : 'ai-message-bot'}`}
                 >
-                  <div className={`prose prose - sm dark: prose - invert max - w - none leading - relaxed break-words ${msg.role === 'user' ? 'prose-headings:text-white prose-p:text-white prose-strong:text-white' : ''} `}>
-                    <ReactMarkdown
-                      components={{
-                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                        ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
-                        ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
-                        li: ({ children }) => <li className="mb-0.5">{children}</li>,
-                        strong: ({ children }) => <span className={`font - bold ${msg.role === 'user' ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'} `}>{children}</span>,
-                        table: ({ children }) => <div className="overflow-x-auto my-2 rounded-lg border border-slate-200 dark:border-slate-700"><table className="min-w-full text-xs text-left">{children}</table></div>,
-                        th: ({ children }) => <th className="px-3 py-2 bg-slate-100 dark:bg-slate-700 font-semibold text-slate-700 dark:text-slate-200">{children}</th>,
-                        td: ({ children }) => <td className="px-3 py-2 border-t border-slate-100 dark:border-slate-700">{children}</td>,
-                        code: ({ children }) => <code className={`px - 1 py - 0.5 rounded text - xs ${msg.role === 'user' ? 'bg-indigo-500 text-white' : 'bg-slate-100 dark:bg-slate-700 font-mono text-pink-500'} `}>{children}</code>
-                      }}
-                    >
-                      {msg.content}
-                    </ReactMarkdown>
-                  </div>
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                      li: ({ children }) => <li className="mb-0.5">{children}</li>,
+                      strong: ({ children }) => <strong>{children}</strong>,
+                      code: ({ children }) => <code>{children}</code>
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
                 </div>
               </div>
             ))}
