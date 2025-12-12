@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import AICopilotWidget from './components/AICopilotWidget';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Scheduler from './pages/Scheduler';
@@ -17,11 +18,12 @@ import AccountsReceivable from './pages/AccountsReceivable';
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
-import './index.css';
+
 
 function App() {
   return (
     <Router>
+      <AICopilotWidget />
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />

@@ -18,4 +18,5 @@ argon2-cffi
 langchain
 langchain-google-genai
 langchain-community
+langchain-core
 chromadb

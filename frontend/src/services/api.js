@@ -101,4 +101,7 @@ export const createMaintenance = (data) => api.post('/maintenance/maintenance', 
 export const updateMaintenance = (id, data) => api.put(`/maintenance/maintenance/${id}`, data);
 export const deleteMaintenance = (id) => api.delete(`/maintenance/maintenance/${id}`);
 
+// AI
+export const chatAI = (message) => api.post('/api/ai/chat', { message });
+
 export default api;
