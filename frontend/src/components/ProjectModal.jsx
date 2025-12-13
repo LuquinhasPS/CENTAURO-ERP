@@ -806,6 +806,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete }) => {
           request={selectedRequest}
           onClose={() => setSelectedRequest(null)}
           onUpdate={loadAllData}
+          context="projects"
         />
       )}
 

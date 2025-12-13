@@ -96,6 +96,7 @@ class ProjectBilling(Base):
     status = Column(Enum(BillingStatus), default=BillingStatus.PREVISTO)
     attachment_url = Column(String, nullable=True)
     replaced_by_id = Column(Integer, ForeignKey("project_billings.id"), nullable=True)
+    substitution_reason = Column(String, nullable=True)  # Motivo da substituição
 
     project = relationship("Project", back_populates="billings")
     replaced_by = relationship("ProjectBilling", remote_side=[id])

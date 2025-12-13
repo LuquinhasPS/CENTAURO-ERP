@@ -29,7 +29,8 @@ const AccountsReceivable = () => {
     // Substitution fields
     substitution_invoice_number: '',
     substitution_issue_date: '',
-    substitution_due_date: ''
+    substitution_due_date: '',
+    substitution_reason: ''
   });
 
   useEffect(() => {
@@ -91,7 +92,8 @@ const AccountsReceivable = () => {
       replaced_by_id: billing.replaced_by_id || '',
       substitution_invoice_number: '',
       substitution_issue_date: '',
-      substitution_due_date: ''
+      substitution_due_date: '',
+      substitution_reason: ''
     });
   };
 
@@ -108,7 +110,8 @@ const AccountsReceivable = () => {
         replaced_by_id: formData.replaced_by_id || null,
         substitution_invoice_number: formData.substitution_invoice_number || null,
         substitution_issue_date: formData.substitution_issue_date || null,
-        substitution_due_date: formData.substitution_due_date || null
+        substitution_due_date: formData.substitution_due_date || null,
+        substitution_reason: formData.substitution_reason || null
       };
 
       await updateProjectBilling(editingBilling.id, payload);
@@ -318,6 +321,16 @@ const AccountsReceivable = () => {
 
               {formData.status === 'SUBSTITUIDA' && (
                 <div className="substitution-section">
+                  <div className="form-group">
+                    <label>Motivo da Substituição *</label>
+                    <textarea
+                      value={formData.substitution_reason}
+                      onChange={(e) => setFormData({ ...formData, substitution_reason: e.target.value })}
+                      placeholder="Ex: Erro no valor, dados incorretos, solicitação do cliente..."
+                      rows={2}
+                      required
+                    />
+                  </div>
                   <h4>Dados da Nova Nota (Substituta)</h4>
                   <div className="form-group">
                     <label>Número da Nova Nota *</label>

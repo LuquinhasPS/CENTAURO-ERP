@@ -27,9 +27,11 @@ class PurchaseItem(Base):
     unit = Column(String, default="un")
     unit_price = Column(Float, default=0.0)
     total_price = Column(Float, default=0.0)
-    supplier = Column(String, nullable=True)
+    supplier = Column(String, nullable=True)  # Fornecedor
+    payment_method = Column(String, nullable=True)  # Forma de pagamento
     status = Column(String, default="pending") # Status individual do item
-    expected_date = Column(Date, nullable=True)
+    expected_date = Column(Date, nullable=True)  # Prazo de entrega
     notes = Column(String, nullable=True)
 
     request = relationship("PurchaseRequest", back_populates="items")
+

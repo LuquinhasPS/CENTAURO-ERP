@@ -434,11 +434,19 @@ async def update_project_billing(billing_id: int, billing: schemas.ProjectBillin
         if not billing.substitution_invoice_number or not billing.substitution_issue_date or not billing.substitution_due_date:
              raise HTTPException(status_code=400, detail="Dados da nova nota (Número, Emissão, Vencimento) são obrigatórios para SUBSTITUIÇÃO")
         
-        # Create new billing
+        # Guardar descrição original antes de modificar
+        original_description = db_billing.description or ""
+        
+        # Atualizar descrição da nota antiga com o motivo
+        reason = billing.substitution_reason or "Substituída"
+        db_billing.description = f"{original_description} ({reason})"
+        db_billing.substitution_reason = reason  # Salvar o motivo no campo
+        
+        # Create new billing - descrição com número da nota anterior
         new_billing = models.ProjectBilling(
             project_id=db_billing.project_id,
             value=db_billing.value, # Assuming same value
-            description=f"{db_billing.description} (Subst. {db_billing.invoice_number or 'Antiga'})",
+            description=f"{original_description} (Subst. {db_billing.invoice_number or 'Antiga'})",
             invoice_number=billing.substitution_invoice_number,
             issue_date=billing.substitution_issue_date,
             date=billing.substitution_due_date,
@@ -451,7 +459,7 @@ async def update_project_billing(billing_id: int, billing: schemas.ProjectBillin
         db_billing.replaced_by_id = new_billing.id
         
     for key, value in billing.model_dump(exclude_unset=True).items():
-        if key not in ['substitution_invoice_number', 'substitution_issue_date', 'substitution_due_date']:
+        if key not in ['substitution_invoice_number', 'substitution_issue_date', 'substitution_due_date', 'substitution_reason', 'description']:
              setattr(db_billing, key, value)
         
     await db.commit()

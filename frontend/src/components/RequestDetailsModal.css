@@ -209,3 +209,27 @@
 .item-row.cancelled select {
   text-decoration: none;
 }
+
+/* Disabled/readonly field styles */
+.items-table input:disabled,
+.items-table select:disabled,
+.input:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.items-table input:disabled:hover,
+.items-table select:disabled:hover {
+  background-color: #f1f5f9;
+  border-color: transparent;
+}
+
+/* Header form disabled inputs */
+.form-group .input:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}

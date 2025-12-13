@@ -203,6 +203,7 @@ const Purchases = () => {
           request={selectedRequest}
           onClose={() => setSelectedRequest(null)}
           onUpdate={loadData}
+          context="purchases"
         />
       )}
     </div>

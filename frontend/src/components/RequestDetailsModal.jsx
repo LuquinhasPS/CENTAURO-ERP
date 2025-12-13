@@ -3,7 +3,10 @@ import { X, Plus, Trash2, Save } from 'lucide-react';
 import { updatePurchase, deletePurchase } from '../services/api';
 import './RequestDetailsModal.css';
 
-const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
+const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' }) => {
+  // context: 'projects' = pode editar descrição, solicitante, itens básicos
+  // context: 'purchases' = só gerencia preço, fornecedor, pagamento, prazo, status
+  const isProjectsContext = context === 'projects';
   const [formData, setFormData] = useState({
     description: '',
     requester: '',
@@ -103,6 +106,8 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
           unit_price: 0,
           total_price: 0,
           supplier: '',
+          payment_method: '',
+          expected_date: '',
           status: 'pending'
         }
       ]
@@ -127,7 +132,8 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
           ...item,
           quantity: parseInt(item.quantity),
           unit_price: parseFloat(item.unit_price),
-          total_price: parseFloat(item.total_price)
+          total_price: parseFloat(item.total_price),
+          expected_date: item.expected_date || null
         }))
       };
 
@@ -184,6 +190,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                 value={formData.description}
                 onChange={handleHeaderChange}
                 className="input"
+                disabled={!isProjectsContext}
               />
             </div>
             <div className="form-group">
@@ -194,6 +201,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                 value={formData.requester}
                 onChange={handleHeaderChange}
                 className="input"
+                disabled={!isProjectsContext}
               />
             </div>
             <div className="form-group">
@@ -217,22 +225,27 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
           <div className="items-section">
             <div className="items-header">
               <h4>Itens da Solicitação</h4>
-              <button className="btn btn-sm btn-secondary" onClick={addItem}>
-                <Plus size={16} /> Adicionar Item
-              </button>
+              {isProjectsContext && (
+                <button className="btn btn-sm btn-secondary" onClick={addItem}>
+                  <Plus size={16} /> Adicionar Item
+                </button>
+              )}
             </div>
 
             <div className="items-table-container">
               <table className="items-table">
                 <thead>
                   <tr>
-                    <th style={{ width: '22%' }}>Item / Material</th>
-                    <th style={{ width: '18%' }}>Fabricante / Modelo</th>
-                    <th style={{ width: '15%' }}>Qtd | Un</th>
-                    <th style={{ width: '12%' }}>Preço Unit.</th>
-                    <th style={{ width: '12%' }}>Total</th>
-                    <th style={{ width: '15%' }}>Status</th>
-                    <th style={{ width: '6%' }}></th>
+                    <th style={{ width: '18%' }}>Item / Material</th>
+                    <th style={{ width: '13%' }}>Fabricante / Modelo</th>
+                    <th style={{ width: '10%' }}>Qtd | Un</th>
+                    <th style={{ width: '8%' }}>Preço Unit.</th>
+                    <th style={{ width: '8%' }}>Total</th>
+                    <th style={{ width: '12%' }}>Fornecedor</th>
+                    <th style={{ width: '10%' }}>Pagamento</th>
+                    <th style={{ width: '10%' }}>Prazo</th>
+                    <th style={{ width: '8%' }}>Status</th>
+                    <th style={{ width: '3%' }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -245,6 +258,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                           onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                           placeholder="Descrição do item"
                           className="input-cell"
+                          disabled={!isProjectsContext}
                         />
                       </td>
                       <td>
@@ -255,6 +269,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                             onChange={(e) => handleItemChange(index, 'manufacturer', e.target.value)}
                             placeholder="Fabricante"
                             className="input-cell"
+                            disabled={!isProjectsContext}
                           />
                           <input
                             type="text"
@@ -262,6 +277,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                             onChange={(e) => handleItemChange(index, 'model', e.target.value)}
                             placeholder="Modelo"
                             className="input-cell"
+                            disabled={!isProjectsContext}
                           />
                         </div>
                       </td>
@@ -273,6 +289,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                             onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                             min="1"
                             className="input-cell"
+                            disabled={!isProjectsContext}
                           />
                           <input
                             type="text"
@@ -281,6 +298,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                             placeholder="Un"
                             className="input-cell"
                             style={{ width: '40px' }}
+                            disabled={!isProjectsContext}
                           />
                         </div>
                       </td>
@@ -291,6 +309,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                           onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
                           step="0.01"
                           className="input-cell"
+                          disabled={isProjectsContext}
                         />
                       </td>
                       <td>
@@ -299,10 +318,46 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                         </div>
                       </td>
                       <td>
+                        <input
+                          type="text"
+                          value={item.supplier || ''}
+                          onChange={(e) => handleItemChange(index, 'supplier', e.target.value)}
+                          placeholder="Fornecedor"
+                          className="input-cell"
+                          disabled={isProjectsContext}
+                        />
+                      </td>
+                      <td>
+                        <select
+                          value={item.payment_method || ''}
+                          onChange={(e) => handleItemChange(index, 'payment_method', e.target.value)}
+                          className="input-cell"
+                          disabled={isProjectsContext}
+                        >
+                          <option value="">-</option>
+                          <option value="boleto">Boleto</option>
+                          <option value="pix">PIX</option>
+                          <option value="cartao">Cartão</option>
+                          <option value="transferencia">Transf.</option>
+                          <option value="dinheiro">Dinheiro</option>
+                          <option value="faturado">Faturado</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="date"
+                          value={item.expected_date || ''}
+                          onChange={(e) => handleItemChange(index, 'expected_date', e.target.value)}
+                          className="input-cell"
+                          disabled={isProjectsContext}
+                        />
+                      </td>
+                      <td>
                         <select
                           value={item.status}
                           onChange={(e) => handleItemChange(index, 'status', e.target.value)}
                           className="input-cell"
+                          disabled={isProjectsContext}
                         >
                           <option value="pending">Pendente</option>
                           <option value="approved">Aprovado</option>
@@ -315,13 +370,17 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
                         </select>
                       </td>
                       <td>
-                        <button
-                          className="btn-icon-danger"
-                          onClick={() => removeItem(index)}
-                          title="Excluir item"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        {isProjectsContext ? (
+                          <button
+                            className="btn-icon-danger"
+                            onClick={() => removeItem(index)}
+                            title="Excluir item"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        ) : (
+                          <span></span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -332,10 +391,13 @@ const RequestDetailsModal = ({ request, onClose, onUpdate }) => {
         </div>
 
         <div className="request-modal-footer">
-          <button className="btn btn-danger" onClick={handleDelete} disabled={loading} style={{ marginRight: 'auto' }}>
-            <Trash2 size={18} />
-            Excluir
-          </button>
+          {isProjectsContext && (
+            <button className="btn btn-danger" onClick={handleDelete} disabled={loading} style={{ marginRight: 'auto' }}>
+              <Trash2 size={18} />
+              Excluir
+            </button>
+          )}
+          {!isProjectsContext && <div style={{ marginRight: 'auto' }}></div>}
           <div className="total-summary">
             <span>Total da Solicitação:</span>
             <strong>R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>

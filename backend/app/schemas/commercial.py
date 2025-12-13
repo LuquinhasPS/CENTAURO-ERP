@@ -62,6 +62,7 @@ class ProjectBillingCreate(ProjectBillingBase):
     substitution_invoice_number: Optional[str] = None
     substitution_issue_date: Optional[DateType] = None
     substitution_due_date: Optional[DateType] = None
+    substitution_reason: Optional[str] = None  # Motivo da substituição
 
 class ProjectBillingResponse(ProjectBillingBase):
     id: int
