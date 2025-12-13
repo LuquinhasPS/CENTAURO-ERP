@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Plus, Trash2, Save } from 'lucide-react';
 import { updatePurchase, deletePurchase } from '../services/api';
+import ApprovalTimeline from './ApprovalTimeline';
 import './RequestDetailsModal.css';
 
 const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' }) => {
@@ -221,6 +222,11 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
             </div>
           </div>
 
+          {/* Approval Timeline - Only in Purchases context */}
+          {!isProjectsContext && (
+            <ApprovalTimeline request={request} onUpdate={onUpdate} />
+          )}
+
           {/* Items Table */}
           <div className="items-section">
             <div className="items-header">
@@ -360,8 +366,6 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           disabled={isProjectsContext}
                         >
                           <option value="pending">Pendente</option>
-                          <option value="approved">Aprovado</option>
-                          <option value="rejected">Rejeitado</option>
                           <option value="quoted">Cotado</option>
                           <option value="bought">Comprado</option>
                           <option value="in_stock">Em estoque</option>

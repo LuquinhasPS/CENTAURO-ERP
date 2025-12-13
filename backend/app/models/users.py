@@ -6,6 +6,7 @@ import enum
 class UserRole(str, enum.Enum):
     ADMIN = "ADMIN"
     ENGENHARIA = "ENGENHARIA"
+    GESTAO = "GESTAO"  # Project Control / Budget approval
     FINANCEIRO = "FINANCEIRO"
     RH = "RH"
     VISUALIZADOR = "VISUALIZADOR"

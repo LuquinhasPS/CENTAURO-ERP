@@ -224,6 +224,82 @@ const Roles = () => {
                 </div>
               </div>
 
+              {/* Approval Permissions Section */}
+              <div className="permissions-section approvals-section">
+                <h4>Aprovações / Alçadas</h4>
+                <p className="section-description">Permissões para aprovar solicitações de compra</p>
+                <div className="approvals-grid">
+                  <label className="approval-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.permissions?.approvals?.approve_technical || false}
+                      onChange={(e) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            approvals: {
+                              ...(prev.permissions?.approvals || {}),
+                              approve_technical: e.target.checked
+                            }
+                          }
+                        }));
+                      }}
+                    />
+                    <div className="approval-info">
+                      <span className="approval-label">Validação Técnica</span>
+                      <span className="approval-description">Aprovar especificações (Engenharia)</span>
+                    </div>
+                  </label>
+
+                  <label className="approval-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.permissions?.approvals?.approve_budget || false}
+                      onChange={(e) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            approvals: {
+                              ...(prev.permissions?.approvals || {}),
+                              approve_budget: e.target.checked
+                            }
+                          }
+                        }));
+                      }}
+                    />
+                    <div className="approval-info">
+                      <span className="approval-label">Controle de Projetos</span>
+                      <span className="approval-description">Aprovar orçamento (Luiza)</span>
+                    </div>
+                  </label>
+
+                  <label className="approval-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.permissions?.approvals?.approve_finance || false}
+                      onChange={(e) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          permissions: {
+                            ...prev.permissions,
+                            approvals: {
+                              ...(prev.permissions?.approvals || {}),
+                              approve_finance: e.target.checked
+                            }
+                          }
+                        }));
+                      }}
+                    />
+                    <div className="approval-info">
+                      <span className="approval-label">Liberação Financeira</span>
+                      <span className="approval-description">Aprovar pagamento (Mayara)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
                   Cancelar

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Eye } from 'lucide-react';
-import { getProjects, createProject, updateProject, deleteProject, getContracts, getClients } from '../services/api';
+import { getProjects, createProject, updateProject, deleteProject, getContracts, getClients, getCollaborators } from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
 import ProjectModal from '../components/ProjectModal';
 import './Projects.css';
@@ -9,6 +9,7 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [contracts, setContracts] = useState([]);
   const [clients, setClients] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -41,6 +42,7 @@ const Projects = () => {
     loadProjects();
     loadContracts();
     loadClients();
+    loadCollaborators();
   }, []);
 
   useEffect(() => {
@@ -80,6 +82,15 @@ const Projects = () => {
       setClients(response.data);
     } catch (error) {
       console.error('Error loading clients:', error);
+    }
+  };
+
+  const loadCollaborators = async () => {
+    try {
+      const response = await getCollaborators();
+      setCollaborators(response.data);
+    } catch (error) {
+      console.error('Error loading collaborators:', error);
     }
   };
 
@@ -365,13 +376,19 @@ const Projects = () => {
                 </div>
                 <div className="form-group">
                   <label className="label">Coordenador</label>
-                  <input
-                    type="text"
+                  <select
                     name="coordinator"
                     className="input"
                     value={formData.coordinator}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Selecione um coordenador</option>
+                    {collaborators.map((collab) => (
+                      <option key={collab.id} value={collab.name}>
+                        {collab.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="form-group">
                   <label className="label">Status</label>

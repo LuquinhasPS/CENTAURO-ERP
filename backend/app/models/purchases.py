@@ -13,7 +13,29 @@ class PurchaseRequest(Base):
     status = Column(String, default="pending") # pending, approved, rejected, ordered, received
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    # Technical Approval (Engineering)
+    tech_approval_at = Column(DateTime, nullable=True)
+    tech_approver_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    
+    # Project Control Approval (Budget)
+    control_approval_at = Column(DateTime, nullable=True)
+    control_approver_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    
+    # Finance Approval (Payment)
+    finance_approval_at = Column(DateTime, nullable=True)
+    finance_approver_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    
+    # Rejection
+    rejection_reason = Column(String, nullable=True)
+    rejected_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    rejected_at = Column(DateTime, nullable=True)
+    
+    # Relationships
     items = relationship("PurchaseItem", back_populates="request", cascade="all, delete-orphan")
+    tech_approver = relationship("app.models.users.User", foreign_keys=[tech_approver_id])
+    control_approver = relationship("app.models.users.User", foreign_keys=[control_approver_id])
+    finance_approver = relationship("app.models.users.User", foreign_keys=[finance_approver_id])
+    rejected_by = relationship("app.models.users.User", foreign_keys=[rejected_by_id])
 
 class PurchaseItem(Base):
     __tablename__ = "purchase_items"

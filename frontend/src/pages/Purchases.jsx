@@ -18,7 +18,7 @@ const Purchases = () => {
     loadData();
   }, []);
 
-  const loadData = async () => {
+  const loadData = async (refreshSelectedId = null) => {
     try {
       const [requestsRes, projectsRes] = await Promise.all([
         getPurchases(),
@@ -26,6 +26,15 @@ const Purchases = () => {
       ]);
       setRequests(requestsRes.data);
       setProjects(projectsRes.data);
+
+      // If we have a selected request, update it with fresh data
+      const idToRefresh = refreshSelectedId || selectedRequest?.id;
+      if (idToRefresh) {
+        const updatedRequest = requestsRes.data.find(r => r.id === idToRefresh);
+        if (updatedRequest) {
+          setSelectedRequest(updatedRequest);
+        }
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {

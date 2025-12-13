@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
+from enum import Enum
 
 class PurchaseItemBase(BaseModel):
     description: str
@@ -35,10 +36,52 @@ class PurchaseRequestBase(BaseModel):
 class PurchaseRequestCreate(PurchaseRequestBase):
     items: Optional[list[PurchaseItemCreate]] = []
 
+# Approver info for response
+class ApproverInfo(BaseModel):
+    id: int
+    name: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
 class PurchaseRequestResponse(PurchaseRequestBase):
     id: int
     created_at: datetime
     items: list[PurchaseItemResponse] = []
+    
+    # Technical Approval
+    tech_approval_at: Optional[datetime] = None
+    tech_approver_id: Optional[int] = None
+    tech_approver_name: Optional[str] = None
+    
+    # Project Control Approval
+    control_approval_at: Optional[datetime] = None
+    control_approver_id: Optional[int] = None
+    control_approver_name: Optional[str] = None
+    
+    # Finance Approval
+    finance_approval_at: Optional[datetime] = None
+    finance_approver_id: Optional[int] = None
+    finance_approver_name: Optional[str] = None
+    
+    # Rejection
+    rejection_reason: Optional[str] = None
+    rejected_by_id: Optional[int] = None
+    rejected_by_name: Optional[str] = None
+    rejected_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
+
+# Approval workflow schemas
+class ApprovalType(str, Enum):
+    TECH = "TECH"
+    CONTROL = "CONTROL"
+    FINANCE = "FINANCE"
+
+class ApprovalRequest(BaseModel):
+    approval_type: ApprovalType
+
+class RejectionRequest(BaseModel):
+    reason: str
+

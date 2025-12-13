@@ -94,6 +94,9 @@ export const getPurchases = (projectId) => api.get('/purchases/purchases', { par
 export const createPurchase = (data) => api.post('/purchases/purchases', data);
 export const updatePurchase = (id, data) => api.put(`/purchases/purchases/${id}`, data);
 export const deletePurchase = (id) => api.delete(`/purchases/purchases/${id}`);
+export const approvePurchase = (id, approvalType) => api.put(`/purchases/purchases/${id}/approve`, { approval_type: approvalType });
+export const rejectPurchase = (id, reason) => api.put(`/purchases/purchases/${id}/reject`, { reason });
+export const clearPurchaseRejection = (id) => api.put(`/purchases/purchases/${id}/clear-rejection`);
 
 // Maintenance
 export const getVehicleMaintenances = (vehicleId) => api.get(`/maintenance/maintenance/vehicle/${vehicleId}`);
