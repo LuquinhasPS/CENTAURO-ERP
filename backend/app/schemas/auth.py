@@ -22,6 +22,7 @@ class UserResponse(UserBase):
     id: int
     is_superuser: bool = False
     permissions: Optional[dict] = {}
+    collaborator_name: Optional[str] = None
     
     class Config:
         from_attributes = True

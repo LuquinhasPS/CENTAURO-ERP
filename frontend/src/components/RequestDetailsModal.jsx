@@ -4,9 +4,10 @@ import { updatePurchase, deletePurchase } from '../services/api';
 import ApprovalTimeline from './ApprovalTimeline';
 import './RequestDetailsModal.css';
 
-const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' }) => {
+const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects', readOnly = false }) => {
   // context: 'projects' = pode editar descrição, solicitante, itens básicos
   // context: 'purchases' = só gerencia preço, fornecedor, pagamento, prazo, status
+  // readOnly: quando true, desabilita todas edições e esconde botão salvar
   const isProjectsContext = context === 'projects';
   const [formData, setFormData] = useState({
     description: '',
@@ -264,7 +265,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                           placeholder="Descrição do item"
                           className="input-cell"
-                          disabled={!isProjectsContext}
+                          disabled={!isProjectsContext || readOnly}
                         />
                       </td>
                       <td>
@@ -275,7 +276,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                             onChange={(e) => handleItemChange(index, 'manufacturer', e.target.value)}
                             placeholder="Fabricante"
                             className="input-cell"
-                            disabled={!isProjectsContext}
+                            disabled={!isProjectsContext || readOnly}
                           />
                           <input
                             type="text"
@@ -283,7 +284,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                             onChange={(e) => handleItemChange(index, 'model', e.target.value)}
                             placeholder="Modelo"
                             className="input-cell"
-                            disabled={!isProjectsContext}
+                            disabled={!isProjectsContext || readOnly}
                           />
                         </div>
                       </td>
@@ -295,7 +296,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                             onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                             min="1"
                             className="input-cell"
-                            disabled={!isProjectsContext}
+                            disabled={!isProjectsContext || readOnly}
                           />
                           <input
                             type="text"
@@ -304,7 +305,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                             placeholder="Un"
                             className="input-cell"
                             style={{ width: '40px' }}
-                            disabled={!isProjectsContext}
+                            disabled={!isProjectsContext || readOnly}
                           />
                         </div>
                       </td>
@@ -315,7 +316,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
                           step="0.01"
                           className="input-cell"
-                          disabled={isProjectsContext}
+                          disabled={isProjectsContext || readOnly}
                         />
                       </td>
                       <td>
@@ -330,7 +331,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           onChange={(e) => handleItemChange(index, 'supplier', e.target.value)}
                           placeholder="Fornecedor"
                           className="input-cell"
-                          disabled={isProjectsContext}
+                          disabled={isProjectsContext || readOnly}
                         />
                       </td>
                       <td>
@@ -338,7 +339,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           value={item.payment_method || ''}
                           onChange={(e) => handleItemChange(index, 'payment_method', e.target.value)}
                           className="input-cell"
-                          disabled={isProjectsContext}
+                          disabled={isProjectsContext || readOnly}
                         >
                           <option value="">-</option>
                           <option value="boleto">Boleto</option>
@@ -355,7 +356,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           value={item.expected_date || ''}
                           onChange={(e) => handleItemChange(index, 'expected_date', e.target.value)}
                           className="input-cell"
-                          disabled={isProjectsContext}
+                          disabled={isProjectsContext || readOnly}
                         />
                       </td>
                       <td>
@@ -363,7 +364,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
                           value={item.status}
                           onChange={(e) => handleItemChange(index, 'status', e.target.value)}
                           className="input-cell"
-                          disabled={isProjectsContext}
+                          disabled={isProjectsContext || readOnly}
                         >
                           <option value="pending">Pendente</option>
                           <option value="quoted">Cotado</option>
@@ -395,21 +396,23 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects' 
         </div>
 
         <div className="request-modal-footer">
-          {isProjectsContext && (
+          {isProjectsContext && !readOnly && (
             <button className="btn btn-danger" onClick={handleDelete} disabled={loading} style={{ marginRight: 'auto' }}>
               <Trash2 size={18} />
               Excluir
             </button>
           )}
-          {!isProjectsContext && <div style={{ marginRight: 'auto' }}></div>}
+          {(!isProjectsContext || readOnly) && <div style={{ marginRight: 'auto' }}></div>}
           <div className="total-summary">
             <span>Total da Solicitação:</span>
             <strong>R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
           </div>
-          <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
-            <Save size={18} />
-            {loading ? 'Salvando...' : 'Salvar Alterações'}
-          </button>
+          {!readOnly && (
+            <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
+              <Save size={18} />
+              {loading ? 'Salvando...' : 'Salvar Alterações'}
+            </button>
+          )}
         </div>
       </div>
     </div>

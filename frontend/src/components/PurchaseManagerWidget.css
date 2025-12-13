@@ -1,0 +1,237 @@
+.purchase-manager-widget {
+  min-height: auto;
+}
+
+/* Full-width layout for purchase widget */
+.purchase-manager-widget.full-width {
+  grid-column: 1 / -1;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+}
+
+.purchase-manager-widget.full-width h4 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: none;
+}
+
+.purchase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.purchase-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.purchase-header .view-all-link {
+  color: #64748b;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.purchase-header .view-all-link:hover {
+  color: #8b5cf6;
+}
+
+.purchase-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.purchase-tabs .tab {
+  padding: 0.625rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  position: relative;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.purchase-tabs .tab:hover {
+  color: #1e293b;
+}
+
+.purchase-tabs .tab.active {
+  color: #8b5cf6;
+}
+
+.purchase-tabs .tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #8b5cf6;
+}
+
+.tab-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.purchase-tab-content {
+  max-height: none;
+  overflow-y: visible;
+}
+
+/* Horizontal list items for full-width layout */
+.approvals-list,
+.tracking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.approval-item,
+.tracking-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.approval-item:hover,
+.tracking-item:hover {
+  background: #f8fafc;
+  margin: 0 -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Keep border on all items */
+
+.approval-item-info,
+.tracking-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.approval-item-name,
+.tracking-item-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 0.875rem;
+}
+
+.approval-item-stage,
+.tracking-item-status {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tracking-item {
+  gap: 1rem;
+}
+
+.tracking-item-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.tracking-item-date {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.tracking-item-date.late {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.tracking-item-date.soon {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.approval-item .chevron {
+  color: #94a3b8;
+}
+
+.approval-item .action-btn {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s;
+}
+
+.approval-item .action-btn:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+/* Empty State */
+.empty-state-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.empty-state-inline .success-icon {
+  color: #22c55e;
+}
+
+/* Widget Loading */
+.widget-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #64748b;
+}

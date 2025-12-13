@@ -5,6 +5,7 @@ import {
   DollarSign, Briefcase, FileText, ShoppingCart,
   Users, AlertTriangle, TrendingUp, Wallet, CheckCircle, Clock
 } from 'lucide-react';
+import PurchaseManagerWidget from '../components/PurchaseManagerWidget';
 import './Dashboard.css';
 
 const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
@@ -208,6 +209,9 @@ const Dashboard = () => {
         {data.commercial && <CommercialWidget data={data.commercial} />}
         {data.operations && <OperationsWidget data={data.operations} />}
         {data.hr && <HRWidget data={data.hr} />}
+
+        {/* Purchase Manager Widget - Always show */}
+        <PurchaseManagerWidget />
 
         {!data.finance && !data.commercial && !data.operations && !data.hr && (
           <div className="empty-dashboard">

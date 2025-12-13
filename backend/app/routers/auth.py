@@ -2,6 +2,9 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from sqlalchemy import select
 from app.database import get_db
 from app.auth import authenticate_user, create_access_token, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.schemas.auth import Token, UserResponse, LoginRequest
@@ -25,5 +28,26 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me", response_model=UserResponse)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
+async def read_users_me(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    # Fetch user with collaborator relationship
+    query = select(User).options(selectinload(User.collaborator)).where(User.id == current_user.id)
+    result = await db.execute(query)
+    user_with_collab = result.scalar_one_or_none()
+    
+    # Build response with collaborator_name
+    collaborator_name = None
+    if user_with_collab and user_with_collab.collaborator:
+        collaborator_name = user_with_collab.collaborator.name
+    
+    return UserResponse(
+        id=current_user.id,
+        email=current_user.email,
+        role=current_user.role,
+        is_superuser=current_user.is_superuser,
+        permissions=current_user.permissions or {},
+        collaborator_id=current_user.collaborator_id,
+        collaborator_name=collaborator_name
+    )
