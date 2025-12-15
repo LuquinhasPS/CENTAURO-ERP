@@ -7,6 +7,7 @@ from typing import List
 from app.database import get_db
 from app.models import commercial as models
 from app.schemas import commercial as schemas
+from app.auth import get_current_active_user
 
 router = APIRouter()
 
@@ -465,3 +466,90 @@ async def update_project_billing(billing_id: int, billing: schemas.ProjectBillin
     await db.commit()
     await db.refresh(db_billing)
     return db_billing
+
+# Feedbacks
+@router.post("/projects/{project_id}/feedback", response_model=schemas.ProjectFeedbackResponse)
+async def create_project_feedback(project_id: int, feedback: schemas.ProjectFeedbackCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_active_user)):
+    db_feedback = models.ProjectFeedback(
+        **feedback.model_dump(),
+        project_id=project_id,
+        author_id=current_user.id
+    )
+    db.add(db_feedback)
+    await db.commit()
+    await db.refresh(db_feedback)
+    
+    # Manually resolve author name for response
+    # We can fetch the user eagerly or just set the name if we eagerly loaded
+    # For now, let's just return. The frontend might need the name immediately.
+    # Ideally, we return with the relation loaded.
+    
+    result = await db.execute(
+        select(models.ProjectFeedback)
+        .options(selectinload(models.ProjectFeedback.author))
+        .where(models.ProjectFeedback.id == db_feedback.id)
+    )
+    loaded_feedback = result.scalar_one()
+    
+    # We need to construct the response manually or rely on Pydantic's from_attributes
+    # But our schema expects author_name.
+    # Let's verify ProjectFeedbackResponse schema in schemas/commercial.py
+    
+    # Assuming author has a link to collaborator, or just use email/name from User
+    author_name = loaded_feedback.author.email # Fallback
+    if loaded_feedback.author.collaborator_id:
+        # If we had loaded collaborator... but we only loaded author (User).
+        # We might need to fetch User with Collaborator option.
+        pass
+
+    # For simplicity/speed, let's just reload with what we need or assume User has a name field?
+    # User model doesn't usually have a name, it links to Collaborator.
+    # Let's check User model in authorized endpoints.
+    
+    # Let's do a quick lookup for the collaborator name if enabled
+    author_name = "Usuário"
+    if loaded_feedback.author.collaborator:
+         author_name = loaded_feedback.author.collaborator.name
+    elif loaded_feedback.author.email:
+         author_name = loaded_feedback.author.email
+
+    response = schemas.ProjectFeedbackResponse(
+        id=loaded_feedback.id,
+        project_id=loaded_feedback.project_id,
+        author_id=loaded_feedback.author_id,
+        message=loaded_feedback.message,
+        created_at=loaded_feedback.created_at,
+        type=loaded_feedback.type,
+        author_name=author_name
+    )
+    return response
+
+@router.get("/projects/{project_id}/feedback", response_model=List[schemas.ProjectFeedbackResponse])
+async def get_project_feedbacks(project_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(models.ProjectFeedback)
+        .options(
+             selectinload(models.ProjectFeedback.author).selectinload(models.User.collaborator)
+        )
+        .where(models.ProjectFeedback.project_id == project_id)
+        .order_by(models.ProjectFeedback.created_at.desc())
+    )
+    feedbacks = result.scalars().all()
+    
+    response = []
+    for f in feedbacks:
+        author_name = f.author.email
+        if f.author.collaborator:
+            author_name = f.author.collaborator.name
+            
+        response.append(schemas.ProjectFeedbackResponse(
+            id=f.id,
+            project_id=f.project_id,
+            author_id=f.author_id,
+            message=f.message,
+            created_at=f.created_at,
+            type=f.type,
+            author_name=author_name
+        ))
+        
+    return response

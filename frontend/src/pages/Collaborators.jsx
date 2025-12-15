@@ -3,8 +3,9 @@ import { Plus, Trash2, Edit, Users, Mail, Phone, Briefcase, FileText, IdCard, Se
 import api, {
   getCollaborators, createCollaborator, updateCollaborator, deleteCollaborator,
   getCertifications, createCertification, deleteCertification,
-  getCollaboratorEducation, createCollaboratorEducation, deleteCollaboratorEducation
-} from '../services/api';
+  getCollaboratorEducation, createCollaboratorEducation, deleteCollaboratorEducation,
+  getCollaboratorReviews, createCollaboratorReview, deleteCollaboratorReview, getCollaboratorPerformance
+} from '../services/api'; import { Star, UserCheck, Shield, Clock as ClockIcon, TrendingUp } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Teams from './Teams';
 import ConfirmModal from '../components/ConfirmModal';
@@ -34,7 +35,7 @@ const Collaborators = () => {
     email: '',
     phone: '',
     salary: '',
-    salary: '',
+
     role_id: '',
     role: '',
     team_id: '',
@@ -60,6 +61,17 @@ const Collaborators = () => {
     course_name: '',
     conclusion_date: '',
     attachment_url: '',
+  });
+
+  // Performance State
+  const [reviewsList, setReviewsList] = useState([]);
+  const [performanceStats, setPerformanceStats] = useState(null);
+  const [reviewFormData, setReviewFormData] = useState({
+    date: new Date().toISOString().split('T')[0],
+    score_technical: 5,
+    score_safety: 5,
+    score_punctuality: 5,
+    comments: ''
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -104,6 +116,24 @@ const Collaborators = () => {
       setEducationList(res.data);
     } catch (error) {
       console.error('Error loading education:', error);
+    }
+  };
+
+  const loadReviews = async (collaboratorId) => {
+    try {
+      const res = await getCollaboratorReviews(collaboratorId);
+      setReviewsList(res.data);
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+    }
+  };
+
+  const loadPerformance = async (collaboratorId) => {
+    try {
+      const res = await getCollaboratorPerformance(collaboratorId);
+      setPerformanceStats(res.data);
+    } catch (error) {
+      console.error('Error loading performance:', error);
     }
   };
 
@@ -206,6 +236,28 @@ const Collaborators = () => {
     }
   };
 
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createCollaboratorReview({
+        ...reviewFormData,
+        collaborator_id: editingId
+      });
+      setReviewFormData({
+        date: new Date().toISOString().split('T')[0],
+        score_technical: 5,
+        score_safety: 5,
+        score_punctuality: 5,
+        comments: ''
+      });
+      loadReviews(editingId);
+      loadPerformance(editingId);
+    } catch (error) {
+      console.error('Error saving review:', error);
+      alert('Erro ao salvar avaliação');
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let formattedValue = value;
@@ -241,7 +293,7 @@ const Collaborators = () => {
       email: collaborator.email || '',
       phone: collaborator.phone || '',
       salary: collaborator.salary || '',
-      salary: collaborator.salary || '',
+
       role_id: collaborator.role_id || '',
       role: collaborator.role || '',
       team_id: collaborator.team_id || '',
@@ -253,6 +305,8 @@ const Collaborators = () => {
     setActiveTab('general');
     loadCertifications(collaborator.id);
     loadEducation(collaborator.id);
+    loadReviews(collaborator.id);
+    loadPerformance(collaborator.id);
     setShowForm(true);
   };
 
@@ -268,6 +322,10 @@ const Collaborators = () => {
       } else if (deleteType === 'education') {
         await deleteCollaboratorEducation(itemToDelete);
         loadEducation(editingId);
+      } else if (deleteType === 'review') {
+        await deleteCollaboratorReview(itemToDelete);
+        loadReviews(editingId);
+        loadPerformance(editingId);
       }
       setShowConfirmModal(false);
       setItemToDelete(null);
@@ -287,6 +345,15 @@ const Collaborators = () => {
     setActiveTab('general');
     setEducationList([]);
     setEduFormData({ type: 'ACADEMIC', institution: '', course_name: '', conclusion_date: '', attachment_url: '' });
+    setReviewsList([]);
+    setPerformanceStats(null);
+    setReviewFormData({
+      date: new Date().toISOString().split('T')[0],
+      score_technical: 5,
+      score_safety: 5,
+      score_punctuality: 5,
+      comments: ''
+    });
   };
 
   const filteredCollaborators = collaborators.filter(collaborator => {
@@ -442,6 +509,18 @@ const Collaborators = () => {
                         }}
                       >
                         Formação/Cursos
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('performance')}
+                        style={{
+                          padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                          background: activeTab === 'performance' ? 'white' : 'transparent',
+                          color: activeTab === 'performance' ? '#0f172a' : '#64748b',
+                          fontWeight: activeTab === 'performance' ? '600' : '500',
+                          boxShadow: activeTab === 'performance' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                        }}
+                      >
+                        Desempenho
                       </button>
                     </div>
                     {canEdit && (
@@ -645,7 +724,7 @@ const Collaborators = () => {
                   <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Fechar</button>
                 </div>
               </div>
-            ) : (
+            ) : activeTab === 'education' ? (
               <div className="education-tab">
                 <form onSubmit={handleEduSubmit} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
                   <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#475569' }}>Adicionar Formação ou Curso</h4>
@@ -769,6 +848,160 @@ const Collaborators = () => {
                 </div>
 
                 <div className="form-actions" style={{ marginTop: '1.5rem' }}>
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Fechar</button>
+                </div>
+              </div>
+            ) : (
+              <div className="performance-tab">
+                {/* 1. Dashboard (Stats) */}
+                <div className="stats-dashboard" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
+                  {[
+                    { label: 'Média Técnica', value: performanceStats?.avg_technical, icon: Star },
+                    { label: 'Segurança/EPI', value: performanceStats?.avg_safety, icon: Shield },
+                    { label: 'Pontualidade', value: performanceStats?.avg_punctuality, icon: ClockIcon },
+                    { label: 'Média Geral', value: performanceStats?.avg_general, icon: TrendingUp }
+                  ].map((stat, index) => {
+                    const val = stat.value || 0;
+                    let color = '#64748b'; // default
+                    let bg = '#f1f5f9';
+                    if (val >= 4) { color = '#10b981'; bg = '#ecfdf5'; } // Green
+                    else if (val >= 2.5) { color = '#f59e0b'; bg = '#fffbeb'; } // Yellow
+                    else if (val > 0) { color = '#ef4444'; bg = '#fef2f2'; } // Red
+
+                    return (
+                      <div key={index} style={{ background: bg, padding: '1rem', borderRadius: '0.75rem', border: `1px solid ${color}30` }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: color, marginBottom: '0.5rem' }}>
+                          <stat.icon size={18} />
+                          <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>{stat.label}</span>
+                        </div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0f172a' }}>
+                          {val > 0 ? val.toFixed(1) : '-'}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>Últimos 12 meses</div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* 2. Add Review Form */}
+                {canEdit && (
+                  <form onSubmit={handleReviewSubmit} style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '0.75rem', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+                    <h4 style={{ marginBottom: '1rem', fontSize: '0.95rem', color: '#475569', fontWeight: '600' }}>Nova Avaliação Mensal</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1rem' }}>
+                      <div className="form-group">
+                        <label className="label">Data Competência</label>
+                        <input
+                          type="date"
+                          className="input"
+                          value={reviewFormData.date}
+                          onChange={(e) => setReviewFormData({ ...reviewFormData, date: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="label">Qualidade Técnica (1-5)</label>
+                        <select
+                          className="input"
+                          value={reviewFormData.score_technical}
+                          onChange={(e) => setReviewFormData({ ...reviewFormData, score_technical: parseInt(e.target.value) })}
+                        >
+                          {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label className="label">Segurança/EPI (1-5)</label>
+                        <select
+                          className="input"
+                          value={reviewFormData.score_safety}
+                          onChange={(e) => setReviewFormData({ ...reviewFormData, score_safety: parseInt(e.target.value) })}
+                        >
+                          {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label className="label">Assiduidade (1-5)</label>
+                        <select
+                          className="input"
+                          value={reviewFormData.score_punctuality}
+                          onChange={(e) => setReviewFormData({ ...reviewFormData, score_punctuality: parseInt(e.target.value) })}
+                        >
+                          {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label className="label">Observações / Feedback</label>
+                      <textarea
+                        className="input"
+                        rows="2"
+                        placeholder="Descreva pontos positivos, negativos ou advertências..."
+                        value={reviewFormData.comments}
+                        onChange={(e) => setReviewFormData({ ...reviewFormData, comments: e.target.value })}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                      <button type="submit" className="btn btn-primary">
+                        <Plus size={18} style={{ marginRight: '0.5rem' }} />
+                        Adicionar Avaliação
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* 3. Timeline List */}
+                <div className="reviews-timeline">
+                  <h4 style={{ marginBottom: '1rem', fontSize: '0.95rem', color: '#475569', fontWeight: '600' }}>Histórico de Avaliações</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {reviewsList.length === 0 ? (
+                      <p style={{ textAlign: 'center', color: '#94a3b8', padding: '2rem', background: '#f8fafc', borderRadius: '0.5rem' }}>Nenhuma avaliação registrada.</p>
+                    ) : (
+                      reviewsList.map(review => (
+                        <div key={review.id} style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '0.75rem', padding: '1rem', position: 'relative' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                            <div>
+                              <div style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.95rem' }}>
+                                Competência: {new Date(review.date).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+                              </div>
+                              <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
+                                <UserCheck size={14} />
+                                Avaliado por: <span style={{ fontWeight: '500' }}>{review.reviewer_name}</span>
+                              </div>
+                            </div>
+                            {canEdit && (
+                              <button
+                                className="btn-icon-small danger"
+                                onClick={() => handleDelete(review.id, 'review')}
+                                title="Excluir Avaliação"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, auto)', gap: '1.5rem', color: '#475569', fontSize: '0.85rem' }}>
+                            <div title="Qualidade Técnica">
+                              <strong>Técnica:</strong> {review.score_technical}/5 <Star size={12} fill="#f59e0b" color="#f59e0b" style={{ display: 'inline', marginLeft: '2px' }} />
+                            </div>
+                            <div title="Segurança e EPI">
+                              <strong>Segurança:</strong> {review.score_safety}/5 <Shield size={12} fill="#10b981" color="#10b981" style={{ display: 'inline', marginLeft: '2px' }} />
+                            </div>
+                            <div title="Assiduidade e Pontualidade">
+                              <strong>Assiduidade:</strong> {review.score_punctuality}/5 <ClockIcon size={12} fill="#3b82f6" color="#3b82f6" style={{ display: 'inline', marginLeft: '2px' }} />
+                            </div>
+                          </div>
+
+                          {review.comments && (
+                            <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: '#f8fafc', borderRadius: '0.5rem', fontSize: '0.9rem', color: '#334155', fontStyle: 'italic' }}>
+                              "{review.comments}"
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="form-actions" style={{ marginTop: '2rem' }}>
                   <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Fechar</button>
                 </div>
               </div>

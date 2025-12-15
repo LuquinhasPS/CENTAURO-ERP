@@ -1,4 +1,4 @@
-from .commercial import Client, Contract, Project
+from .commercial import Client, Contract, Project, ProjectFeedback
 from .assets import Fleet, Tool
 from .operational import Allocation, Collaborator
 from .tickets import Ticket

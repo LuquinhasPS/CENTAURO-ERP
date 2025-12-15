@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000',
+  timeout: 15000,
 });
 
 api.interceptors.request.use((config) => {
@@ -68,6 +69,11 @@ export const getCollaboratorEducation = (collaboratorId) => api.get(`/operationa
 export const createCollaboratorEducation = (data) => api.post('/operational/education', data);
 export const deleteCollaboratorEducation = (id) => api.delete(`/operational/education/${id}`);
 
+export const getCollaboratorReviews = (collaboratorId) => api.get(`/operational/reviews/${collaboratorId}`);
+export const createCollaboratorReview = (data) => api.post('/operational/reviews', data);
+export const deleteCollaboratorReview = (id) => api.delete(`/operational/reviews/${id}`);
+export const getCollaboratorPerformance = (collaboratorId) => api.get(`/operational/performance/${collaboratorId}`);
+
 // Tickets
 export const getTickets = () => api.get('/tickets/tickets');
 export const createTicket = (data) => api.post('/tickets/tickets', data);
@@ -110,5 +116,9 @@ export const deleteMaintenance = (id) => api.delete(`/maintenance/maintenance/${
 
 // AI
 export const chatAI = (message) => api.post('/api/ai/chat', { message });
+
+// Project Feedbacks
+export const getProjectFeedbacks = (projectId) => api.get(`/commercial/projects/${projectId}/feedback`);
+export const createProjectFeedback = (projectId, data) => api.post(`/commercial/projects/${projectId}/feedback`, data);
 
 export default api;

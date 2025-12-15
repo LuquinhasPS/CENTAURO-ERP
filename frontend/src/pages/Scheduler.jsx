@@ -104,7 +104,7 @@ const Scheduler = () => {
       resource_type: 'PERSON',
       project_id: '',
       start_date: new Date().toISOString().split('T')[0],
-      start_date: new Date().toISOString().split('T')[0],
+
       end_date: new Date().toISOString().split('T')[0]
     });
     setEditingId(null);

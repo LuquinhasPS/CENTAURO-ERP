@@ -6,6 +6,8 @@ from typing import List
 from app.database import get_db
 from app.models import operational as models
 from app.schemas import operational as schemas
+from app.auth import get_current_active_user
+from app.models.users import User
 
 router = APIRouter()
 
@@ -298,3 +300,118 @@ async def delete_education(education_id: int, db: AsyncSession = Depends(get_db)
     await db.delete(db_education)
     await db.commit()
     return {"message": "Education item deleted"}
+
+# Review / Performance
+@router.get("/reviews/{collaborator_id}", response_model=List[schemas.CollaboratorReviewResponse])
+async def get_reviews(collaborator_id: int, db: AsyncSession = Depends(get_db)):
+    from app.models.users import User
+    
+    # Join with User then Collaborator to get the Reviewer's Name (Performance/UX Requirement)
+    # If the reviewer User is not linked to a collaborator, we might need a fallback?
+    # For now, let's left join user and then join collaborator.
+    
+    stmt = (
+        select(models.CollaboratorReview, models.Collaborator.name.label("reviewer_name"))
+        .join(User, models.CollaboratorReview.reviewer_id == User.id)
+        .outerjoin(models.Collaborator, User.collaborator_id == models.Collaborator.id)
+        .where(models.CollaboratorReview.collaborator_id == collaborator_id)
+        .order_by(models.CollaboratorReview.date.desc())
+    )
+    
+    result = await db.execute(stmt)
+    reviews_data = []
+    for review, reviewer_name in result.all():
+        # Inject the resolved name into the response object (Pydantic will handle it if we modify the dict or object)
+        # Since 'review' is an ORM object, we can't easily add attributes that aren't columns.
+        # But we can convert to dict/schema.
+        
+        # Helper to construct response
+        review_dict = {
+            "id": review.id,
+            "collaborator_id": review.collaborator_id,
+            "reviewer_id": review.reviewer_id,
+            "date": review.date,
+            "score_technical": review.score_technical,
+            "score_safety": review.score_safety,
+            "score_punctuality": review.score_punctuality,
+            "comments": review.comments,
+            "reviewer_name": reviewer_name or "Desconhecido" # Fallback if no collaborator linked
+        }
+        reviews_data.append(review_dict)
+        
+    return reviews_data
+
+@router.post("/reviews", response_model=schemas.CollaboratorReviewResponse)
+async def create_review(
+    review: schemas.CollaboratorReviewCreate, 
+    current_user: User = Depends(get_current_active_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    db_review = models.CollaboratorReview(
+        **review.model_dump(),
+        reviewer_id=current_user.id
+    )
+    
+    db.add(db_review)
+    await db.commit()
+    await db.refresh(db_review)
+    return db_review
+
+@router.get("/performance/{collaborator_id}", response_model=schemas.CollaboratorPerformanceStats)
+async def get_performance_stats(collaborator_id: int, db: AsyncSession = Depends(get_db)):
+    from datetime import datetime, timedelta
+    from sqlalchemy import func
+    
+    # 1. Calculate Date Range (Last 12 Months)
+    one_year_ago = datetime.now().date() - timedelta(days=365)
+    
+    # 2. Query for averages
+    stmt = (
+        select(
+            func.avg(models.CollaboratorReview.score_technical).label("avg_tech"),
+            func.avg(models.CollaboratorReview.score_safety).label("avg_safety"),
+            func.avg(models.CollaboratorReview.score_punctuality).label("avg_punct"),
+            func.count(models.CollaboratorReview.id).label("total")
+        )
+        .where(models.CollaboratorReview.collaborator_id == collaborator_id)
+        .where(models.CollaboratorReview.date >= one_year_ago)
+    )
+    
+    result = await db.execute(stmt)
+    stats = result.first()
+    
+    total = stats.total or 0
+    if total == 0:
+        return {
+            "avg_technical": 0,
+            "avg_safety": 0,
+            "avg_punctuality": 0,
+            "avg_general": 0,
+            "total_reviews": 0
+        }
+        
+    avg_tech = float(stats.avg_tech or 0)
+    avg_safety = float(stats.avg_safety or 0)
+    avg_punct = float(stats.avg_punct or 0)
+    
+    # General Average (Simple Mean of the 3 criteria)
+    avg_general = (avg_tech + avg_safety + avg_punct) / 3
+    
+    return {
+        "avg_technical": round(avg_tech, 1),
+        "avg_safety": round(avg_safety, 1),
+        "avg_punctuality": round(avg_punct, 1),
+        "avg_general": round(avg_general, 1),
+        "total_reviews": total
+    }
+
+@router.delete("/reviews/{review_id}")
+async def delete_review(review_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.CollaboratorReview).where(models.CollaboratorReview.id == review_id))
+    db_review = result.scalar_one_or_none()
+    if not db_review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    await db.delete(db_review)
+    await db.commit()
+    return {"message": "Review deleted"}

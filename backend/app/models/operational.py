@@ -90,3 +90,24 @@ class CollaboratorEducation(Base):
 
 # Update Collaborator to include education relationship
 Collaborator.education = relationship("CollaboratorEducation", back_populates="collaborator", cascade="all, delete-orphan")
+
+class CollaboratorReview(Base):
+    __tablename__ = "collaborator_reviews"
+
+    id = Column(Integer, primary_key=True, index=True)
+    collaborator_id = Column(Integer, ForeignKey("collaborators.id"), nullable=False)
+    reviewer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    date = Column(Date, nullable=False)
+    
+    # 1-5 Scores
+    score_technical = Column(Integer, nullable=False)
+    score_safety = Column(Integer, nullable=False)
+    score_punctuality = Column(Integer, nullable=False)
+    
+    comments = Column(String, nullable=True)
+
+    collaborator = relationship("Collaborator", back_populates="reviews")
+    reviewer = relationship("app.models.users.User")
+
+# Update Collaborator to include reviews relationship
+Collaborator.reviews = relationship("CollaboratorReview", back_populates="collaborator", order_by="desc(CollaboratorReview.date)", cascade="all, delete-orphan")

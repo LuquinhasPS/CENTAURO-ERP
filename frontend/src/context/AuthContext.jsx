@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   // Configure axios defaults
   const api = axios.create({
     baseURL: 'http://127.0.0.1:8000',
-    timeout: 5000,
+    timeout: 15000,
   });
 
   api.interceptors.request.use((config) => {

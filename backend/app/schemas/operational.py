@@ -36,6 +36,32 @@ class CollaboratorEducationResponse(CollaboratorEducationBase):
     class Config:
         from_attributes = True
 
+# Collaborator Review Schemas
+class CollaboratorReviewBase(BaseModel):
+    date: date
+    score_technical: int
+    score_safety: int
+    score_punctuality: int
+    comments: Optional[str] = None
+
+class CollaboratorReviewCreate(CollaboratorReviewBase):
+    collaborator_id: int
+
+class CollaboratorReviewResponse(CollaboratorReviewBase):
+    id: int
+    reviewer_id: int
+    reviewer_name: Optional[str] = None # Resolved from User -> Collaborator
+
+    class Config:
+        from_attributes = True
+
+class CollaboratorPerformanceStats(BaseModel):
+    avg_technical: float
+    avg_safety: float
+    avg_punctuality: float
+    avg_general: float
+    total_reviews: int
+
 # Collaborator Schemas
 class CollaboratorBase(BaseModel):
     name: str

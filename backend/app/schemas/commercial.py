@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date as DateType
+from datetime import date as DateType, datetime
 from decimal import Decimal
 
 # Client Schemas
@@ -99,5 +99,23 @@ class ProjectResponse(ProjectBase):
     billings: list[ProjectBillingResponse] = []
     invoiced: Optional[Decimal] = None # Calculated field
     
+    class Config:
+        from_attributes = True
+
+# Project Feedback Schemas
+class ProjectFeedbackBase(BaseModel):
+    message: str
+    type: Optional[str] = "INFO"
+
+class ProjectFeedbackCreate(ProjectFeedbackBase):
+    pass
+
+class ProjectFeedbackResponse(ProjectFeedbackBase):
+    id: int
+    project_id: int
+    author_id: int
+    created_at: datetime
+    author_name: Optional[str] = None # Resolved
+
     class Config:
         from_attributes = True

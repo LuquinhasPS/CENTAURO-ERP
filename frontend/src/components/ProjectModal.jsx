@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   X, Users, Wrench, Truck, Plus, Trash2, Calendar, Edit,
-  DollarSign, ShoppingCart, Package, FileText
+  DollarSign, ShoppingCart, Package, FileText, MessageSquare, Send
 } from 'lucide-react';
 import {
   getCollaborators, getTools, getFleet, getClients, getProject,
@@ -10,7 +10,8 @@ import {
   addProjectVehicle, removeProjectVehicle,
   createProjectBilling, deleteProjectBilling,
   getPurchases, createPurchase,
-  getProjectCollaborators, getProjectTools, getProjectVehicles
+  getProjectCollaborators, getProjectTools, getProjectVehicles,
+  getProjectFeedbacks, createProjectFeedback
 } from '../services/api';
 import RequestDetailsModal from './RequestDetailsModal';
 import ConfirmModal from './ConfirmModal';
@@ -75,6 +76,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
     description: ''
   });
 
+  // Feedbacks
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [feedbackInput, setFeedbackInput] = useState('');
+  const [feedbackType, setFeedbackType] = useState('INFO');
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -130,6 +136,9 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
       } else if (activeTab === 'purchases') {
         const res = await getPurchases(project.id);
         setPurchases(res.data);
+      } else if (activeTab === 'feedback') {
+        const res = await getProjectFeedbacks(project.id);
+        setFeedbacks(res.data);
       }
     } catch (error) {
       console.error('Error loading data:', error);
@@ -341,6 +350,43 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
     return acc;
   }, 0);
 
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    if (!feedbackInput.trim()) return;
+
+    try {
+      await createProjectFeedback(project.id, {
+        message: feedbackInput,
+        type: feedbackType
+      });
+      setFeedbackInput('');
+      setFeedbackType('INFO');
+
+      // Refresh list
+      const res = await getProjectFeedbacks(project.id);
+      setFeedbacks(res.data);
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      alert('Erro ao enviar mensagem');
+    }
+  };
+
+  const formatTimeAgo = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    if (diffInSeconds < 60) return 'agora mesmo';
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `há ${diffInMinutes} min`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `há ${diffInHours} horas`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `há ${diffInDays} dias`;
+
+    return date.toLocaleDateString('pt-BR');
+  };
+
   return (
     <div className="project-modal-overlay">
       <div className="project-modal" onClick={(e) => e.stopPropagation()}>
@@ -351,12 +397,19 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
           </button>
         </div>
 
+
         <div className="project-modal-tabs">
           <button
             className={`tab ${activeTab === 'info' ? 'active' : ''}`}
             onClick={() => setActiveTab('info')}
           >
             Info
+          </button>
+          <button
+            className={`tab ${activeTab === 'feedback' ? 'active' : ''}`}
+            onClick={() => setActiveTab('feedback')}
+          >
+            <MessageSquare size={16} /> Diário
           </button>
           <button
             className={`tab ${activeTab === 'team' ? 'active' : ''}`}
@@ -476,6 +529,82 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
             </div>
           )
           }
+
+          {/* TAB: FEEDBACK (DIARY) */}
+          {activeTab === 'feedback' && (
+            <div className="tab-content" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div className="feedback-timeline" style={{ flex: 1, overflowY: 'auto', paddingRight: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
+                {feedbacks.length === 0 ? (
+                  <div className="empty-message">
+                    <MessageSquare size={32} />
+                    <p>Nenhum registro no diário deste projeto.</p>
+                  </div>
+                ) : (
+                  feedbacks.map(fb => (
+                    <div key={fb.id} className={`feedback-item ${fb.type.toLowerCase()}`} style={{
+                      padding: '1rem',
+                      borderRadius: '0.75rem',
+                      background: fb.type === 'ALERTA' ? '#fef3c7' : fb.type === 'BLOQUEIO' ? '#fee2e2' : '#f8fafc',
+                      border: fb.type === 'ALERTA' ? '1px solid #fcd34d' : fb.type === 'BLOQUEIO' ? '1px solid #fca5a5' : '1px solid #e2e8f0'
+                    }}>
+                      <div className="feedback-header" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                        <div className="avatar-placeholder" style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#475569' }}>
+                          {(fb.author_name || 'U').charAt(0)}
+                        </div>
+                        <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#1e293b' }}>{fb.author_name || 'Usuário'}</span>
+                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>• {formatTimeAgo(fb.created_at)}</span>
+                        {fb.type !== 'INFO' && (
+                          <span style={{
+                            fontSize: '0.7rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px',
+                            background: fb.type === 'ALERTA' ? '#f59e0b' : '#ef4444', color: 'white', marginLeft: 'auto'
+                          }}>
+                            {fb.type}
+                          </span>
+                        )}
+                      </div>
+                      <div className="feedback-body" style={{ fontSize: '0.95rem', color: '#334155', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                        {fb.message}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {canEdit && (
+                <form onSubmit={handleFeedbackSubmit} className="feedback-input-area" style={{
+                  display: 'flex', gap: '0.75rem', padding: '1rem', background: 'white', borderTop: '1px solid #e2e8f0', margin: '-1rem -1.5rem -1.5rem -1.5rem', borderRadius: '0 0 0.5rem 0.5rem'
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <select
+                      value={feedbackType}
+                      onChange={(e) => setFeedbackType(e.target.value)}
+                      style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                    >
+                      <option value="INFO">Info</option>
+                      <option value="ALERTA">Alerta</option>
+                      <option value="BLOQUEIO">Bloqueio</option>
+                    </select>
+                  </div>
+                  <textarea
+                    value={feedbackInput}
+                    onChange={(e) => setFeedbackInput(e.target.value)}
+                    placeholder="Digite uma atualização sobre o projeto..."
+                    rows="2"
+                    style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid #cbd5e1', resize: 'none', fontFamily: 'inherit' }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleFeedbackSubmit(e);
+                      }
+                    }}
+                  />
+                  <button type="submit" className="btn btn-primary" style={{ height: 'auto', aspectRatio: '1/1', padding: '0' }} title="Enviar">
+                    <Send size={20} />
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
 
           {
             activeTab === 'team' && (

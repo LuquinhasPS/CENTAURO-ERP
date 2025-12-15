@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, DateTime, Enum
 from sqlalchemy.orm import relationship
 from app.database import Base
 import enum
@@ -73,6 +73,7 @@ class Project(Base):
     contract = relationship("Contract", back_populates="projects")
     client = relationship("Client", back_populates="projects")
     billings = relationship("ProjectBilling", back_populates="project", cascade="all, delete-orphan")
+    # feedbacks = relationship defined at end of file
 
 class BillingStatus(str, enum.Enum):
     PREVISTO = "PREVISTO"
@@ -100,3 +101,24 @@ class ProjectBilling(Base):
 
     project = relationship("Project", back_populates="billings")
     replaced_by = relationship("ProjectBilling", remote_side=[id])
+
+class FeedbackType(str, enum.Enum):
+    INFO = "INFO"
+    ALERTA = "ALERTA"
+    BLOQUEIO = "BLOQUEIO"
+
+class ProjectFeedback(Base):
+    __tablename__ = "project_feedbacks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    message = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    type = Column(Enum(FeedbackType), default=FeedbackType.INFO)
+
+    project = relationship("Project", back_populates="feedbacks")
+    author = relationship("app.models.users.User")
+
+# Update Project to include feedbacks relationship
+Project.feedbacks = relationship("ProjectFeedback", back_populates="project", order_by="desc(ProjectFeedback.created_at)", cascade="all, delete-orphan")
