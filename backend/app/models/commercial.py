@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Date, DateTime, Enum
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -114,7 +115,7 @@ class ProjectFeedback(Base):
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
     author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     message = Column(String, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=datetime.now, nullable=False)
     type = Column(Enum(FeedbackType), default=FeedbackType.INFO)
 
     project = relationship("Project", back_populates="feedbacks")

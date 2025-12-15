@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload, joinedload
-from datetime import date
+from datetime import date, datetime
 from typing import List
 from app.database import get_db
 from app.models import commercial as models
+from app.models.users import User # Import User explicitly to fix models.User reference
 from app.schemas import commercial as schemas
 from app.auth import get_current_active_user
 
@@ -473,45 +474,25 @@ async def create_project_feedback(project_id: int, feedback: schemas.ProjectFeed
     db_feedback = models.ProjectFeedback(
         **feedback.model_dump(),
         project_id=project_id,
-        author_id=current_user.id
+        author_id=current_user.id,
+        created_at=datetime.now()
     )
     db.add(db_feedback)
     await db.commit()
     await db.refresh(db_feedback)
     
-    # Manually resolve author name for response
-    # We can fetch the user eagerly or just set the name if we eagerly loaded
-    # For now, let's just return. The frontend might need the name immediately.
-    # Ideally, we return with the relation loaded.
-    
     result = await db.execute(
         select(models.ProjectFeedback)
-        .options(selectinload(models.ProjectFeedback.author))
+        .options(selectinload(models.ProjectFeedback.author).selectinload(User.collaborator))
         .where(models.ProjectFeedback.id == db_feedback.id)
     )
     loaded_feedback = result.scalar_one()
     
-    # We need to construct the response manually or rely on Pydantic's from_attributes
-    # But our schema expects author_name.
-    # Let's verify ProjectFeedbackResponse schema in schemas/commercial.py
-    
-    # Assuming author has a link to collaborator, or just use email/name from User
-    author_name = loaded_feedback.author.email # Fallback
-    if loaded_feedback.author.collaborator_id:
-        # If we had loaded collaborator... but we only loaded author (User).
-        # We might need to fetch User with Collaborator option.
-        pass
-
-    # For simplicity/speed, let's just reload with what we need or assume User has a name field?
-    # User model doesn't usually have a name, it links to Collaborator.
-    # Let's check User model in authorized endpoints.
-    
-    # Let's do a quick lookup for the collaborator name if enabled
     author_name = "Usuário"
     if loaded_feedback.author.collaborator:
-         author_name = loaded_feedback.author.collaborator.name
+            author_name = loaded_feedback.author.collaborator.name
     elif loaded_feedback.author.email:
-         author_name = loaded_feedback.author.email
+            author_name = loaded_feedback.author.email
 
     response = schemas.ProjectFeedbackResponse(
         id=loaded_feedback.id,
@@ -529,7 +510,7 @@ async def get_project_feedbacks(project_id: int, db: AsyncSession = Depends(get_
     result = await db.execute(
         select(models.ProjectFeedback)
         .options(
-             selectinload(models.ProjectFeedback.author).selectinload(models.User.collaborator)
+             selectinload(models.ProjectFeedback.author).selectinload(User.collaborator)
         )
         .where(models.ProjectFeedback.project_id == project_id)
         .order_by(models.ProjectFeedback.created_at.desc())
@@ -553,3 +534,19 @@ async def get_project_feedbacks(project_id: int, db: AsyncSession = Depends(get_
         ))
         
     return response
+
+@router.delete("/projects/feedback/{feedback_id}")
+async def delete_project_feedback(feedback_id: int, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_active_user)):
+    result = await db.execute(select(models.ProjectFeedback).where(models.ProjectFeedback.id == feedback_id))
+    feedback = result.scalar_one_or_none()
+    
+    if not feedback:
+        raise HTTPException(status_code=404, detail="Feedback not found")
+        
+    # Optional permission check: Only author or admin can delete
+    # if feedback.author_id != current_user.id and not current_user.is_superuser:
+    #    raise HTTPException(status_code=403, detail="Not authorized")
+    
+    await db.delete(feedback)
+    await db.commit()
+    return {"message": "Feedback deleted successfully"}

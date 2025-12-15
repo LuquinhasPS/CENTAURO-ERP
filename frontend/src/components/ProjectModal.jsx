@@ -11,7 +11,7 @@ import {
   createProjectBilling, deleteProjectBilling,
   getPurchases, createPurchase,
   getProjectCollaborators, getProjectTools, getProjectVehicles,
-  getProjectFeedbacks, createProjectFeedback
+  getProjectFeedbacks, createProjectFeedback, deleteProjectFeedback
 } from '../services/api';
 import RequestDetailsModal from './RequestDetailsModal';
 import ConfirmModal from './ConfirmModal';
@@ -371,6 +371,20 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
     }
   };
 
+  const handleDeleteFeedback = async (id) => {
+    if (window.confirm('Tem certeza que deseja excluir esta anotação?')) {
+      try {
+        await deleteProjectFeedback(id);
+        const res = await getProjectFeedbacks(project.id);
+        setFeedbacks(res.data);
+      } catch (error) {
+        console.error('Error deleting feedback:', error);
+        alert('Erro ao excluir anotação');
+      }
+    }
+  };
+
+
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -532,8 +546,8 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
 
           {/* TAB: FEEDBACK (DIARY) */}
           {activeTab === 'feedback' && (
-            <div className="tab-content" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div className="feedback-timeline" style={{ flex: 1, overflowY: 'auto', paddingRight: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
+            <div className="tab-content" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: 0 }}>
+              <div className="feedback-timeline">
                 {feedbacks.length === 0 ? (
                   <div className="empty-message">
                     <MessageSquare size={32} />
@@ -541,28 +555,48 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                   </div>
                 ) : (
                   feedbacks.map(fb => (
-                    <div key={fb.id} className={`feedback-item ${fb.type.toLowerCase()}`} style={{
-                      padding: '1rem',
-                      borderRadius: '0.75rem',
-                      background: fb.type === 'ALERTA' ? '#fef3c7' : fb.type === 'BLOQUEIO' ? '#fee2e2' : '#f8fafc',
-                      border: fb.type === 'ALERTA' ? '1px solid #fcd34d' : fb.type === 'BLOQUEIO' ? '1px solid #fca5a5' : '1px solid #e2e8f0'
-                    }}>
-                      <div className="feedback-header" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                        <div className="avatar-placeholder" style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#475569' }}>
+                    <div key={fb.id} className={`feedback-item ${fb.type.toLowerCase()}`}>
+                      {canEdit && (
+                        <button
+                          className="delete-feedback-btn"
+                          onClick={() => handleDeleteFeedback(fb.id)}
+                          title="Excluir anotação"
+                          style={{
+                            position: 'absolute',
+                            top: '12px',
+                            right: '12px',
+                            background: 'none',
+                            border: 'none',
+                            color: '#94a3b8',
+                            cursor: 'pointer',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: 0.6,
+                            transition: 'opacity 0.2s, color 0.2s'
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#ef4444'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.6'; e.currentTarget.style.color = '#94a3b8'; }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+
+                      <div className="feedback-header" style={{ paddingRight: '24px' }}>
+                        <div className="feedback-avatar">
                           {(fb.author_name || 'U').charAt(0)}
                         </div>
-                        <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#1e293b' }}>{fb.author_name || 'Usuário'}</span>
-                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>• {formatTimeAgo(fb.created_at)}</span>
-                        {fb.type !== 'INFO' && (
-                          <span style={{
-                            fontSize: '0.7rem', fontWeight: 'bold', padding: '0.1rem 0.4rem', borderRadius: '4px',
-                            background: fb.type === 'ALERTA' ? '#f59e0b' : '#ef4444', color: 'white', marginLeft: 'auto'
-                          }}>
+                        <span className="feedback-author">{fb.author_name || 'Usuário'}</span>
+                        <span className="feedback-time">• {formatTimeAgo(fb.created_at)}</span>
+
+                        {(fb.type === 'ALERTA' || fb.type === 'BLOQUEIO') && (
+                          <span className={`type-badge ${fb.type.toLowerCase()}`}>
                             {fb.type}
                           </span>
                         )}
                       </div>
-                      <div className="feedback-body" style={{ fontSize: '0.95rem', color: '#334155', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                      <div className="feedback-body">
                         {fb.message}
                       </div>
                     </div>
@@ -571,26 +605,22 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
               </div>
 
               {canEdit && (
-                <form onSubmit={handleFeedbackSubmit} className="feedback-input-area" style={{
-                  display: 'flex', gap: '0.75rem', padding: '1rem', background: 'white', borderTop: '1px solid #e2e8f0', margin: '-1rem -1.5rem -1.5rem -1.5rem', borderRadius: '0 0 0.5rem 0.5rem'
-                }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <select
-                      value={feedbackType}
-                      onChange={(e) => setFeedbackType(e.target.value)}
-                      style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
-                    >
-                      <option value="INFO">Info</option>
-                      <option value="ALERTA">Alerta</option>
-                      <option value="BLOQUEIO">Bloqueio</option>
-                    </select>
-                  </div>
+                <form onSubmit={handleFeedbackSubmit} className="feedback-input-area">
+                  <select
+                    className="feedback-type-select"
+                    value={feedbackType}
+                    onChange={(e) => setFeedbackType(e.target.value)}
+                  >
+                    <option value="INFO">Info</option>
+                    <option value="ALERTA">Alerta</option>
+                    <option value="BLOQUEIO">Bloqueio</option>
+                  </select>
                   <textarea
+                    className="feedback-input"
                     value={feedbackInput}
                     onChange={(e) => setFeedbackInput(e.target.value)}
                     placeholder="Digite uma atualização sobre o projeto..."
-                    rows="2"
-                    style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid #cbd5e1', resize: 'none', fontFamily: 'inherit' }}
+                    rows="1"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -598,7 +628,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                       }
                     }}
                   />
-                  <button type="submit" className="btn btn-primary" style={{ height: 'auto', aspectRatio: '1/1', padding: '0' }} title="Enviar">
+                  <button type="submit" className="feedback-send-btn" disabled={!feedbackInput.trim()} title="Enviar">
                     <Send size={20} />
                   </button>
                 </form>

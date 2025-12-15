@@ -118,7 +118,8 @@ export const deleteMaintenance = (id) => api.delete(`/maintenance/maintenance/${
 export const chatAI = (message) => api.post('/api/ai/chat', { message });
 
 // Project Feedbacks
+export const createProjectFeedback = (projectId, feedback) => api.post(`/commercial/projects/${projectId}/feedback`, feedback);
 export const getProjectFeedbacks = (projectId) => api.get(`/commercial/projects/${projectId}/feedback`);
-export const createProjectFeedback = (projectId, data) => api.post(`/commercial/projects/${projectId}/feedback`, data);
+export const deleteProjectFeedback = (feedbackId) => api.delete(`/commercial/projects/feedback/${feedbackId}`);
 
 export default api;
