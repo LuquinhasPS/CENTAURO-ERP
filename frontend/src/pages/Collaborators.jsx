@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Plus, Trash2, Edit, Users, Mail, Phone, Briefcase, FileText, IdCard, Search, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Plus, Trash2, Edit, Users, Mail, Phone, Briefcase, FileText, IdCard, Search, AlertTriangle, CheckCircle, Clock, GraduationCap, Award } from 'lucide-react';
 import api, {
   getCollaborators, createCollaborator, updateCollaborator, deleteCollaborator,
-  getCertifications, createCertification, deleteCertification
+  getCertifications, createCertification, deleteCertification,
+  getCollaboratorEducation, createCollaboratorEducation, deleteCollaboratorEducation
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Teams from './Teams';
@@ -51,6 +52,16 @@ const Collaborators = () => {
     validity: '',
   });
 
+  // Education State
+  const [educationList, setEducationList] = useState([]);
+  const [eduFormData, setEduFormData] = useState({
+    type: 'ACADEMIC', // ACADEMIC, TECHNICAL, CERTIFICATION
+    institution: '',
+    course_name: '',
+    conclusion_date: '',
+    attachment_url: '',
+  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('');
   const [selectedTeamFilter, setSelectedTeamFilter] = useState('');
@@ -84,6 +95,15 @@ const Collaborators = () => {
       console.error('Error loading data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadEducation = async (collaboratorId) => {
+    try {
+      const res = await getCollaboratorEducation(collaboratorId);
+      setEducationList(res.data);
+    } catch (error) {
+      console.error('Error loading education:', error);
     }
   };
 
@@ -171,6 +191,21 @@ const Collaborators = () => {
     }
   };
 
+  const handleEduSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createCollaboratorEducation({
+        ...eduFormData,
+        collaborator_id: editingId
+      });
+      setEduFormData({ type: 'ACADEMIC', institution: '', course_name: '', conclusion_date: '', attachment_url: '' });
+      loadEducation(editingId);
+    } catch (error) {
+      console.error('Error saving education:', error);
+      alert('Erro ao salvar formação');
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let formattedValue = value;
@@ -217,6 +252,7 @@ const Collaborators = () => {
     setEditingId(collaborator.id);
     setActiveTab('general');
     loadCertifications(collaborator.id);
+    loadEducation(collaborator.id);
     setShowForm(true);
   };
 
@@ -226,9 +262,12 @@ const Collaborators = () => {
         await deleteCollaborator(itemToDelete);
         setShowForm(false); // Close modal if deleting the currently edited item (though usually called from list)
         loadData();
-      } else {
+      } else if (deleteType === 'certification') {
         await deleteCertification(itemToDelete);
         loadCertifications(editingId);
+      } else if (deleteType === 'education') {
+        await deleteCollaboratorEducation(itemToDelete);
+        loadEducation(editingId);
       }
       setShowConfirmModal(false);
       setItemToDelete(null);
@@ -246,6 +285,8 @@ const Collaborators = () => {
     setCertFormData({ name: '', type: 'NR', validity: '' });
     setCertifications([]);
     setActiveTab('general');
+    setEducationList([]);
+    setEduFormData({ type: 'ACADEMIC', institution: '', course_name: '', conclusion_date: '', attachment_url: '' });
   };
 
   const filteredCollaborators = collaborators.filter(collaborator => {
@@ -359,7 +400,7 @@ const Collaborators = () => {
 
       {showForm && (
         <div className="clients-form-modal">
-          <div className="clients-form card" style={{ maxWidth: '800px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="clients-form card" style={{ maxWidth: '1100px' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h3>{editingId ? 'Editar Colaborador' : 'Cadastrar Colaborador'}</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -389,6 +430,18 @@ const Collaborators = () => {
                         }}
                       >
                         Certificações (NR/ASO)
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('education')}
+                        style={{
+                          padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                          background: activeTab === 'education' ? 'white' : 'transparent',
+                          color: activeTab === 'education' ? '#0f172a' : '#64748b',
+                          fontWeight: activeTab === 'education' ? '600' : '500',
+                          boxShadow: activeTab === 'education' ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                        }}
+                      >
+                        Formação/Cursos
                       </button>
                     </div>
                     {canEdit && (
@@ -481,7 +534,7 @@ const Collaborators = () => {
                   {canEdit && <button type="submit" className="btn btn-primary">Salvar</button>}
                 </div>
               </form>
-            ) : (
+            ) : activeTab === 'certifications' ? (
               <div className="certifications-tab">
                 <form onSubmit={handleCertSubmit} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
                   <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#475569' }}>Adicionar Nova Certificação</h4>
@@ -520,9 +573,12 @@ const Collaborators = () => {
                       />
                     </div>
                     {canEdit && (
-                      <button type="submit" className="btn btn-primary" style={{ height: '42px' }}>
-                        <Plus size={18} />
-                      </button>
+                      <div className="form-group">
+                        <label className="label">&nbsp;</label>
+                        <button type="submit" className="btn btn-primary" style={{ height: '42px', width: '100%' }} title="Adicionar">
+                          <Plus size={18} />
+                        </button>
+                      </div>
                     )}
                   </div>
                 </form>
@@ -582,6 +638,133 @@ const Collaborators = () => {
                         </div>
                       );
                     })
+                  )}
+                </div>
+
+                <div className="form-actions" style={{ marginTop: '1.5rem' }}>
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Fechar</button>
+                </div>
+              </div>
+            ) : (
+              <div className="education-tab">
+                <form onSubmit={handleEduSubmit} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+                  <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#475569' }}>Adicionar Formação ou Curso</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr auto', gap: '0.75rem', alignItems: 'end' }}>
+                    <div className="form-group">
+                      <label className="label">Tipo</label>
+                      <select
+                        className="input"
+                        value={eduFormData.type}
+                        onChange={(e) => setEduFormData({ ...eduFormData, type: e.target.value })}
+                      >
+                        <option value="ACADEMIC">Escolaridade/Acadêmico</option>
+                        <option value="TECHNICAL">Curso Técnico</option>
+                        <option value="CERTIFICATION">Certificação (Ex: CCURE)</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label className="label">Instituição</label>
+                      <input
+                        type="text"
+                        className="input"
+                        placeholder="Ex: USP, SENAI..."
+                        value={eduFormData.institution}
+                        onChange={(e) => setEduFormData({ ...eduFormData, institution: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="label">Curso</label>
+                      <input
+                        type="text"
+                        className="input"
+                        placeholder="Ex: Engenharia..."
+                        value={eduFormData.course_name}
+                        onChange={(e) => setEduFormData({ ...eduFormData, course_name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="label">Conclusão</label>
+                      <input
+                        type="date"
+                        className="input"
+                        value={eduFormData.conclusion_date}
+                        onChange={(e) => setEduFormData({ ...eduFormData, conclusion_date: e.target.value })}
+                        required
+                      />
+                    </div>
+                    {canEdit && (
+                      <div className="form-group">
+                        <label className="label">&nbsp;</label>
+                        <button type="submit" className="btn btn-primary" style={{ height: '42px', width: '100%' }} title="Adicionar">
+                          <Plus size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="form-group" style={{ marginTop: '0.75rem' }}>
+                    <label className="label">Link do Certificado (Opcional)</label>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="Cole a URL do documento..."
+                      value={eduFormData.attachment_url}
+                      onChange={(e) => setEduFormData({ ...eduFormData, attachment_url: e.target.value })}
+                    />
+                  </div>
+                </form>
+
+                <div className="education-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {educationList.length === 0 ? (
+                    <p style={{ textAlign: 'center', color: '#94a3b8', padding: '1rem' }}>Nenhuma formação cadastrada.</p>
+                  ) : (
+                    [...educationList].sort((a, b) => new Date(b.conclusion_date) - new Date(a.conclusion_date))
+                      .map(edu => (
+                        <div key={edu.id} style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '0.75rem', border: '1px solid #e2e8f0', borderRadius: '0.5rem', background: 'white'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{
+                              width: '40px', height: '40px', borderRadius: '8px',
+                              background: edu.type === 'ACADEMIC' ? '#eff6ff' : '#f0fdf4',
+                              color: edu.type === 'ACADEMIC' ? '#2563eb' : '#16a34a',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}>
+                              {edu.type === 'ACADEMIC' ? <GraduationCap size={20} /> : <Award size={20} />}
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.95rem' }}>{edu.course_name}</div>
+                              <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                                {edu.institution} • Concluído em {new Date(edu.conclusion_date).getFullYear()}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            {edu.attachment_url && (
+                              <a href={edu.attachment_url} target="_blank" rel="noopener noreferrer"
+                                style={{
+                                  display: 'flex', alignItems: 'center', gap: '0.25rem',
+                                  fontSize: '0.85rem', color: '#3b82f6', textDecoration: 'none', fontWeight: '500'
+                                }}>
+                                <FileText size={14} />
+                                Ver Certificado
+                              </a>
+                            )}
+                            {canEdit && (
+                              <button
+                                className="btn-icon-small danger"
+                                onClick={() => handleDelete(edu.id, 'education')}
+                                title="Excluir"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))
                   )}
                 </div>
 

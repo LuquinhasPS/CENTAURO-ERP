@@ -69,3 +69,24 @@ class Certification(Base):
 
 # Update Collaborator to include certifications relationship
 Collaborator.certifications = relationship("Certification", back_populates="collaborator", cascade="all, delete-orphan")
+
+class EducationType(str, enum.Enum):
+    ACADEMIC = "ACADEMIC"
+    TECHNICAL = "TECHNICAL"
+    CERTIFICATION = "CERTIFICATION"
+
+class CollaboratorEducation(Base):
+    __tablename__ = "collaborator_education"
+
+    id = Column(Integer, primary_key=True, index=True)
+    type = Column(Enum(EducationType))
+    institution = Column(String)
+    course_name = Column(String)
+    conclusion_date = Column(Date)
+    attachment_url = Column(String, nullable=True)
+    collaborator_id = Column(Integer, ForeignKey("collaborators.id"))
+
+    collaborator = relationship("Collaborator", back_populates="education")
+
+# Update Collaborator to include education relationship
+Collaborator.education = relationship("CollaboratorEducation", back_populates="collaborator", cascade="all, delete-orphan")

@@ -18,6 +18,24 @@ class CertificationResponse(CertificationBase):
     class Config:
         from_attributes = True
 
+# Education Schemas
+class CollaboratorEducationBase(BaseModel):
+    type: str # ACADEMIC, TECHNICAL, CERTIFICATION
+    institution: str
+    course_name: str
+    conclusion_date: date
+    attachment_url: Optional[str] = None
+    collaborator_id: int
+
+class CollaboratorEducationCreate(CollaboratorEducationBase):
+    pass
+
+class CollaboratorEducationResponse(CollaboratorEducationBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
 # Collaborator Schemas
 class CollaboratorBase(BaseModel):
     name: str
@@ -39,6 +57,7 @@ class CollaboratorCreate(CollaboratorBase):
 class CollaboratorResponse(CollaboratorBase):
     id: int
     certifications: list[CertificationResponse] = []
+    education: list[CollaboratorEducationResponse] = []
     
     class Config:
         from_attributes = True

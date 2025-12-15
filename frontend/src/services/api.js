@@ -64,6 +64,10 @@ export const getCertifications = (collaboratorId) => api.get(`/operational/certi
 export const createCertification = (data) => api.post('/operational/certifications', data);
 export const deleteCertification = (id) => api.delete(`/operational/certifications/${id}`);
 
+export const getCollaboratorEducation = (collaboratorId) => api.get(`/operational/education/${collaboratorId}`);
+export const createCollaboratorEducation = (data) => api.post('/operational/education', data);
+export const deleteCollaboratorEducation = (id) => api.delete(`/operational/education/${id}`);
+
 // Tickets
 export const getTickets = () => api.get('/tickets/tickets');
 export const createTicket = (data) => api.post('/tickets/tickets', data);

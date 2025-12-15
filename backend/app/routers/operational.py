@@ -209,10 +209,12 @@ async def delete_allocation(allocation_id: int, db: AsyncSession = Depends(get_d
     await db.commit()
     return {"message": "Allocation deleted"}
 
-# Collaborators
 @router.get("/collaborators", response_model=List[schemas.CollaboratorResponse])
 async def get_collaborators(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Collaborator).options(selectinload(models.Collaborator.certifications)))
+    result = await db.execute(select(models.Collaborator).options(
+        selectinload(models.Collaborator.certifications),
+        selectinload(models.Collaborator.education)
+    ))
     collaborators = result.scalars().all()
     return collaborators
 
@@ -226,7 +228,10 @@ async def create_collaborator(collaborator: schemas.CollaboratorCreate, db: Asyn
 
 @router.put("/collaborators/{collaborator_id}", response_model=schemas.CollaboratorResponse)
 async def update_collaborator(collaborator_id: int, collaborator: schemas.CollaboratorCreate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Collaborator).options(selectinload(models.Collaborator.certifications)).where(models.Collaborator.id == collaborator_id))
+    result = await db.execute(select(models.Collaborator).options(
+        selectinload(models.Collaborator.certifications),
+        selectinload(models.Collaborator.education)
+    ).where(models.Collaborator.id == collaborator_id))
     db_collaborator = result.scalar_one_or_none()
     if not db_collaborator:
         raise HTTPException(status_code=404, detail="Collaborator not found")
@@ -264,13 +269,32 @@ async def create_certification(certification: schemas.CertificationCreate, db: A
     await db.refresh(db_certification)
     return db_certification
 
-@router.delete("/certifications/{certification_id}")
-async def delete_certification(certification_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Certification).where(models.Certification.id == certification_id))
-    db_certification = result.scalar_one_or_none()
-    if not db_certification:
-        raise HTTPException(status_code=404, detail="Certification not found")
-    
     await db.delete(db_certification)
     await db.commit()
     return {"message": "Certification deleted"}
+
+# Education
+@router.get("/education/{collaborator_id}", response_model=List[schemas.CollaboratorEducationResponse])
+async def get_education(collaborator_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.CollaboratorEducation).where(models.CollaboratorEducation.collaborator_id == collaborator_id))
+    education_items = result.scalars().all()
+    return education_items
+
+@router.post("/education", response_model=schemas.CollaboratorEducationResponse)
+async def create_education(education: schemas.CollaboratorEducationCreate, db: AsyncSession = Depends(get_db)):
+    db_education = models.CollaboratorEducation(**education.model_dump())
+    db.add(db_education)
+    await db.commit()
+    await db.refresh(db_education)
+    return db_education
+
+@router.delete("/education/{education_id}")
+async def delete_education(education_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.CollaboratorEducation).where(models.CollaboratorEducation.id == education_id))
+    db_education = result.scalar_one_or_none()
+    if not db_education:
+        raise HTTPException(status_code=404, detail="Education item not found")
+    
+    await db.delete(db_education)
+    await db.commit()
+    return {"message": "Education item deleted"}
