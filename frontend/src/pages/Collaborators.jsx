@@ -53,6 +53,7 @@ const Collaborators = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('');
+  const [selectedTeamFilter, setSelectedTeamFilter] = useState('');
 
   useEffect(() => {
     loadData();
@@ -251,8 +252,10 @@ const Collaborators = () => {
     const matchesSearch = collaborator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (collaborator.email && collaborator.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (collaborator.cpf && collaborator.cpf.includes(searchTerm));
+    (collaborator.cpf && collaborator.cpf.includes(searchTerm));
     const matchesRole = selectedRoleFilter ? collaborator.role_id === parseInt(selectedRoleFilter) : true;
-    return matchesSearch && matchesRole;
+    const matchesTeam = selectedTeamFilter ? collaborator.team_id === parseInt(selectedTeamFilter) : true;
+    return matchesSearch && matchesRole && matchesTeam;
   });
 
   const getValidityStatus = (dateString) => {
@@ -334,6 +337,19 @@ const Collaborators = () => {
                 <option value="">Todas as Funções</option>
                 {roles.map(role => (
                   <option key={role.id} value={role.id}>{role.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-team" style={{ minWidth: '200px' }}>
+              <select
+                className="input"
+                value={selectedTeamFilter}
+                onChange={(e) => setSelectedTeamFilter(e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <option value="">Todos os Times</option>
+                {teams.map(team => (
+                  <option key={team.id} value={team.id}>{team.name}</option>
                 ))}
               </select>
             </div>

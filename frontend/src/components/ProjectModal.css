@@ -16,7 +16,7 @@
   background: white;
   border-radius: 12px;
   width: 100%;
-  max-width: 900px;
+  max-width: 1400px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@
 
 .project-modal-header h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   color: #1e293b;
 }
 
@@ -61,7 +61,7 @@
   padding: 12px 24px;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #64748b;
   cursor: pointer;
@@ -107,7 +107,7 @@
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
 
@@ -126,7 +126,7 @@
 }
 
 .info-item span {
-  font-size: 16px;
+  font-size: 14px;
   color: #1e293b;
 }
 
@@ -182,7 +182,7 @@
   padding: 8px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .resource-form button {
@@ -223,7 +223,7 @@
 }
 
 .resource-info strong {
-  font-size: 14px;
+  font-size: 13px;
   color: #1e293b;
   display: block;
 }

@@ -1,25 +1,25 @@
 .purchases {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
 }
 
 .purchases-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
+  align-items: flex-start;
+  margin-bottom: 2rem;
 }
 
 .purchases-header h1 {
-  font-size: 32px;
-  color: #1e293b;
-  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  margin-top: 0;
 }
 
 .purchases-header p {
-  color: #64748b;
-  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 /* Card Style */

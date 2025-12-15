@@ -14,8 +14,8 @@
 .request-modal {
   background-color: #fff;
   border-radius: 8px;
-  width: 90%;
-  max-width: 1000px;
+  width: 95%;
+  max-width: 1400px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -109,12 +109,12 @@
 .items-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
 
 .items-table th {
   background-color: #f8fafc;
-  padding: 0.75rem;
+  padding: 0.5rem;
   text-align: left;
   font-weight: 600;
   color: #64748b;
@@ -122,14 +122,15 @@
 }
 
 .items-table td {
-  padding: 0.5rem;
+  padding: 0.25rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
 .items-table input,
 .items-table select {
   width: 100%;
-  padding: 0.375rem;
+  padding: 0.25rem;
+  font-size: 0.75rem;
   border: 1px solid transparent;
   border-radius: 4px;
   background-color: transparent;

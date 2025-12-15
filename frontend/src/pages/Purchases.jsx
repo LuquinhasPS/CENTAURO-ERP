@@ -218,6 +218,7 @@ const Purchases = () => {
           onClose={() => setSelectedRequest(null)}
           onUpdate={() => loadData(selectedRequest.id)}
           readOnly={!canEdit}
+          context="purchases"
         />
       )}
     </div>
