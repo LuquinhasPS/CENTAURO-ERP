@@ -650,34 +650,52 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
 
                 {showCollabForm && (
                   <form className="resource-form" onSubmit={handleAddCollaborator}>
-                    <select
-                      value={collabFormData.collaborator_id}
-                      onChange={(e) => setCollabFormData({ ...collabFormData, collaborator_id: e.target.value })}
-                      required
-                    >
-                      <option value="">Selecione um colaborador</option>
-                      {availableCollaborators.map(c => (
-                        <option key={c.id} value={c.id}>{c.name} - {c.role}</option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      placeholder="Função no projeto"
-                      value={collabFormData.role}
-                      onChange={(e) => setCollabFormData({ ...collabFormData, role: e.target.value })}
-                    />
-                    <input
-                      type="date"
-                      value={collabFormData.start_date}
-                      onChange={(e) => setCollabFormData({ ...collabFormData, start_date: e.target.value })}
-                    />
-                    <input
-                      type="date"
-                      value={collabFormData.end_date}
-                      onChange={(e) => setCollabFormData({ ...collabFormData, end_date: e.target.value })}
-                    />
-                    <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)}>Cancelar</button>
+                    <div className="form-group" style={{ flex: 2 }}>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Colaborador</label>
+                      <select
+                        value={collabFormData.collaborator_id}
+                        onChange={(e) => setCollabFormData({ ...collabFormData, collaborator_id: e.target.value })}
+                        required
+                        style={{ width: '100%' }}
+                      >
+                        <option value="">Selecione...</option>
+                        {availableCollaborators.map(c => (
+                          <option key={c.id} value={c.id}>{c.name} - {c.role}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Função</label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Motorista"
+                        value={collabFormData.role}
+                        onChange={(e) => setCollabFormData({ ...collabFormData, role: e.target.value })}
+                        style={{ width: '100%' }}
+                      />
+                    </div>
+                    <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data Início</label>
+                        <input
+                          type="date"
+                          value={collabFormData.start_date}
+                          onChange={(e) => setCollabFormData({ ...collabFormData, start_date: e.target.value })}
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data Fim</label>
+                        <input
+                          type="date"
+                          value={collabFormData.end_date}
+                          onChange={(e) => setCollabFormData({ ...collabFormData, end_date: e.target.value })}
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px', alignSelf: 'center' }}>Salvar</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)} style={{ height: '38px', alignSelf: 'center' }}>Cancelar</button>
                   </form>
                 )}
 
@@ -789,18 +807,44 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
 
                   {showVehicleForm && (
                     <form className="resource-form" onSubmit={handleAddVehicle}>
-                      <select
-                        value={vehicleFormData.vehicle_id}
-                        onChange={(e) => setVehicleFormData({ ...vehicleFormData, vehicle_id: e.target.value })}
-                        required
-                      >
-                        <option value="">Selecione um veículo</option>
-                        {availableVehicles.map(v => (
-                          <option key={v.id} value={v.id}>{v.model} - {v.license_plate}</option>
-                        ))}
-                      </select>
-                      <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)}>Cancelar</button>
+                      <div className="form-group" style={{ flex: 2 }}>
+                        <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Veículo</label>
+                        <select
+                          value={vehicleFormData.vehicle_id}
+                          onChange={(e) => setVehicleFormData({ ...vehicleFormData, vehicle_id: e.target.value })}
+                          required
+                          style={{ width: '100%' }}
+                        >
+                          <option value="">Selecione...</option>
+                          {availableVehicles.map(v => (
+                            <option key={v.id} value={v.id}>{v.model} - {v.license_plate}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="form-row" style={{ display: 'flex', gap: '1rem' }}>
+                        <div className="form-group" style={{ flex: 1 }}>
+                          <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data Início</label>
+                          <input
+                            type="date"
+                            value={vehicleFormData.start_date}
+                            onChange={(e) => setVehicleFormData({ ...vehicleFormData, start_date: e.target.value })}
+                            required
+                            style={{ width: '100%' }}
+                          />
+                        </div>
+                        <div className="form-group" style={{ flex: 1 }}>
+                          <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data Fim</label>
+                          <input
+                            type="date"
+                            value={vehicleFormData.end_date}
+                            onChange={(e) => setVehicleFormData({ ...vehicleFormData, end_date: e.target.value })}
+                            required
+                            style={{ width: '100%' }}
+                          />
+                        </div>
+                      </div>
+                      <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px', alignSelf: 'center' }}>Salvar</button>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)} style={{ height: '38px', alignSelf: 'center' }}>Cancelar</button>
                     </form>
                   )}
 
@@ -811,6 +855,13 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                           <Truck size={20} />
                           <div>
                             <strong>{getVehicleName(pv.vehicle_id)}</strong>
+                            {pv.start_date && (
+                              <p className="resource-dates">
+                                <Calendar size={14} />
+                                {new Date(pv.start_date).toLocaleDateString('pt-BR')}
+                                {pv.end_date && ` - ${new Date(pv.end_date).toLocaleDateString('pt-BR')}`}
+                              </p>
+                            )}
                           </div>
                         </div>
                         {canEdit && (

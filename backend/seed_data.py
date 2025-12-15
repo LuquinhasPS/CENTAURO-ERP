@@ -6,7 +6,7 @@ import sys
 import os
 import random
 import traceback
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 # Adiciona o diretório atual ao path para importar app
 sys.path.append(os.getcwd())
@@ -14,8 +14,9 @@ sys.path.append(os.getcwd())
 from app.database import AsyncSessionLocal
 from app.models.roles import Role
 from app.models.teams import Team
-from app.models.operational import Collaborator, Certification, CertificationType, Allocation, ResourceType, AllocationType
-from app.models.commercial import Client, Contract, Project, ProjectBilling
+from app.models.operational import Collaborator, Certification, CertificationType, Allocation, ResourceType, AllocationType, CollaboratorEducation, EducationType, CollaboratorReview
+from app.models.commercial import Client, Contract, Project, ProjectBilling, ProjectFeedback, FeedbackType
+from app.models.project_resources import ProjectCollaborator, ProjectVehicle, ProjectTool
 from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus
 from app.models.tickets import Ticket, TicketStatus, TicketPriority
 from app.models.purchases import PurchaseRequest, PurchaseItem
@@ -33,9 +34,15 @@ async def clear_data(db):
     await db.execute(delete(Ticket))
     await db.execute(delete(Allocation))
     await db.execute(delete(ProjectBilling))
+    await db.execute(delete(ProjectFeedback))
+    await db.execute(delete(ProjectCollaborator))
+    await db.execute(delete(ProjectVehicle))
+    await db.execute(delete(ProjectTool))
     await db.execute(delete(Project))
     await db.execute(delete(Contract))
     await db.execute(delete(Certification))
+    await db.execute(delete(CollaboratorEducation))
+    await db.execute(delete(CollaboratorReview))
     await db.execute(delete(Tool))
     await db.execute(delete(User)) # Delete users
     
@@ -92,6 +99,20 @@ async def seed_roles(db):
         {"name": "Auxiliar", "description": "Auxiliar técnico", "permissions": {}},
         {"name": "Assistente", "description": "Assistente administrativo", "permissions": {"finance": ["read"], "collaborators": ["read"]}},
         {"name": "Supervisor", "description": "Supervisor de equipe", "permissions": {"projects": ["read"], "collaborators": ["read", "write"]}},
+        {
+            "name": "ADM", 
+            "description": "Administrador Geral", 
+            "permissions": {
+                "projects": ["read", "write"], 
+                "contracts": ["read", "write"], 
+                "finance": ["read", "write"],
+                "collaborators": ["read", "write"],
+                "fleet": ["read", "write"],
+                "tickets": ["read", "write"],
+                "users": ["read", "write"],
+                "roles": ["read", "write"]
+            }
+        },
     ]
     
     print("🔍 Criando cargos...")
@@ -278,6 +299,11 @@ async def seed_collaborators(db, roles_map, teams):
         # Office roles -> Presidência/Admin/Engenharia
         
         role_name = random.choice(roles_list)
+        
+        # Force Lucas Silva to be ADM
+        if name == "Lucas Silva":
+            role_name = "ADM"
+            
         role_id = roles_map[role_name]
         
         team_choice = None
@@ -346,6 +372,39 @@ async def seed_collaborators(db, roles_map, teams):
             
     print(f"✅ {len(new_collabs)} Colaboradores e certificações criados.")
     return new_collabs
+
+async def seed_education(db, collaborators):
+    """Cria dados de educação para os colaboradores"""
+    print("🎓 Adicionando histórico escolar/acadêmico...")
+    
+    education_data = [
+        {"type": EducationType.ACADEMIC, "course": "Engenharia Elétrica", "inst": "USP"},
+        {"type": EducationType.ACADEMIC, "course": "Engenharia Civil", "inst": "Unicamp"},
+        {"type": EducationType.TECHNICAL, "course": "Técnico em Eletrônica", "inst": "ETEC"},
+        {"type": EducationType.TECHNICAL, "course": "Eletrotécnica", "inst": "SENAI"},
+        {"type": EducationType.CERTIFICATION, "course": "Gestão de Projetos", "inst": "FGV"},
+    ]
+
+    count = 0
+    for collab in collaborators:
+        # Add 1-2 items per person
+        num = random.randint(1, 2)
+        for _ in range(num):
+            item = random.choice(education_data)
+            
+            edu = CollaboratorEducation(
+                collaborator_id=collab.id,
+                type=item["type"],
+                course_name=item["course"],
+                institution=item["inst"],
+                conclusion_date=date.today() - timedelta(days=random.randint(100, 2000)),
+                attachment_url=None
+            )
+            db.add(edu)
+            count += 1
+            
+    await db.flush()
+    print(f"✅ {count} registros de educação criados.")
 
 async def seed_leaders(db, teams):
     """Define líderes para os times"""
@@ -728,68 +787,90 @@ async def seed_billings(db, projects):
     print(f"✅ {len(created_billings) + 2} faturamentos criados.")
 
 async def seed_allocations(db, collaborators, fleet, projects):
-    """Cria alocações de recursos em projetos"""
-    print("🔍 Criando alocações...")
+    """Cria alocações de recursos em projetos e vincula às tabelas de recursos do projeto"""
+    print("🔍 Criando alocações e vinculando recursos...")
     
     today = date.today()
     created_allocations = []
     
-    # Allocate first 5 collaborators to different projects for this week and next
-    for i, collab in enumerate(collaborators[:5]):
+    # 1. Allocate Collaborators
+    # Allocate first 10 collaborators to different projects for a range of dates
+    print("   Allocating 10 collaborators...")
+    for i, collab in enumerate(collaborators[:10]):
         proj = projects[i % len(projects)]
         
-        # Current week allocation
-        alloc = Allocation(
-            date=today + timedelta(days=i),
-            resource_type=ResourceType.PERSON,
-            resource_id=collab.id,
-            project_id=proj.id,
-            description=f"Alocado no projeto {proj.name}",
-            type=AllocationType.RESERVATION
-        )
-        db.add(alloc)
-        created_allocations.append(alloc)
+        # Define range (start today, some duration)
+        start_date = today + timedelta(days=random.randint(0, 5))
+        duration = random.randint(5, 15)
+        end_date = start_date + timedelta(days=duration)
         
-        # Another day allocation  
-        alloc2 = Allocation(
-            date=today + timedelta(days=i+7),
-            resource_type=ResourceType.PERSON,
-            resource_id=collab.id,
+        # Create ProjectCollaborator link
+        proj_collab = ProjectCollaborator(
             project_id=proj.id,
-            description=f"Alocado no projeto {proj.name}",
-            type=AllocationType.RESERVATION
+            collaborator_id=collab.id,
+            role=collab.role, # Use their main role as project role
+            start_date=start_date,
+            end_date=end_date,
+            status="active"
         )
-        db.add(alloc2)
-        created_allocations.append(alloc2)
-    
-    # Allocate vehicles to projects
-    for i, vehicle in enumerate(fleet[:3]):
-        proj = projects[(i+2) % len(projects)]
+        db.add(proj_collab)
         
-        alloc = Allocation(
-            date=today + timedelta(days=i),
-            resource_type=ResourceType.CAR,
-            resource_id=vehicle.id,
-            project_id=proj.id,
-            description=f"Veículo alocado para {proj.name}",
-            type=AllocationType.RESERVATION
-        )
-        db.add(alloc)
-        created_allocations.append(alloc)
+        # Create Daily Allocations for this range
+        current_date = start_date
+        while current_date <= end_date:
+            # Skip Sundays if you want, but for simplicity let's book all
+            if current_date.weekday() != 6: # Skip Sunday
+                alloc = Allocation(
+                    date=current_date,
+                    resource_type=ResourceType.PERSON,
+                    resource_id=collab.id,
+                    project_id=proj.id,
+                    description=f"Alocado no projeto {proj.name}",
+                    type=AllocationType.RESERVATION
+                )
+                db.add(alloc)
+                created_allocations.append(alloc)
+            
+            current_date += timedelta(days=1)
+            
+    # 2. Allocate Vehicles
+    # Allocate first 5 vehicles to projects
+    print("   Allocating 5 vehicles...")
+    for i, vehicle in enumerate(fleet[:5]):
+        proj = projects[(i+3) % len(projects)] # Offset project choice
         
-        alloc2 = Allocation(
-            date=today + timedelta(days=i+3),
-            resource_type=ResourceType.CAR,
-            resource_id=vehicle.id,
+        start_date = today + timedelta(days=random.randint(0, 2))
+        duration = random.randint(7, 20)
+        end_date = start_date + timedelta(days=duration)
+        
+        # Create ProjectVehicle link
+        proj_vehicle = ProjectVehicle(
             project_id=proj.id,
-            description=f"Veículo alocado para {proj.name}",
-            type=AllocationType.RESERVATION
+            vehicle_id=vehicle.id,
+            start_date=start_date,
+            end_date=end_date
         )
-        db.add(alloc2)
-        created_allocations.append(alloc2)
+        db.add(proj_vehicle)
+        
+        # Create Daily Allocations
+        current_date = start_date
+        while current_date <= end_date:
+            if current_date.weekday() != 6: # Skip Sunday
+                alloc = Allocation(
+                    date=current_date,
+                    resource_type=ResourceType.CAR,
+                    resource_id=vehicle.id,
+                    project_id=proj.id,
+                    description=f"Veículo alocado para {proj.name}",
+                    type=AllocationType.RESERVATION
+                )
+                db.add(alloc)
+                created_allocations.append(alloc)
+            
+            current_date += timedelta(days=1)
     
     await db.flush()
-    print(f"✅ {len(created_allocations)} alocações criadas.")
+    print(f"✅ Recursos vinculados e {len(created_allocations)} alocações diárias criadas.")
 
 async def seed_users(db):
     print("🔍 Seeding Users...")
@@ -832,7 +913,7 @@ async def seed_users(db):
             lucas_user = User(
                 email=lucas_email,
                 password_hash=hashed_password,
-                role=UserRole.VISUALIZADOR, # Role is determined by Collaborator linkage
+                role=UserRole.ADMIN,
                 is_superuser=False,
                 collaborator_id=lucas_collab.id
             )
@@ -843,6 +924,85 @@ async def seed_users(db):
             print("⚠️ Author Lucas Silva not found (unexpected).")
     else:
         print(f"ℹ️ User {lucas_email} already exists.")
+        
+    # Return list of users for other seeds
+    stmt_all = select(User)
+    result_all = await db.execute(stmt_all)
+    all_users = result_all.scalars().all()
+    return all_users
+
+async def seed_reviews(db, collaborators, users):
+    """Cria avaliações de desempenho"""
+    print("⭐ Criando avaliações de desempenho...")
+    
+    if not users:
+        print("⚠️ Sem usuários para criar avaliações.")
+        return
+
+    count = 0
+    for collab in collaborators:
+        # 1-3 reviews per collab
+        for _ in range(random.randint(1, 3)):
+            reviewer = random.choice(users)
+            review_date = date.today() - timedelta(days=random.randint(10, 365))
+            
+            review = CollaboratorReview(
+                collaborator_id=collab.id,
+                reviewer_id=reviewer.id,
+                date=review_date,
+                score_technical=random.randint(3, 5), # Mostly good
+                score_safety=random.randint(4, 5),
+                score_punctuality=random.randint(2, 5),
+                comments=random.choice([
+                    "Excelente desempenho técnico.",
+                    "Precisa melhorar pontualidade.",
+                    "Líder nato, muito proativo.",
+                    "Segue rigorosamente as normas de segurança.",
+                    "Entrega resultados consistentes."
+                ])
+            )
+            db.add(review)
+            count += 1
+            
+    await db.flush()
+    print(f"✅ {count} avaliações criadas.")
+
+async def seed_feedbacks(db, projects, users):
+    """Cria feedbacks (diário de obra) nos projetos"""
+    print("📝 Criando diário de projetos (feedbacks)...")
+    
+    if not users:
+        print("⚠️ Sem usuários para criar feedbacks.")
+        return
+
+    count = 0
+    for project in projects:
+        # 3-8 feedbacks per project
+        for i in range(random.randint(3, 8)):
+            author = random.choice(users)
+            fb_date = project.start_date + timedelta(days=random.randint(0, 30))
+            if fb_date > datetime.now().date():
+                 fb_date = datetime.now().date() # Cap at today
+            
+            # Convert date to datetime for created_at
+            fb_datetime = datetime(fb_date.year, fb_date.month, fb_date.day, random.randint(8, 18), random.randint(0, 59))
+            
+            fb_type = random.choice(list(FeedbackType))
+            
+            msg = f"Registro diário: {random.choice(['Equipe mobilizada.', 'Chuva intensa paralisou atividades.', 'Entrega de materiais realizada.', 'Visita do cliente.', 'Finalizada etapa de infraestrutura.'])}"
+            
+            feedback = ProjectFeedback(
+                project_id=project.id,
+                author_id=author.id,
+                message=msg,
+                created_at=fb_datetime,
+                type=fb_type
+            )
+            db.add(feedback)
+            count += 1
+            
+    await db.flush()
+    print(f"✅ {count} feedbacks de projeto criados.")
 
 async def main():
     print("🌱 Iniciando seed de dados (REFAZENDO TUDO)...")
@@ -864,18 +1024,26 @@ async def main():
             teams = await seed_teams(db)
             collaborators = await seed_collaborators(db, roles_map, teams)
             await seed_leaders(db, teams)
-            
             await seed_tools(db)
+            
+            await seed_education(db, collaborators)
+            
+            # Users must be created before Reviews and Feedbacks
+            users = await seed_users(db) 
+            
+            await seed_reviews(db, collaborators, users)
             
             contracts = await seed_contracts(db, clients)
             projects = await seed_projects(db, clients, contracts)
+            
+            await seed_feedbacks(db, projects, users)
             
             await seed_tickets(db, contracts, collaborators)
             await seed_purchases(db, projects)
             await seed_billings(db, projects)
             await seed_allocations(db, collaborators, fleet, projects)
             
-            await seed_users(db)
+            # await seed_users(db) # Moved up
             
             await db.commit()
             print("✨ Seed concluído com sucesso!")
