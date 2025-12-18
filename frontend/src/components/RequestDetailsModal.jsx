@@ -194,7 +194,12 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
       <div className="request-modal" onClick={e => e.stopPropagation()}>
         <div className="request-modal-header">
           <div>
-            <h3>Solicitação #{request.id}</h3>
+            <h3>
+              Solicitação #{request.id}
+              {request.project_tag && <span style={{ fontSize: '0.8em', marginLeft: '10px', color: '#666', fontWeight: 'normal' }}>| {request.project_tag}</span>}
+              {request.project_name && <span style={{ fontSize: '0.8em', marginLeft: '2px', color: '#666', fontWeight: 'normal' }}>- {request.project_name}</span>}
+              {request.client_name && <span style={{ fontSize: '0.8em', marginLeft: '5px', color: '#666', fontWeight: 'normal' }}>| {request.client_name}</span>}
+            </h3>
             <span className={`status-badge ${formData.status}`}>
               {
                 {

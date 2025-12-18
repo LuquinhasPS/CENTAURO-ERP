@@ -7,7 +7,9 @@ from app.database import get_db
 from app.models import purchases as models
 from app.schemas import purchases as schemas
 from app.auth import get_current_active_user
+from app.auth import get_current_active_user
 from app.models.users import User, UserRole
+from app.models.commercial import Project, Client
 
 router = APIRouter()
 
@@ -17,6 +19,7 @@ from sqlalchemy.orm import selectinload
 async def get_purchase_with_approvers(db: AsyncSession, purchase_id: int):
     query = select(models.PurchaseRequest).options(
         selectinload(models.PurchaseRequest.items),
+        selectinload(models.PurchaseRequest.project).selectinload(Project.client),
         selectinload(models.PurchaseRequest.tech_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.control_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.finance_approver).selectinload(User.collaborator),
@@ -30,6 +33,9 @@ def purchase_to_response(purchase: models.PurchaseRequest) -> dict:
     data = {
         "id": purchase.id,
         "project_id": purchase.project_id,
+        "project_tag": purchase.project.tag if purchase.project else None,
+        "project_name": purchase.project.name if purchase.project else None,
+        "client_name": purchase.project.client.name if purchase.project and purchase.project.client else None,
         "description": purchase.description,
         "requester": purchase.requester,
         "status": purchase.status,
@@ -63,6 +69,7 @@ async def get_purchases(
 ):
     query = select(models.PurchaseRequest).options(
         selectinload(models.PurchaseRequest.items),
+        selectinload(models.PurchaseRequest.project).selectinload(Project.client),
         selectinload(models.PurchaseRequest.tech_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.control_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.finance_approver).selectinload(User.collaborator),

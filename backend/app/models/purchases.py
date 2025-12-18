@@ -7,7 +7,7 @@ class PurchaseRequest(Base):
     __tablename__ = "purchase_requests"
 
     id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(Integer, nullable=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     description = Column(String, nullable=False) # Nome do pacote/solicitação
     requester = Column(String, nullable=True)
     status = Column(String, default="pending") # pending, approved, rejected, ordered, received
@@ -44,6 +44,7 @@ class PurchaseRequest(Base):
     control_approver = relationship("app.models.users.User", foreign_keys=[control_approver_id])
     finance_approver = relationship("app.models.users.User", foreign_keys=[finance_approver_id])
     rejected_by = relationship("app.models.users.User", foreign_keys=[rejected_by_id])
+    project = relationship("app.models.commercial.Project")
 
 class PurchaseItem(Base):
     __tablename__ = "purchase_items"

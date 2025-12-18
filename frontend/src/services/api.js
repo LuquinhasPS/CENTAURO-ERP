@@ -101,6 +101,7 @@ export const removeProjectVehicle = (id) => api.delete(`/project-resources/vehic
 
 // Purchases
 export const getPurchases = (projectId) => api.get('/purchases/purchases', { params: { project_id: projectId } });
+export const getPurchasesWithDetails = (projectId) => api.get('/purchases/purchases', { params: { project_id: projectId } }); // Just calling same endpoint, robust enough
 export const createPurchase = (data) => api.post('/purchases/purchases', data);
 export const updatePurchase = (id, data) => api.put(`/purchases/purchases/${id}`, data);
 export const deletePurchase = (id) => api.delete(`/purchases/purchases/${id}`);

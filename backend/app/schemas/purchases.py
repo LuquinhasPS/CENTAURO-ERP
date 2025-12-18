@@ -53,6 +53,9 @@ class ApproverInfo(BaseModel):
 
 class PurchaseRequestResponse(PurchaseRequestBase):
     id: int
+    project_tag: Optional[str] = None
+    project_name: Optional[str] = None
+    client_name: Optional[str] = None
     created_at: datetime
     items: list[PurchaseItemResponse] = []
     

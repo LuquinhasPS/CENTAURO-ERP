@@ -134,7 +134,13 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
         setProjectVehicles(vehiclesRes.data);
       } else if (activeTab === 'purchases') {
         const res = await getPurchases(project.id);
-        setPurchases(res.data);
+        const enrichedPurchases = res.data.map(p => ({
+          ...p,
+          project_tag: project.tag,
+          project_name: project.name,
+          client_name: getClientName(project.client_id)
+        }));
+        setPurchases(enrichedPurchases);
       } else if (activeTab === 'feedback') {
         const res = await getProjectFeedbacks(project.id);
         setFeedbacks(res.data);
@@ -243,8 +249,14 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
       };
       const response = await createPurchase(newRequest);
       await loadAllData();
+      await loadAllData();
       // Open the newly created request
-      setSelectedRequest(response.data);
+      setSelectedRequest({
+        ...response.data,
+        project_tag: project.tag,
+        project_name: project.name,
+        client_name: getClientName(project.client_id)
+      });
     } catch (error) {
       console.error('Error creating request:', error);
       alert('Erro ao criar solicitação');
@@ -926,7 +938,12 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                       <div
                         key={request.id}
                         className="purchase-item clickable"
-                        onClick={() => setSelectedRequest(request)}
+                        onClick={() => setSelectedRequest({
+                          ...request,
+                          project_tag: project.tag,
+                          project_name: project.name,
+                          client_name: getClientName(project.client_id)
+                        })}
                         style={{ cursor: 'pointer' }}
                       >
                         <div className="purchase-header">
