@@ -14,6 +14,10 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
     requester: '',
     status: 'pending',
     shipping_cost: 0,
+    category: 'MATERIAL',
+    service_start_date: '',
+    service_end_date: '',
+    is_indefinite_term: false,
     items: []
   });
   const [loading, setLoading] = useState(false);
@@ -25,6 +29,10 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         requester: request.requester || '',
         status: request.status || 'pending',
         shipping_cost: request.shipping_cost || 0,
+        category: request.category || 'MATERIAL',
+        service_start_date: request.service_start_date || '',
+        service_end_date: request.service_end_date || '',
+        is_indefinite_term: request.is_indefinite_term || false,
         items: request.items || []
       });
     }
@@ -77,6 +85,17 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         }));
         return;
       }
+    }
+
+    // Indefinite Term Logic
+    if (name === 'is_indefinite_term') {
+      const isChecked = e.target.checked;
+      setFormData(prev => ({
+        ...prev,
+        is_indefinite_term: isChecked,
+        service_end_date: isChecked ? '' : prev.service_end_date
+      }));
+      return;
     }
 
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -133,6 +152,10 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         requester: formData.requester,
         status: formData.status,
         shipping_cost: parseFloat(formData.shipping_cost),
+        category: formData.category,
+        service_start_date: formData.category === 'SERVICE' ? (formData.service_start_date || null) : null,
+        service_end_date: formData.category === 'SERVICE' ? (formData.service_end_date || null) : null,
+        is_indefinite_term: formData.category === 'SERVICE' ? formData.is_indefinite_term : false,
         items: formData.items.map(item => ({
           ...item,
           quantity: parseInt(item.quantity),
@@ -233,6 +256,77 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
             </div>
           </div>
 
+          {/* Service / Rental Configuration */}
+          <div className="request-header-form" style={{ marginTop: '15px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+            <div className="form-group" style={{ flex: '0 0 auto' }}>
+              <label>Tipo de Solicitação</label>
+              <div className="radio-group" style={{ display: 'flex', gap: '15px', marginTop: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="category"
+                    value="MATERIAL"
+                    checked={formData.category === 'MATERIAL'}
+                    onChange={handleHeaderChange}
+                    disabled={!isProjectsContext || readOnly}
+                  />
+                  Compra de Material
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="category"
+                    value="SERVICE"
+                    checked={formData.category === 'SERVICE'}
+                    onChange={handleHeaderChange}
+                    disabled={!isProjectsContext || readOnly}
+                  />
+                  Serviço / Locação
+                </label>
+              </div>
+            </div>
+
+            {formData.category === 'SERVICE' && (
+              <>
+                <div className="form-group">
+                  <label>Início / Mobilização</label>
+                  <input
+                    type="date"
+                    name="service_start_date"
+                    value={formData.service_start_date}
+                    onChange={handleHeaderChange}
+                    className="input"
+                    disabled={!isProjectsContext || readOnly}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Término / Desmobilização</label>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input
+                      type="date"
+                      name="service_end_date"
+                      value={formData.service_end_date}
+                      onChange={handleHeaderChange}
+                      className="input"
+                      disabled={!isProjectsContext || readOnly || formData.is_indefinite_term}
+                    />
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+                      <input
+                        type="checkbox"
+                        name="is_indefinite_term"
+                        checked={formData.is_indefinite_term}
+                        onChange={handleHeaderChange}
+                        disabled={!isProjectsContext || readOnly}
+                      />
+                      Prazo Indeterminado
+                    </label>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
           {/* Approval Timeline - Only in Purchases context */}
           {!isProjectsContext && (
             <ApprovalTimeline request={request} onUpdate={onUpdate} />
@@ -244,7 +338,9 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
               <h4>Itens da Solicitação</h4>
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                 <div className="shipping-input-container">
-                  <label style={{ fontSize: '0.85rem', marginRight: '8px', color: '#666' }}>Valor do Frete (R$):</label>
+                  <label style={{ fontSize: '0.85rem', marginRight: '8px', color: '#666' }}>
+                    {formData.category === 'SERVICE' ? 'Mobilização (R$):' : 'Valor do Frete (R$):'}
+                  </label>
                   <input
                     type="number"
                     name="shipping_cost"
@@ -431,7 +527,9 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
           {(!isProjectsContext || readOnly) && <div style={{ marginRight: 'auto' }}></div>}
           <div className="total-summary" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
             <span style={{ fontSize: '0.9rem', color: '#666' }}>Subtotal: R$ {calculateSubtotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-            <span style={{ fontSize: '0.9rem', color: '#666' }}>Frete: R$ {(parseFloat(formData.shipping_cost) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <span style={{ fontSize: '0.9rem', color: '#666' }}>
+              {formData.category === 'SERVICE' ? 'Mobilização:' : 'Frete:'} R$ {(parseFloat(formData.shipping_cost) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </span>
             <div style={{ borderTop: '1px solid #ccc', paddingTop: '4px', marginTop: '2px' }}>
               <span style={{ fontSize: '1.1rem' }}>Total Final: </span>
               <strong style={{ fontSize: '1.1rem' }}>R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>

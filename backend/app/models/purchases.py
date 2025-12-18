@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
@@ -12,6 +12,13 @@ class PurchaseRequest(Base):
     requester = Column(String, nullable=True)
     status = Column(String, default="pending") # pending, approved, rejected, ordered, received
     shipping_cost = Column(Float, default=0.0)
+    
+    # Service / Rental Fields
+    category = Column(String, default="MATERIAL") # MATERIAL, SERVICE
+    service_start_date = Column(Date, nullable=True)
+    service_end_date = Column(Date, nullable=True)
+    is_indefinite_term = Column(Boolean, default=False)
+
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Technical Approval (Engineering)

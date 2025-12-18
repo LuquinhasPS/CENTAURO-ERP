@@ -33,6 +33,12 @@ class PurchaseRequestBase(BaseModel):
     requester: Optional[str] = None
     shipping_cost: Optional[float] = 0.0
     status: str = "pending"
+    
+    # Service Fields
+    category: str = "MATERIAL"
+    service_start_date: Optional[date] = None
+    service_end_date: Optional[date] = None
+    is_indefinite_term: bool = False
 
 class PurchaseRequestCreate(PurchaseRequestBase):
     items: Optional[list[PurchaseItemCreate]] = []

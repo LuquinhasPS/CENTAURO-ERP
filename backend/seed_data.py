@@ -446,12 +446,15 @@ async def seed_tools(db):
         {"name": "Jogo de Chaves", "serial_number": "JOG-005", "current_holder": "Almoxarifado", "current_location": "Escritório", "status": ToolStatus.AVAILABLE},
     ]
     
+    tools = []
     for tool_data in tools_data:
         tool = Tool(**tool_data)
         db.add(tool)
+        tools.append(tool)
     
     await db.flush()
     print("✅ Ferramentas criadas.")
+    return tools
 
 async def seed_contracts(db, clients):
     """Cria 5 contratos com TAG logic e novos campos"""
@@ -639,15 +642,18 @@ async def seed_tickets(db, contracts, collaborators):
     print("✅ Tickets criados.")
 
 async def seed_purchases(db, projects):
-    """Cria solicitações de compra vinculadas a projetos"""
-    print("🔍 Criando solicitações de compra...")
+    """Cria solicitações de compra vinculadas a projetos (Material e Serviço)"""
+    print("🔍 Criando solicitações de compra e serviço...")
     
-    for i, project in enumerate(projects[:5]): # Add purchases to first 5 projects
+    # 1. Material Requests
+    for i, project in enumerate(projects[:3]): 
         request = PurchaseRequest(
             project_id=project.id,
-            description=f"Materiais para {project.name}",
+            description=f"Materiais Elétricos para {project.name}",
             requester="Engenheiro Responsável",
-            status="pending"
+            status="pending",
+            category="MATERIAL",
+            shipping_cost=random.randint(50, 200)
         )
         db.add(request)
         await db.flush()
@@ -667,9 +673,51 @@ async def seed_purchases(db, projects):
             )
             db.add(item)
             
+    # 2. Service/Rental Requests (Container/Machinery)
+    for i, project in enumerate(projects[3:6]):
+        current_project = project
+        
+        # Rental types
+        rentals = [
+            {"desc": "Locação de Container 20pés", "mobilization": 1500.00, "daily": 45.00},
+            {"desc": "Locação de Andaime Tubular", "mobilization": 300.00, "daily": 15.00},
+            {"desc": "Aluguel de Gerador 55kVA", "mobilization": 800.00, "daily": 250.00},
+        ]
+        
+        rental_data = rentals[i % 3]
+        
+        start_date = date.today() + timedelta(days=5)
+        is_indefinite = (i % 2 == 0) # Alternate indefinite
+        end_date = None if is_indefinite else start_date + timedelta(days=30)
+        
+        request = PurchaseRequest(
+            project_id=current_project.id,
+            description=f"{rental_data['desc']} - Mobilização",
+            requester="Coordenador de Obra",
+            status="approved",
+            category="SERVICE",
+            shipping_cost=rental_data["mobilization"], # Mobilization cost
+            service_start_date=start_date,
+            service_end_date=end_date,
+            is_indefinite_term=is_indefinite
+        )
+        db.add(request)
+        await db.flush()
+        
+        # Item itself is the monthly/daily rate reference
+        item = PurchaseItem(
+            request_id=request.id,
+            description=rental_data['desc'],
+            quantity=1,
+            unit="diaria" if not is_indefinite else "mensal",
+            unit_price=rental_data['daily'],
+            total_price=rental_data['daily'] * (30 if is_indefinite else 30), # Estimate
+            status="quoted"
+        )
+        db.add(item)
+
     await db.flush()
-    await db.flush()
-    print("✅ Solicitações de compra criadas.")
+    print("✅ Solicitações de compra e serviço criadas.")
 
 async def seed_billings(db, projects):
     """Cria faturamentos com diversos status"""
@@ -786,7 +834,7 @@ async def seed_billings(db, projects):
         
     print(f"✅ {len(created_billings) + 2} faturamentos criados.")
 
-async def seed_allocations(db, collaborators, fleet, projects):
+async def seed_allocations(db, collaborators, fleet, projects, tools):
     """Cria alocações de recursos em projetos e vincula às tabelas de recursos do projeto"""
     print("🔍 Criando alocações e vinculando recursos...")
     
@@ -868,6 +916,49 @@ async def seed_allocations(db, collaborators, fleet, projects):
                 created_allocations.append(alloc)
             
             current_date += timedelta(days=1)
+            
+    # 3. Allocate Tools
+    # Allocate all tools to remaining projects
+    print("   Allocating 5 tools...")
+    for i, tool in enumerate(tools):
+        proj = projects[(i+5) % len(projects)]
+        
+        start_date = today + timedelta(days=random.randint(0, 5))
+        duration = random.randint(10, 30)
+        end_date = start_date + timedelta(days=duration)
+        
+        # Create ProjectTool link
+        proj_tool = ProjectTool(
+            project_id=proj.id,
+            tool_id=tool.id,
+            quantity=1, # Tools are scalar/unique now
+            start_date=start_date,
+            end_date=end_date
+        )
+        db.add(proj_tool)
+        
+        # Update Tool Status
+        if tool.status == ToolStatus.IN_USE:
+             tool.current_holder = proj.coordinator or "Equipe"
+             tool.current_location = proj.name
+             db.add(tool)
+
+        # Create Daily Allocations
+        current_date_tool = start_date
+        while current_date_tool <= end_date:
+            if current_date_tool.weekday() != 6: # Skip Sunday
+                alloc = Allocation(
+                    date=current_date_tool,
+                    resource_type=ResourceType.TOOL, # Using the TOOL enum
+                    resource_id=tool.id,
+                    project_id=proj.id,
+                    description=f"{tool.name} em uso no projeto {proj.name}",
+                    type=AllocationType.RESERVATION
+                )
+                db.add(alloc)
+                created_allocations.append(alloc)
+            
+            current_date_tool += timedelta(days=1)
     
     await db.flush()
     print(f"✅ Recursos vinculados e {len(created_allocations)} alocações diárias criadas.")
@@ -1024,7 +1115,7 @@ async def main():
             teams = await seed_teams(db)
             collaborators = await seed_collaborators(db, roles_map, teams)
             await seed_leaders(db, teams)
-            await seed_tools(db)
+            tools = await seed_tools(db)
             
             await seed_education(db, collaborators)
             
@@ -1041,7 +1132,7 @@ async def main():
             await seed_tickets(db, contracts, collaborators)
             await seed_purchases(db, projects)
             await seed_billings(db, projects)
-            await seed_allocations(db, collaborators, fleet, projects)
+            await seed_allocations(db, collaborators, fleet, projects, tools)
             
             # await seed_users(db) # Moved up
             

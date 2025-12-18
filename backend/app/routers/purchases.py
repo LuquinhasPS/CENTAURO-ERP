@@ -34,6 +34,10 @@ def purchase_to_response(purchase: models.PurchaseRequest) -> dict:
         "requester": purchase.requester,
         "status": purchase.status,
         "shipping_cost": purchase.shipping_cost,
+        "category": purchase.category,
+        "service_start_date": purchase.service_start_date,
+        "service_end_date": purchase.service_end_date,
+        "is_indefinite_term": purchase.is_indefinite_term,
         "created_at": purchase.created_at,
         "items": purchase.items,
         "tech_approval_at": purchase.tech_approval_at,
@@ -78,7 +82,11 @@ async def create_purchase(purchase: schemas.PurchaseRequestCreate, db: AsyncSess
         description=purchase.description,
         requester=purchase.requester,
         status=purchase.status,
-        shipping_cost=purchase.shipping_cost
+        shipping_cost=purchase.shipping_cost,
+        category=purchase.category,
+        service_start_date=purchase.service_start_date,
+        service_end_date=purchase.service_end_date,
+        is_indefinite_term=purchase.is_indefinite_term
     )
     db.add(db_request)
     await db.commit()
@@ -116,6 +124,10 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     db_purchase.requester = purchase.requester
     db_purchase.status = purchase.status
     db_purchase.shipping_cost = purchase.shipping_cost
+    db_purchase.category = purchase.category
+    db_purchase.service_start_date = purchase.service_start_date
+    db_purchase.service_end_date = purchase.service_end_date
+    db_purchase.is_indefinite_term = purchase.is_indefinite_term
     
     # Update Items (Full replacement strategy for simplicity in this prototype)
     # Delete existing items
