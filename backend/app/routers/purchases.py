@@ -17,10 +17,10 @@ from sqlalchemy.orm import selectinload
 async def get_purchase_with_approvers(db: AsyncSession, purchase_id: int):
     query = select(models.PurchaseRequest).options(
         selectinload(models.PurchaseRequest.items),
-        selectinload(models.PurchaseRequest.tech_approver),
-        selectinload(models.PurchaseRequest.control_approver),
-        selectinload(models.PurchaseRequest.finance_approver),
-        selectinload(models.PurchaseRequest.rejected_by)
+        selectinload(models.PurchaseRequest.tech_approver).selectinload(User.collaborator),
+        selectinload(models.PurchaseRequest.control_approver).selectinload(User.collaborator),
+        selectinload(models.PurchaseRequest.finance_approver).selectinload(User.collaborator),
+        selectinload(models.PurchaseRequest.rejected_by).selectinload(User.collaborator)
     ).where(models.PurchaseRequest.id == purchase_id)
     result = await db.execute(query)
     return result.scalar_one_or_none()
@@ -33,6 +33,7 @@ def purchase_to_response(purchase: models.PurchaseRequest) -> dict:
         "description": purchase.description,
         "requester": purchase.requester,
         "status": purchase.status,
+        "shipping_cost": purchase.shipping_cost,
         "created_at": purchase.created_at,
         "items": purchase.items,
         "tech_approval_at": purchase.tech_approval_at,
@@ -76,7 +77,8 @@ async def create_purchase(purchase: schemas.PurchaseRequestCreate, db: AsyncSess
         project_id=purchase.project_id,
         description=purchase.description,
         requester=purchase.requester,
-        status=purchase.status
+        status=purchase.status,
+        shipping_cost=purchase.shipping_cost
     )
     db.add(db_request)
     await db.commit()
@@ -113,6 +115,7 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     db_purchase.description = purchase.description
     db_purchase.requester = purchase.requester
     db_purchase.status = purchase.status
+    db_purchase.shipping_cost = purchase.shipping_cost
     
     # Update Items (Full replacement strategy for simplicity in this prototype)
     # Delete existing items

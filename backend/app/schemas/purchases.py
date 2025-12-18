@@ -31,6 +31,7 @@ class PurchaseRequestBase(BaseModel):
     project_id: Optional[int] = None
     description: str
     requester: Optional[str] = None
+    shipping_cost: Optional[float] = 0.0
     status: str = "pending"
 
 class PurchaseRequestCreate(PurchaseRequestBase):

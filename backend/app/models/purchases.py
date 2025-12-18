@@ -11,6 +11,7 @@ class PurchaseRequest(Base):
     description = Column(String, nullable=False) # Nome do pacote/solicitação
     requester = Column(String, nullable=True)
     status = Column(String, default="pending") # pending, approved, rejected, ordered, received
+    shipping_cost = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Technical Approval (Engineering)

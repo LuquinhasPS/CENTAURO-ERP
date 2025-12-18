@@ -13,6 +13,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
     description: '',
     requester: '',
     status: 'pending',
+    shipping_cost: 0,
     items: []
   });
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         description: request.description,
         requester: request.requester || '',
         status: request.status || 'pending',
+        shipping_cost: request.shipping_cost || 0,
         items: request.items || []
       });
     }
@@ -130,6 +132,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         description: formData.description,
         requester: formData.requester,
         status: formData.status,
+        shipping_cost: parseFloat(formData.shipping_cost),
         items: formData.items.map(item => ({
           ...item,
           quantity: parseInt(item.quantity),
@@ -150,11 +153,17 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
     }
   };
 
-  const calculateTotal = () => {
+  const calculateSubtotal = () => {
     return formData.items.reduce((sum, item) => {
       if (item.status === 'cancelled') return sum;
       return sum + (parseFloat(item.total_price) || 0);
     }, 0);
+  };
+
+  const calculateTotal = () => {
+    const subtotal = calculateSubtotal();
+    const shipping = parseFloat(formData.shipping_cost) || 0;
+    return subtotal + shipping;
   };
 
   return (
@@ -233,11 +242,27 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
           <div className="items-section">
             <div className="items-header">
               <h4>Itens da Solicitação</h4>
-              {isProjectsContext && !readOnly && (
-                <button className="btn btn-sm btn-secondary" onClick={addItem}>
-                  <Plus size={16} /> Adicionar Item
-                </button>
-              )}
+              <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                <div className="shipping-input-container">
+                  <label style={{ fontSize: '0.85rem', marginRight: '8px', color: '#666' }}>Valor do Frete (R$):</label>
+                  <input
+                    type="number"
+                    name="shipping_cost"
+                    value={formData.shipping_cost}
+                    onChange={handleHeaderChange}
+                    className="input"
+                    style={{ width: '100px', padding: '4px 8px' }}
+                    disabled={isProjectsContext || readOnly}
+                    step="0.01"
+                    min="0"
+                  />
+                </div>
+                {isProjectsContext && !readOnly && (
+                  <button className="btn btn-sm btn-secondary" onClick={addItem}>
+                    <Plus size={16} /> Adicionar Item
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="items-table-container">
@@ -404,9 +429,13 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
             </button>
           )}
           {(!isProjectsContext || readOnly) && <div style={{ marginRight: 'auto' }}></div>}
-          <div className="total-summary">
-            <span>Total da Solicitação:</span>
-            <strong>R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+          <div className="total-summary" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+            <span style={{ fontSize: '0.9rem', color: '#666' }}>Subtotal: R$ {calculateSubtotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <span style={{ fontSize: '0.9rem', color: '#666' }}>Frete: R$ {(parseFloat(formData.shipping_cost) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <div style={{ borderTop: '1px solid #ccc', paddingTop: '4px', marginTop: '2px' }}>
+              <span style={{ fontSize: '1.1rem' }}>Total Final: </span>
+              <strong style={{ fontSize: '1.1rem' }}>R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
+            </div>
           </div>
           {!readOnly && (
             <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
