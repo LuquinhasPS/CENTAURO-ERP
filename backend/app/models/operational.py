@@ -16,6 +16,7 @@ class Collaborator(Base):
     __tablename__ = "collaborators"
     
     id = Column(Integer, primary_key=True, index=True)
+    registration_number = Column(String, unique=True, nullable=True) # Matricula
     name = Column(String, index=True)  # Nome completo
     cpf = Column(String, unique=True, nullable=True)
     rg = Column(String, nullable=True)

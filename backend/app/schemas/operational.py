@@ -65,6 +65,7 @@ class CollaboratorPerformanceStats(BaseModel):
 # Collaborator Schemas
 class CollaboratorBase(BaseModel):
     name: str
+    registration_number: Optional[str] = None
     cpf: Optional[str] = None
     rg: Optional[str] = None
     email: Optional[str] = None

@@ -336,6 +336,7 @@ async def seed_collaborators(db, roles_map, teams):
             phone=phone,
             salary=salary,
             team_id=team_choice.id,
+            registration_number=f"{20240000 + i}",
             cnh_number=f"{random.randint(100000000, 999999999)}",
             cnh_category=random.choice(["A", "B", "AB", "C", "D", "E"]),
             cnh_validity=date.today() + timedelta(days=random.randint(100, 1000))

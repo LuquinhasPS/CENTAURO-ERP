@@ -29,6 +29,7 @@ const Collaborators = () => {
   const [deleteType, setDeleteType] = useState(null); // 'collaborator' or 'certification'
 
   const [formData, setFormData] = useState({
+    registration_number: '',
     name: '',
     cpf: '',
     rg: '',
@@ -287,6 +288,7 @@ const Collaborators = () => {
 
   const handleEdit = (collaborator) => {
     setFormData({
+      registration_number: collaborator.registration_number || '',
       name: collaborator.name,
       cpf: collaborator.cpf || '',
       rg: collaborator.rg || '',
@@ -337,7 +339,7 @@ const Collaborators = () => {
 
   const resetForm = () => {
     setFormData({
-      name: '', cpf: '', rg: '', email: '', phone: '', salary: '', role_id: '', role: '', team_id: '',
+      registration_number: '', name: '', cpf: '', rg: '', email: '', phone: '', salary: '', role_id: '', role: '', team_id: '',
       cnh_number: '', cnh_category: '', cnh_validity: '',
     });
     setCertFormData({ name: '', type: 'NR', validity: '' });
@@ -359,7 +361,8 @@ const Collaborators = () => {
   const filteredCollaborators = collaborators.filter(collaborator => {
     const matchesSearch = collaborator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (collaborator.email && collaborator.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (collaborator.cpf && collaborator.cpf.includes(searchTerm));
+      (collaborator.cpf && collaborator.cpf.includes(searchTerm)) ||
+      (collaborator.registration_number && collaborator.registration_number.includes(searchTerm));
     (collaborator.cpf && collaborator.cpf.includes(searchTerm));
     const matchesRole = selectedRoleFilter ? collaborator.role_id === parseInt(selectedRoleFilter) : true;
     const matchesTeam = selectedTeamFilter ? collaborator.team_id === parseInt(selectedTeamFilter) : true;
@@ -540,6 +543,10 @@ const Collaborators = () => {
             {activeTab === 'general' ? (
               <form onSubmit={handleSubmit}>
                 <div className="form-grid">
+                  <div className="form-group">
+                    <label className="label">Matrícula</label>
+                    <input type="text" name="registration_number" className="input" value={formData.registration_number} onChange={handleChange} placeholder="000000" />
+                  </div>
                   <div className="form-group">
                     <label className="label">Nome Completo *</label>
                     <input type="text" name="name" className="input" value={formData.name} onChange={handleChange} required placeholder="Nome completo" />
@@ -1054,6 +1061,12 @@ const Collaborators = () => {
                   })()
                 )}
                 <div className="client-details">
+                  {collaborator.registration_number && (
+                    <div className="detail-item">
+                      <span style={{ fontWeight: 'bold', color: '#64748b', fontSize: '0.9rem', marginRight: '4px' }}>#</span>
+                      <span>{collaborator.registration_number}</span>
+                    </div>
+                  )}
                   {collaborator.cpf && (
                     <div className="detail-item">
                       <IdCard size={16} color="#64748b" />
