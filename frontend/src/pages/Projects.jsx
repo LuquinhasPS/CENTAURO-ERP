@@ -422,34 +422,47 @@ const Projects = () => {
                 <div className="form-group">
                   <label className="label">Valor Venda Serviço</label>
                   <input
-                    type="number"
+                    type="text"
                     name="service_value"
                     className="input"
-                    value={formData.service_value}
-                    onChange={handleChange}
-                    step="0.01"
+                    value={formData.service_value ? `R$ ${Number(formData.service_value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
+                    onChange={(e) => {
+                      // Remove tudo exceto números
+                      const onlyNumbers = e.target.value.replace(/\D/g, '');
+                      // Converte para centavos e depois para reais
+                      const valueInCents = parseInt(onlyNumbers || '0', 10);
+                      const valueInReais = (valueInCents / 100).toFixed(2);
+                      handleChange({ target: { name: 'service_value', value: valueInReais } });
+                    }}
+                    placeholder="R$ 0,00"
                   />
                 </div>
                 <div className="form-group">
                   <label className="label">Valor Venda Material</label>
                   <input
-                    type="number"
+                    type="text"
                     name="material_value"
                     className="input"
-                    value={formData.material_value}
-                    onChange={handleChange}
-                    step="0.01"
+                    value={formData.material_value ? `R$ ${Number(formData.material_value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/\D/g, '');
+                      const valueInCents = parseInt(onlyNumbers || '0', 10);
+                      const valueInReais = (valueInCents / 100).toFixed(2);
+                      handleChange({ target: { name: 'material_value', value: valueInReais } });
+                    }}
+                    placeholder="R$ 0,00"
                   />
                 </div>
                 <div className="form-group">
                   <label className="label">Orçamento Total</label>
                   <input
-                    type="number"
+                    type="text"
                     name="budget"
                     className="input"
-                    value={formData.budget}
+                    value={formData.budget ? `R$ ${Number(formData.budget).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : 'R$ 0,00'}
                     readOnly
                     disabled
+                    style={{ backgroundColor: '#f1f5f9', color: '#475569' }}
                   />
                 </div>
                 {editingId && (

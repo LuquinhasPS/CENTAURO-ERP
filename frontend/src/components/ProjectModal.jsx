@@ -539,27 +539,69 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
 
                 {/* Cost Breakdown */}
                 <div style={{ gridColumn: '1 / -1', marginTop: '1rem', marginBottom: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#64748b' }}>Detalhamento de Custos (Realizado)</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>Compras e Serviços</label>
-                      <span style={{ fontSize: '1rem', fontWeight: '600', color: '#334155' }}>
-                        R$ {(purchases.reduce((acc, p) => acc + (p.items?.reduce((iAcc, item) => iAcc + (item.total_price || 0), 0) || 0) + (p.shipping_cost || 0), 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </span>
+                  <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.9rem', color: '#64748b' }}>Detalhamento de Custos</h4>
+
+                  {/* Header Row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#94a3b8' }}></div>
+                    <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#94a3b8', textAlign: 'right' }}>Material</div>
+                    <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#94a3b8', textAlign: 'right' }}>Mão de Obra</div>
+                    <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#94a3b8', textAlign: 'right' }}>Total</div>
+                  </div>
+
+                  {/* Previsto Row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: '500', color: '#64748b' }}>Previsto</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '500', color: '#475569', textAlign: 'right' }}>
+                      R$ {(Number(projectDetails.material_value) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </div>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>Mão de Obra e Despesas</label>
-                      <span style={{ fontSize: '1rem', fontWeight: '600', color: '#334155' }}>
-                        R$ {(projectDetails.total_labor_cost || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </span>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '500', color: '#475569', textAlign: 'right' }}>
+                      R$ {(Number(projectDetails.service_value) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </div>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>Custo Total do Projeto</label>
-                      <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#0f172a' }}>
-                        R$ {((purchases.reduce((acc, p) => acc + (p.items?.reduce((iAcc, item) => iAcc + (item.total_price || 0), 0) || 0) + (p.shipping_cost || 0), 0)) + (Number(projectDetails.total_labor_cost) || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </span>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '600', color: '#334155', textAlign: 'right' }}>
+                      R$ {((Number(projectDetails.material_value) || 0) + (Number(projectDetails.service_value) || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </div>
                   </div>
+
+                  {/* Realizado Row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'center' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: '500', color: '#64748b' }}>Realizado</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '500', color: '#475569', textAlign: 'right' }}>
+                      R$ {(purchases.reduce((acc, p) => acc + (p.items?.reduce((iAcc, item) => iAcc + (item.total_price || 0), 0) || 0) + (p.shipping_cost || 0), 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '500', color: '#475569', textAlign: 'right' }}>
+                      R$ {(Number(projectDetails.total_labor_cost) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: '600', color: '#334155', textAlign: 'right' }}>
+                      R$ {((purchases.reduce((acc, p) => acc + (p.items?.reduce((iAcc, item) => iAcc + (item.total_price || 0), 0) || 0) + (p.shipping_cost || 0), 0)) + (Number(projectDetails.total_labor_cost) || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </div>
+                  </div>
+
+                  {/* Saldo Row */}
+                  {(() => {
+                    const previstoMaterial = Number(projectDetails.material_value) || 0;
+                    const previstoMO = Number(projectDetails.service_value) || 0;
+                    const realizadoMaterial = purchases.reduce((acc, p) => acc + (p.items?.reduce((iAcc, item) => iAcc + (item.total_price || 0), 0) || 0) + (p.shipping_cost || 0), 0);
+                    const realizadoMO = Number(projectDetails.total_labor_cost) || 0;
+                    const saldoMaterial = previstoMaterial - realizadoMaterial;
+                    const saldoMO = previstoMO - realizadoMO;
+                    const saldoTotal = saldoMaterial + saldoMO;
+                    const getColor = (val) => val >= 0 ? '#16a34a' : '#dc2626';
+                    return (
+                      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 1fr', gap: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0', alignItems: 'center' }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: '600', color: '#334155' }}>Saldo</div>
+                        <div style={{ fontSize: '0.95rem', fontWeight: '600', color: getColor(saldoMaterial), textAlign: 'right' }}>
+                          R$ {saldoMaterial.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </div>
+                        <div style={{ fontSize: '0.95rem', fontWeight: '600', color: getColor(saldoMO), textAlign: 'right' }}>
+                          R$ {saldoMO.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: '700', color: getColor(saldoTotal), textAlign: 'right' }}>
+                          R$ {saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="info-item">
