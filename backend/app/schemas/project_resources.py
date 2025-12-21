@@ -12,7 +12,7 @@ class ProjectCollaboratorBase(BaseModel):
     status: str = "active"
 
 class ProjectCollaboratorCreate(ProjectCollaboratorBase):
-    pass
+    include_weekends: bool = False
 
 class ProjectCollaboratorResponse(ProjectCollaboratorBase):
     id: int
@@ -29,7 +29,7 @@ class ProjectToolBase(BaseModel):
     end_date: Optional[date] = None
 
 class ProjectToolCreate(ProjectToolBase):
-    pass
+    include_weekends: bool = False
 
 class ProjectToolResponse(ProjectToolBase):
     id: int
@@ -45,7 +45,7 @@ class ProjectVehicleBase(BaseModel):
     end_date: Optional[date] = None
 
 class ProjectVehicleCreate(ProjectVehicleBase):
-    pass
+    include_weekends: bool = False
 
 class ProjectVehicleResponse(ProjectVehicleBase):
     id: int

@@ -98,6 +98,7 @@ class ProjectResponse(ProjectBase):
     client_name: Optional[str] = None  # Client name for display
     billings: list[ProjectBillingResponse] = []
     invoiced: Optional[Decimal] = None # Calculated field
+    total_labor_cost: Optional[Decimal] = 0.0 # Calculated field
     
     class Config:
         from_attributes = True

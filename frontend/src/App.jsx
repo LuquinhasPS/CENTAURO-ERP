@@ -14,6 +14,7 @@ import Fleet from './pages/Fleet';
 import Tools from './pages/Tools';
 import Tickets from './pages/Tickets';
 import AccountsReceivable from './pages/AccountsReceivable';
+import Payroll from './pages/Finance/Payroll';
 
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';
@@ -53,6 +54,7 @@ function App() {
           <Route path="/tools" element={<PrivateRoute requiredPermission="tools"><Layout><Tools /></Layout></PrivateRoute>} />
           <Route path="/tickets" element={<PrivateRoute requiredPermission="tickets"><Layout><Tickets /></Layout></PrivateRoute>} />
           <Route path="/accounts-receivable" element={<PrivateRoute requiredPermission="accounts_receivable"><Layout><AccountsReceivable /></Layout></PrivateRoute>} />
+          <Route path="/payroll" element={<PrivateRoute requiredPermission="finance"><Layout><Payroll /></Layout></PrivateRoute>} />
 
         </Routes>
       </AuthProvider>

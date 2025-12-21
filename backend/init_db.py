@@ -2,10 +2,11 @@
 import asyncio
 from app.database import engine, Base
 # Import all models to ensure they are registered with Base
-from app.models import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles
+from app.models import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles, finance_payroll, teams, users
 
 async def init_models():
     async with engine.begin() as conn:
+        print("Registered Tables:", Base.metadata.tables.keys())
         # await conn.run_sync(Base.metadata.drop_all) # Optional: Reset DB
         await conn.run_sync(Base.metadata.create_all)
     print("Tables created successfully.")

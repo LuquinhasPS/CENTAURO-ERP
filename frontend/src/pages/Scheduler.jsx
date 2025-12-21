@@ -25,7 +25,8 @@ const Scheduler = () => {
     resource_type: 'PERSON',
     project_id: '', // Default project
     start_date: '',
-    end_date: ''
+    end_date: '',
+    include_weekends: false
   });
 
   useEffect(() => {
@@ -103,13 +104,17 @@ const Scheduler = () => {
   };
 
   const handleAddAllocation = () => {
+    // Use local date for default value to avoid timezone shifts
+    const today = new Date();
+    const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
     setFormData({
       resource_id: '',
       resource_type: 'PERSON',
       project_id: '',
-      start_date: new Date().toISOString().split('T')[0],
-
-      end_date: new Date().toISOString().split('T')[0]
+      start_date: localDateStr,
+      end_date: localDateStr,
+      include_weekends: false
     });
     setEditingId(null);
     setShowForm(true);
@@ -121,7 +126,8 @@ const Scheduler = () => {
       resource_type: allocation.resource_type,
       project_id: allocation.project_id,
       start_date: allocation.date,
-      end_date: allocation.date
+      end_date: allocation.date,
+      include_weekends: true // Default to true when editing to show existing allocation even if weekend
     });
     setEditingId(allocation.id);
     setShowForm(true);
@@ -190,7 +196,9 @@ const Scheduler = () => {
 
   // Get allocations for a specific resource and day
   const getAllocationsForCell = (resourceId, resourceType, day) => {
-    const dayStr = day.toISOString().split('T')[0];
+    // Use local date string comparison to avoid UTC shifts
+    const dayStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+
     return allocations.filter(alloc => {
       if (!alloc.date) return false;
       return alloc.date === dayStr &&
@@ -431,6 +439,19 @@ const Scheduler = () => {
                 </div>
               </div>
 
+              <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <input
+                  type="checkbox"
+                  name="include_weekends"
+                  id="include_weekends"
+                  checked={formData.include_weekends}
+                  onChange={(e) => setFormData({ ...formData, include_weekends: e.target.checked })}
+                  style={{ width: 'auto', margin: 0 }}
+                />
+                <label htmlFor="include_weekends" className="label" style={{ marginBottom: 0, cursor: 'pointer' }}>
+                  Incluir Finais de Semana e Feriados
+                </label>
+              </div>
 
               <div className="form-actions">
                 {editingId && canEdit && (

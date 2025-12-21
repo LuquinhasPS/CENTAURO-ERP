@@ -102,6 +102,7 @@ class AllocationBase(BaseModel):
 class AllocationCreate(AllocationBase):
     start_date: date
     end_date: date
+    include_weekends: bool = False
 
 class AllocationResponse(AllocationBase):
     id: int

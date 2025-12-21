@@ -17,6 +17,14 @@ import RequestDetailsModal from './RequestDetailsModal';
 import ConfirmModal from './ConfirmModal';
 import './ProjectModal.css';
 
+// Helper to format YYYY-MM-DD strings without timezone shift
+// Appends T12:00:00 to force noon local time, preventing day shift due to timezone
+const formatDateUTC = (dateString) => {
+  if (!dateString) return 'N/A';
+  if (dateString.includes('T')) return new Date(dateString).toLocaleDateString('pt-BR');
+  return new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR');
+};
+
 const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) => {
   const [activeTab, setActiveTab] = useState('info');
   const [loading, setLoading] = useState(false);
@@ -52,8 +60,10 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
   const [collabFormData, setCollabFormData] = useState({
     collaborator_id: '',
     role: '',
+    role: '',
     start_date: '',
-    end_date: ''
+    end_date: '',
+    include_weekends: false
   });
 
   const [toolFormData, setToolFormData] = useState({
@@ -158,10 +168,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
       await addProjectCollaborator(project.id, {
         ...collabFormData,
         project_id: project.id,
-        collaborator_id: parseInt(collabFormData.collaborator_id)
+        collaborator_id: parseInt(collabFormData.collaborator_id),
+        include_weekends: collabFormData.include_weekends
       });
       setShowCollabForm(false);
-      setCollabFormData({ collaborator_id: '', role: '', start_date: '', end_date: '' });
+      setCollabFormData({ collaborator_id: '', role: '', start_date: '', end_date: '', include_weekends: false });
       loadAllData();
     } catch (error) {
       console.error('Error adding collaborator:', error);
@@ -188,10 +199,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
         tool_id: parseInt(toolFormData.tool_id),
         quantity: 1, // Default to 1 as requested (unique tools)
         start_date: toolFormData.start_date || null,
-        end_date: toolFormData.end_date || null
+        end_date: toolFormData.end_date || null,
+        include_weekends: toolFormData.include_weekends
       });
       setShowToolForm(false);
-      setToolFormData({ tool_id: '', start_date: '', end_date: '' });
+      setToolFormData({ tool_id: '', start_date: '', end_date: '', include_weekends: false });
       loadAllData();
     } catch (error) {
       console.error('Error adding tool:', error);
@@ -217,10 +229,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
         project_id: project.id,
         vehicle_id: parseInt(vehicleFormData.vehicle_id),
         start_date: vehicleFormData.start_date || null,
-        end_date: vehicleFormData.end_date || null
+        end_date: vehicleFormData.end_date || null,
+        include_weekends: vehicleFormData.include_weekends
       });
       setShowVehicleForm(false);
-      setVehicleFormData({ vehicle_id: '', start_date: '', end_date: '' });
+      setVehicleFormData({ vehicle_id: '', start_date: '', end_date: '', include_weekends: false });
       loadAllData();
     } catch (error) {
       console.error('Error adding vehicle:', error);
@@ -514,6 +527,32 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                   <label>Orçamento:</label>
                   <span>R$ {projectDetails.budget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}</span>
                 </div>
+
+                {/* Cost Breakdown */}
+                <div style={{ gridColumn: '1 / -1', marginTop: '1rem', marginBottom: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
+                  <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#64748b' }}>Detalhamento de Custos (Realizado)</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>bricks Materiais/Serviços</label>
+                      <span style={{ fontSize: '1rem', fontWeight: '600', color: '#334155' }}>
+                        R$ {(purchases.reduce((acc, p) => acc + (p.total_price || 0), 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>hard_hat Mão de Obra</label>
+                      <span style={{ fontSize: '1rem', fontWeight: '600', color: '#334155' }}>
+                        R$ {(projectDetails.total_labor_cost || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: '#475569', display: 'block' }}>moneybag Total Geral</label>
+                      <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#0f172a' }}>
+                        R$ {((purchases.reduce((acc, p) => acc + (p.total_price || 0), 0)) + (Number(projectDetails.total_labor_cost) || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="info-item">
                   <label>Coordenador:</label>
                   <span>{project.coordinator || 'N/A'}</span>
@@ -528,11 +567,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                 </div>
                 <div className="info-item">
                   <label>Início Estimado:</label>
-                  <span>{project.estimated_start_date ? new Date(project.estimated_start_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                  <span>{formatDateUTC(project.estimated_start_date)}</span>
                 </div>
                 <div className="info-item">
                   <label>Fim Estimado:</label>
-                  <span>{project.estimated_end_date ? new Date(project.estimated_end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                  <span>{formatDateUTC(project.estimated_end_date)}</span>
                 </div>
                 <div className="info-item">
                   <label>A Faturar:</label>
@@ -540,11 +579,11 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                 </div>
                 <div className="info-item">
                   <label>Início Real:</label>
-                  <span>{project.start_date ? new Date(project.start_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                  <span>{formatDateUTC(project.start_date)}</span>
                 </div>
                 <div className="info-item">
                   <label>Fim Real:</label>
-                  <span>{project.end_date ? new Date(project.end_date).toLocaleDateString('pt-BR') : 'N/A'}</span>
+                  <span>{formatDateUTC(project.end_date)}</span>
                 </div>
                 <div className="info-item" style={{ gridColumn: '1 / -1' }}>
                   <label>Escopo:</label>
@@ -705,8 +744,21 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                         />
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px', alignSelf: 'center' }}>Salvar</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)} style={{ height: '38px', alignSelf: 'center' }}>Cancelar</button>
+
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '1rem', flex: '1 1 100%' }}>
+                      <label htmlFor="collab-weekends" style={{ marginBottom: 0, cursor: 'pointer', fontSize: '0.875rem', width: 'auto', flexGrow: 0, whiteSpace: 'nowrap' }}>Incluir Finais de Semana e Feriados</label>
+                      <input
+                        type="checkbox"
+                        checked={collabFormData.include_weekends}
+                        onChange={(e) => setCollabFormData({ ...collabFormData, include_weekends: e.target.checked })}
+                        id="collab-weekends"
+                        style={{ width: 'auto', margin: 0, flexShrink: 0 }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'flex-end' }}>
+                      <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px' }}>Salvar</button>
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowCollabForm(false)} style={{ height: '38px' }}>Cancelar</button>
+                    </div>
                   </form>
                 )}
 
@@ -721,8 +773,8 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                           {pc.start_date && (
                             <p className="resource-dates">
                               <Calendar size={14} />
-                              {new Date(pc.start_date).toLocaleDateString('pt-BR')}
-                              {pc.end_date && ` - ${new Date(pc.end_date).toLocaleDateString('pt-BR')}`}
+                              {formatDateUTC(pc.start_date)}
+                              {pc.end_date && ` - ${formatDateUTC(pc.end_date)}`}
                             </p>
                           )}
                         </div>
@@ -794,8 +846,21 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                           />
                         </div>
                       </div>
-                      <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px', alignSelf: 'center' }}>Salvar</button>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowToolForm(false)} style={{ height: '38px', alignSelf: 'center' }}>Cancelar</button>
+
+                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '1rem', flex: '1 1 100%' }}>
+                        <label htmlFor="tool-weekends" style={{ marginBottom: 0, cursor: 'pointer', fontSize: '0.875rem', width: 'auto', flexGrow: 0, whiteSpace: 'nowrap' }}>Incluir Finais de Semana e Feriados</label>
+                        <input
+                          type="checkbox"
+                          checked={toolFormData.include_weekends}
+                          onChange={(e) => setToolFormData({ ...toolFormData, include_weekends: e.target.checked })}
+                          id="tool-weekends"
+                          style={{ width: 'auto', margin: 0, flexShrink: 0 }}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'flex-end' }}>
+                        <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px' }}>Salvar</button>
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowToolForm(false)} style={{ height: '38px' }}>Cancelar</button>
+                      </div>
                     </form>
                   )}
 
@@ -809,8 +874,8 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                             {pt.start_date && (
                               <p className="resource-dates">
                                 <Calendar size={14} />
-                                {new Date(pt.start_date).toLocaleDateString('pt-BR')}
-                                {pt.end_date && ` - ${new Date(pt.end_date).toLocaleDateString('pt-BR')}`}
+                                {formatDateUTC(pt.start_date)}
+                                {pt.end_date && ` - ${formatDateUTC(pt.end_date)}`}
                               </p>
                             )}
                           </div>
@@ -877,8 +942,21 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                           />
                         </div>
                       </div>
-                      <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px', alignSelf: 'center' }}>Salvar</button>
-                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)} style={{ height: '38px', alignSelf: 'center' }}>Cancelar</button>
+
+                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '1rem', flex: '1 1 100%' }}>
+                        <label htmlFor="vehicle-weekends" style={{ marginBottom: 0, cursor: 'pointer', fontSize: '0.875rem', width: 'auto', flexGrow: 0, whiteSpace: 'nowrap' }}>Incluir Finais de Semana e Feriados</label>
+                        <input
+                          type="checkbox"
+                          checked={vehicleFormData.include_weekends}
+                          onChange={(e) => setVehicleFormData({ ...vehicleFormData, include_weekends: e.target.checked })}
+                          id="vehicle-weekends"
+                          style={{ width: 'auto', margin: 0, flexShrink: 0 }}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'flex-end' }}>
+                        <button type="submit" className="btn btn-primary btn-sm" style={{ height: '38px' }}>Salvar</button>
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowVehicleForm(false)} style={{ height: '38px' }}>Cancelar</button>
+                      </div>
                     </form>
                   )}
 
@@ -892,8 +970,8 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                             {pv.start_date && (
                               <p className="resource-dates">
                                 <Calendar size={14} />
-                                {new Date(pv.start_date).toLocaleDateString('pt-BR')}
-                                {pv.end_date && ` - ${new Date(pv.end_date).toLocaleDateString('pt-BR')}`}
+                                {formatDateUTC(pv.start_date)}
+                                {pv.end_date && ` - ${formatDateUTC(pv.end_date)}`}
                               </p>
                             )}
                           </div>
@@ -1046,7 +1124,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                             </span>
                           </div>
                           <p className="resource-role">
-                            {billing.date ? new Date(billing.date).toLocaleDateString('pt-BR') : 'Data não definida'}
+                            {billing.date ? formatDateUTC(billing.date) : 'Data não definida'}
                             {billing.invoice_number && ` - NF ${billing.invoice_number}`}
                             {billing.description && ` - ${billing.description}`}
                           </p>
@@ -1070,15 +1148,17 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
       </div>
 
       {/* Stacked Modal for Request Details */}
-      {selectedRequest && (
-        <RequestDetailsModal
-          request={selectedRequest}
-          onClose={() => setSelectedRequest(null)}
-          onUpdate={loadAllData}
-          context="projects"
-          readOnly={!canEdit}
-        />
-      )}
+      {
+        selectedRequest && (
+          <RequestDetailsModal
+            request={selectedRequest}
+            onClose={() => setSelectedRequest(null)}
+            onUpdate={loadAllData}
+            context="projects"
+            readOnly={!canEdit}
+          />
+        )
+      }
 
       {/* Confirm Modal for Billing Deletion */}
       <ConfirmModal
@@ -1088,7 +1168,7 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
         title="Confirmar Exclusão"
         message="Tem certeza que deseja excluir este faturamento? Esta ação não pode ser desfeita."
       />
-    </div>
+    </div >
   );
 };
 

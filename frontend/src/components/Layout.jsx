@@ -41,6 +41,7 @@ const Layout = ({ children }) => {
     { path: '/fleet', icon: Car, label: 'Frota', permission: 'fleet' },
     { path: '/tools', icon: Wrench, label: 'Ferramentas', permission: 'tools' },
     { path: '/accounts-receivable', icon: DollarSign, label: 'Contas a Receber', permission: 'accounts_receivable' },
+    { path: '/payroll', icon: DollarSign, label: 'Folha de Pagamento', permission: 'finance' },
     { path: '/tickets', icon: Ticket, label: 'Chamados', permission: 'tickets' },
     { path: '/roles', icon: Settings, label: 'Cargos', permission: 'roles' },
   ];

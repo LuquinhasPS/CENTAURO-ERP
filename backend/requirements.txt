@@ -20,3 +20,6 @@ langchain-google-genai
 langchain-community
 langchain-core
 chromadb
+pandas
+openpyxl
+holidays

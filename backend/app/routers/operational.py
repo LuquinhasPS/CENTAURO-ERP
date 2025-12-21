@@ -21,13 +21,23 @@ async def get_allocations(db: AsyncSession = Depends(get_db)):
 @router.post("/allocations", response_model=List[schemas.AllocationResponse])
 async def create_allocation(allocation: schemas.AllocationCreate, db: AsyncSession = Depends(get_db)):
     from datetime import timedelta
+    import holidays
     from app.models.project_resources import ProjectCollaborator, ProjectVehicle
     
+    br_holidays = holidays.BR()
     created_allocations = []
     
     # 1. Iterate dates
     current_date = allocation.start_date
     while current_date <= allocation.end_date:
+        # Check for Weekend/Holiday
+        is_weekend = current_date.weekday() >= 5 # 5=Sat, 6=Sun
+        is_holiday = current_date in br_holidays
+        
+        if (is_weekend or is_holiday) and not allocation.include_weekends:
+            current_date += timedelta(days=1)
+            continue
+
         # Check if allocation exists for this resource/date?
         # For checks we would need a query. Let's assume we can create (or overlapping allowed).
         # Better: Delete existing for this resource/date if exists?
@@ -80,7 +90,8 @@ async def create_allocation(allocation: schemas.AllocationCreate, db: AsyncSessi
             pc = res.scalars().first()
             
             if not pc:
-                # Create default entry covering this period
+
+                # Create default entry
                 pc = ProjectCollaborator(
                     project_id=allocation.project_id,
                     collaborator_id=allocation.resource_id,
@@ -91,9 +102,17 @@ async def create_allocation(allocation: schemas.AllocationCreate, db: AsyncSessi
                 )
                 db.add(pc)
             else:
-                # Ideally extend dates if outside range?
-                # For now, safe to leave as is if already on project.
-                pass
+                # Update existing if dates expand range
+                modified = False
+                if pc.start_date and allocation.start_date < pc.start_date:
+                    pc.start_date = allocation.start_date
+                    modified = True
+                if pc.end_date and allocation.end_date > pc.end_date:
+                    pc.end_date = allocation.end_date
+                    modified = True
+                
+                if modified:
+                    db.add(pc)
                 
         elif allocation.resource_type == "CAR":
              # Check if exists
@@ -119,7 +138,9 @@ async def create_allocation(allocation: schemas.AllocationCreate, db: AsyncSessi
 @router.put("/allocations/{allocation_id}", response_model=List[schemas.AllocationResponse])
 async def update_allocation(allocation_id: int, allocation: schemas.AllocationCreate, db: AsyncSession = Depends(get_db)):
     from datetime import timedelta
+    import holidays
     from app.models.project_resources import ProjectCollaborator, ProjectVehicle
+    br_holidays = holidays.BR()
 
     # 1. Delete the existing allocation
     result = await db.execute(select(models.Allocation).where(models.Allocation.id == allocation_id))
@@ -137,6 +158,15 @@ async def update_allocation(allocation_id: int, allocation: schemas.AllocationCr
     # 2. Iterate dates (Same logic as create)
     current_date = allocation.start_date
     while current_date <= allocation.end_date:
+        # Check for Weekend/Holiday
+        is_weekend = current_date.weekday() >= 5 # 5=Sat, 6=Sun
+        is_holiday = current_date in br_holidays
+        
+        if (is_weekend or is_holiday) and not allocation.include_weekends:
+            current_date += timedelta(days=1)
+            continue
+
+        # Delete overlaps to avoid duplicates (clean slate approach for the range)
         # Delete overlaps to avoid duplicates (clean slate approach for the range)
         existing = await db.execute(select(models.Allocation).where(
             models.Allocation.date == current_date,
@@ -179,6 +209,18 @@ async def update_allocation(allocation_id: int, allocation: schemas.AllocationCr
                     status="active"
                 )
                 db.add(pc)
+            else:
+                # Update existing if dates expand range
+                modified = False
+                if pc.start_date and allocation.start_date < pc.start_date:
+                    pc.start_date = allocation.start_date
+                    modified = True
+                if pc.end_date and allocation.end_date > pc.end_date:
+                    pc.end_date = allocation.end_date
+                    modified = True
+                
+                if modified:
+                    db.add(pc)
                 
         elif allocation.resource_type == "CAR":
             res = await db.execute(

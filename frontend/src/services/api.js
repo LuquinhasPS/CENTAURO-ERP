@@ -123,4 +123,12 @@ export const createProjectFeedback = (projectId, feedback) => api.post(`/commerc
 export const getProjectFeedbacks = (projectId) => api.get(`/commercial/projects/${projectId}/feedback`);
 export const deleteProjectFeedback = (feedbackId) => api.delete(`/commercial/projects/feedback/${feedbackId}`);
 
+
+// Finance Payroll
+export const uploadPayroll = (formData) => api.post('/finance/payroll/upload', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
 export default api;

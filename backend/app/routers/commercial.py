@@ -291,6 +291,8 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
 
 @router.get("/projects/{project_id}", response_model=schemas.ProjectResponse)
 async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
+    from app.models import finance_payroll as finance_models # Import here to avoid circular dependency
+    
     result = await db.execute(select(models.Project).options(selectinload(models.Project.billings)).where(models.Project.id == project_id))
     project = result.scalar_one_or_none()
     if not project:
@@ -312,6 +314,14 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     
     # Calculate invoiced
     project.invoiced = sum(b.value for b in project.billings if b.status == models.BillingStatus.PAGO) if project.billings else 0
+
+    # Calculate Total Labor Cost (Performance Guardrail: Only in get_project)
+    labor_result = await db.execute(
+        select(func.sum(finance_models.ProjectLaborCost.cost_value))
+        .where(finance_models.ProjectLaborCost.project_id == project_id)
+    )
+    labor_cost = labor_result.scalar() or 0
+    project.total_labor_cost = labor_cost
     
     return project
 
