@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Plus, X, Trash2, Edit } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X, Trash2, Edit, Filter } from 'lucide-react';
 import { getAllocations, getCollaborators, getFleet, getTools, getProjects, getClients, createAllocation, updateAllocation, deleteAllocation } from '../services/api';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import './Scheduler.css';
@@ -69,6 +70,9 @@ const Scheduler = () => {
   const [tools, setTools] = useState([]);
   const [projects, setProjects] = useState([]);
   const [clients, setClients] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [selectedTeamIds, setSelectedTeamIds] = useState([]);  // Empty = show all (global view)
+  const [showTeamFilter, setShowTeamFilter] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
   const [showForm, setShowForm] = useState(false);
@@ -90,13 +94,14 @@ const Scheduler = () => {
 
   const loadData = async () => {
     try {
-      const [allocRes, collabRes, fleetRes, toolsRes, projRes, clientsRes] = await Promise.all([
-        getAllocations(),
+      const [allocRes, collabRes, fleetRes, toolsRes, projRes, clientsRes, teamsRes] = await Promise.all([
+        getAllocations(selectedTeamIds),
         getCollaborators(),
         getFleet(),
         getTools(),
         getProjects(),
-        getClients()
+        getClients(),
+        api.get('/teams/teams')
       ]);
       setAllocations(allocRes.data);
       setCollaborators(collabRes.data);
@@ -104,14 +109,32 @@ const Scheduler = () => {
       setTools(toolsRes.data);
       setProjects(projRes.data);
       setClients(clientsRes.data);
+      setTeams(teamsRes.data);
     } catch (error) {
       console.error('Error loading data:', error);
     }
   };
 
-  // Combine resources
+  // Reload allocations when team filter changes
+  useEffect(() => {
+    const reloadAllocations = async () => {
+      try {
+        const res = await getAllocations(selectedTeamIds);
+        setAllocations(res.data);
+      } catch (error) {
+        console.error('Error reloading allocations:', error);
+      }
+    };
+    reloadAllocations();
+  }, [selectedTeamIds]);
+
+  // Combine resources - filter collaborators by selected teams
+  const filteredCollaborators = selectedTeamIds.length > 0
+    ? collaborators.filter(c => c.teams?.some(t => selectedTeamIds.includes(t.id)))
+    : collaborators;
+
   const resources = [
-    ...collaborators.map(c => ({ id: `person-${c.id}`, type: 'PERSON', name: c.name, originalId: c.id })),
+    ...filteredCollaborators.map(c => ({ id: `person-${c.id}`, type: 'PERSON', name: c.name, originalId: c.id })),
     ...fleet.map(f => ({ id: `car-${f.id}`, type: 'CAR', name: `${f.license_plate} (${f.model})`, originalId: f.id })),
     ...tools.map(t => ({ id: `tool-${t.id}`, type: 'TOOL', name: t.name, originalId: t.id }))
   ];
@@ -282,6 +305,100 @@ const Scheduler = () => {
           </button>
         </div>
         <div className="scheduler-actions">
+          {/* Team Filter Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowTeamFilter(!showTeamFilter)}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <Filter size={18} />
+              Filtrar por Times
+              {selectedTeamIds.length > 0 && (
+                <span style={{
+                  background: '#6366f1',
+                  color: 'white',
+                  borderRadius: '9999px',
+                  padding: '2px 8px',
+                  fontSize: '0.75rem',
+                  fontWeight: '600'
+                }}>
+                  {selectedTeamIds.length}
+                </span>
+              )}
+            </button>
+
+            {showTeamFilter && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.5rem',
+                background: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.5rem',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+                zIndex: 100,
+                minWidth: '220px',
+                padding: '0.5rem'
+              }}>
+                <div style={{ padding: '0.5rem', borderBottom: '1px solid #e2e8f0', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: '600', fontSize: '0.875rem' }}>Selecionar Times</span>
+                    <button
+                      onClick={() => setSelectedTeamIds([])}
+                      style={{ fontSize: '0.75rem', color: '#6366f1', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                  {selectedTeamIds.length === 0 && (
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Visão Global (todos)</span>
+                  )}
+                </div>
+
+                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  {teams.map(team => (
+                    <label
+                      key={team.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.5rem',
+                        cursor: 'pointer',
+                        borderRadius: '0.375rem',
+                        background: selectedTeamIds.includes(team.id) ? '#e0e7ff' : 'transparent'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedTeamIds.includes(team.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedTeamIds([...selectedTeamIds, team.id]);
+                          } else {
+                            setSelectedTeamIds(selectedTeamIds.filter(id => id !== team.id));
+                          }
+                        }}
+                        style={{ accentColor: '#6366f1' }}
+                      />
+                      <span style={{ fontSize: '0.875rem' }}>{team.name}</span>
+                    </label>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowTeamFilter(false)}
+                  className="btn btn-primary"
+                  style={{ width: '100%', marginTop: '0.5rem' }}
+                >
+                  Aplicar
+                </button>
+              </div>
+            )}
+          </div>
+
           {canEdit && (
             <button className="btn btn-primary" onClick={handleAddAllocation}>
               <Plus size={20} />

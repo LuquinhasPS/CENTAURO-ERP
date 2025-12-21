@@ -51,7 +51,12 @@ export const updateTool = (id, data) => api.put(`/assets/tools/${id}`, data);
 export const deleteTool = (id) => api.delete(`/assets/tools/${id}`);
 
 // Operational
-export const getAllocations = () => api.get('/operational/allocations');
+export const getAllocations = (teamIds = []) => {
+  const params = teamIds.length > 0
+    ? '?' + teamIds.map(id => `team_ids=${id}`).join('&')
+    : '';
+  return api.get(`/operational/allocations${params}`);
+};
 export const createAllocation = (data) => api.post('/operational/allocations', data);
 export const updateAllocation = (id, data) => api.put(`/operational/allocations/${id}`, data);
 export const deleteAllocation = (id) => api.delete(`/operational/allocations/${id}`);

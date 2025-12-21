@@ -192,7 +192,7 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
                 <div className="form-group">
                   <label className="label" style={{ marginBottom: '0.75rem' }}>Membros do Time</label>
                   {(() => {
-                    const teamMembers = collaborators.filter(c => c.team_id === editingId);
+                    const teamMembers = collaborators.filter(c => c.teams?.some(t => t.id === editingId));
                     if (teamMembers.length === 0) {
                       return (
                         <p style={{ color: '#94a3b8', fontSize: '0.875rem', fontStyle: 'italic' }}>

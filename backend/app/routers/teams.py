@@ -5,6 +5,7 @@ from typing import List
 from app.database import get_db
 from app.models import teams as models
 from app.models import operational as op_models
+from app.models.collaborator_teams import collaborator_teams
 from app.schemas import teams as schemas
 
 router = APIRouter()
@@ -25,13 +26,13 @@ async def get_teams(db: AsyncSession = Depends(get_db)):
             if leader:
                 leader_name = leader.name
         
-        # Get Member Count
-        # Optimized: perform count query
-        # count_res = await db.execute(select(func.count()).select_from(op_models.Collaborator).where(op_models.Collaborator.team_id == team.id))
-        # This creates N+1 for simplicity for now, but scalable app should optimize or join.
-        # Let's do simple query for now.
-        members_res = await db.execute(select(op_models.Collaborator).where(op_models.Collaborator.team_id == team.id))
-        member_count = len(members_res.scalars().all())
+        # Get Member Count using N:N relationship
+        count_res = await db.execute(
+            select(func.count())
+            .select_from(collaborator_teams)
+            .where(collaborator_teams.c.team_id == team.id)
+        )
+        member_count = count_res.scalar() or 0
         
         response.append(schemas.TeamResponse(
             id=team.id,
@@ -88,8 +89,13 @@ async def update_team(team_id: int, team_data: schemas.TeamUpdate, db: AsyncSess
          if leader:
              leader_name = leader.name
 
-    members_res = await db.execute(select(op_models.Collaborator).where(op_models.Collaborator.team_id == db_team.id))
-    member_count = len(members_res.scalars().all())
+    # Get member count using N:N relationship
+    count_res = await db.execute(
+        select(func.count())
+        .select_from(collaborator_teams)
+        .where(collaborator_teams.c.team_id == db_team.id)
+    )
+    member_count = count_res.scalar() or 0
 
     return schemas.TeamResponse(
         id=db_team.id,
@@ -107,13 +113,8 @@ async def delete_team(team_id: int, db: AsyncSession = Depends(get_db)):
     if not db_team:
         raise HTTPException(status_code=404, detail="Team not found")
         
-    # Optional: Unassign members? (SET NULL) - SQLAlchemy usually handles this if nullable=True on FK
-    # FK on Collaborator is nullable, so it should be fine or we can manually clear.
-    # Manual clear for safety:
-    collabs = await db.execute(select(op_models.Collaborator).where(op_models.Collaborator.team_id == team_id))
-    for collab in collabs.scalars().all():
-        collab.team_id = None
-        db.add(collab)
+    # Note: N:N relationship will auto-delete from junction table due to cascade
+    # No need to manually unassign members
         
     await db.delete(db_team)
     await db.commit()

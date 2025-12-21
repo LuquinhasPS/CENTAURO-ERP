@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -13,8 +13,39 @@ router = APIRouter()
 
 # Allocations
 @router.get("/allocations", response_model=List[schemas.AllocationResponse])
-async def get_allocations(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Allocation))
+async def get_allocations(
+    team_ids: List[int] = Query(None, description="Filter by team IDs"),
+    db: AsyncSession = Depends(get_db)
+):
+    from app.models.teams import Team
+    from app.models.collaborator_teams import collaborator_teams
+    
+    if team_ids:
+        # Filter allocations where collaborator belongs to at least one of the specified teams
+        # Only applies to PERSON resource type
+        stmt = (
+            select(models.Allocation)
+            .distinct()
+            .outerjoin(
+                models.Collaborator,
+                (models.Allocation.resource_type == 'PERSON') & 
+                (models.Allocation.resource_id == models.Collaborator.id)
+            )
+            .outerjoin(
+                collaborator_teams,
+                models.Collaborator.id == collaborator_teams.c.collaborator_id
+            )
+            .where(
+                # Either it's a PERSON in one of the teams, or it's not a PERSON (CAR/TOOL - show all)
+                (collaborator_teams.c.team_id.in_(team_ids)) |
+                (models.Allocation.resource_type != 'PERSON')
+            )
+        )
+        result = await db.execute(stmt)
+    else:
+        # No filter - return all allocations (Global View)
+        result = await db.execute(select(models.Allocation))
+    
     allocations = result.scalars().all()
     return allocations
 
@@ -255,36 +286,69 @@ async def delete_allocation(allocation_id: int, db: AsyncSession = Depends(get_d
 
 @router.get("/collaborators", response_model=List[schemas.CollaboratorResponse])
 async def get_collaborators(db: AsyncSession = Depends(get_db)):
+    from app.models.teams import Team
     result = await db.execute(select(models.Collaborator).options(
         selectinload(models.Collaborator.certifications),
-        selectinload(models.Collaborator.education)
+        selectinload(models.Collaborator.education),
+        selectinload(models.Collaborator.teams)  # Load N:N teams
     ))
     collaborators = result.scalars().all()
     return collaborators
 
 @router.post("/collaborators", response_model=schemas.CollaboratorResponse)
 async def create_collaborator(collaborator: schemas.CollaboratorCreate, db: AsyncSession = Depends(get_db)):
-    db_collaborator = models.Collaborator(**collaborator.model_dump())
+    from app.models.teams import Team
+    
+    # Extract team_ids from payload
+    team_ids = collaborator.team_ids
+    collaborator_data = collaborator.model_dump(exclude={"team_ids"})
+    
+    # Create collaborator
+    db_collaborator = models.Collaborator(**collaborator_data)
     db.add(db_collaborator)
+    await db.flush()  # Get the ID
+    
+    # Add teams
+    if team_ids:
+        result = await db.execute(select(Team).where(Team.id.in_(team_ids)))
+        teams = result.scalars().all()
+        db_collaborator.teams = teams
+    
     await db.commit()
-    await db.refresh(db_collaborator)
+    await db.refresh(db_collaborator, attribute_names=["teams", "certifications", "education"])
     return db_collaborator
 
 @router.put("/collaborators/{collaborator_id}", response_model=schemas.CollaboratorResponse)
 async def update_collaborator(collaborator_id: int, collaborator: schemas.CollaboratorCreate, db: AsyncSession = Depends(get_db)):
+    from app.models.teams import Team
+    
     result = await db.execute(select(models.Collaborator).options(
         selectinload(models.Collaborator.certifications),
-        selectinload(models.Collaborator.education)
+        selectinload(models.Collaborator.education),
+        selectinload(models.Collaborator.teams)
     ).where(models.Collaborator.id == collaborator_id))
     db_collaborator = result.scalar_one_or_none()
     if not db_collaborator:
         raise HTTPException(status_code=404, detail="Collaborator not found")
     
-    for key, value in collaborator.model_dump().items():
+    # Extract team_ids from payload
+    team_ids = collaborator.team_ids
+    collaborator_data = collaborator.model_dump(exclude={"team_ids"})
+    
+    # Update collaborator attributes
+    for key, value in collaborator_data.items():
         setattr(db_collaborator, key, value)
     
+    # Update teams (replace all)
+    if team_ids is not None:
+        result = await db.execute(select(Team).where(Team.id.in_(team_ids)))
+        teams = result.scalars().all()
+        db_collaborator.teams = teams
+    else:
+        db_collaborator.teams = []
+    
     await db.commit()
-    await db.refresh(db_collaborator)
+    await db.refresh(db_collaborator, attribute_names=["teams", "certifications", "education"])
     return db_collaborator
 
 @router.delete("/collaborators/{collaborator_id}")

@@ -14,6 +14,7 @@ sys.path.append(os.getcwd())
 from app.database import AsyncSessionLocal
 from app.models.roles import Role
 from app.models.teams import Team
+from app.models.collaborator_teams import collaborator_teams
 from app.models.operational import Collaborator, Certification, CertificationType, Allocation, ResourceType, AllocationType, CollaboratorEducation, EducationType, CollaboratorReview
 from app.models.commercial import Client, Contract, Project, ProjectBilling, ProjectFeedback, FeedbackType
 from app.models.project_resources import ProjectCollaborator, ProjectVehicle, ProjectTool
@@ -54,6 +55,12 @@ async def clear_data(db):
         await db.execute(update(Team).values(leader_id=None))
     except Exception:
         pass # Table might not exist or empty
+
+    # Clear N:N junction table
+    try:
+        await db.execute(delete(collaborator_teams))
+    except Exception:
+        pass
 
     await db.execute(delete(Collaborator))
     await db.execute(delete(Team))
@@ -335,13 +342,18 @@ async def seed_collaborators(db, roles_map, teams):
             email=email,
             phone=phone,
             salary=salary,
-            team_id=team_choice.id,
             registration_number=f"{20240000 + i}",
             cnh_number=f"{random.randint(100000000, 999999999)}",
             cnh_category=random.choice(["A", "B", "AB", "C", "D", "E"]),
             cnh_validity=date.today() + timedelta(days=random.randint(100, 1000))
         )
         db.add(collab)
+        await db.flush()  # Get ID before adding to teams
+        
+        # N:N relationship - insert directly into junction table
+        await db.execute(
+            collaborator_teams.insert().values(collaborator_id=collab.id, team_id=team_choice.id)
+        )
         new_collabs.append(collab)
     
     await db.flush()
@@ -415,8 +427,12 @@ async def seed_leaders(db, teams):
     # Actually teams objects are attached to session.
     
     for team in teams:
-        # Find collaborators in this team
-        stmt = select(Collaborator).filter(Collaborator.team_id == team.id)
+        # Find collaborators in this team (N:N relationship)
+        stmt = (
+            select(Collaborator)
+            .join(collaborator_teams, Collaborator.id == collaborator_teams.c.collaborator_id)
+            .where(collaborator_teams.c.team_id == team.id)
+        )
         result = await db.execute(stmt)
         members = result.scalars().all()
         

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
+from app.models.collaborator_teams import collaborator_teams
 
 class Team(Base):
     __tablename__ = "teams"
@@ -12,4 +13,5 @@ class Team(Base):
 
     # Relationships
     leader = relationship("Collaborator", foreign_keys=[leader_id], backref="led_teams")
-    members = relationship("Collaborator", foreign_keys="[Collaborator.team_id]", back_populates="team")
+    members = relationship("Collaborator", secondary=collaborator_teams, back_populates="teams")
+

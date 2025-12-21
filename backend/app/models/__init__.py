@@ -1,5 +1,7 @@
 from .commercial import Client, Contract, Project, ProjectFeedback
 from .assets import Fleet, Tool
+from .collaborator_teams import collaborator_teams  # Must be before operational
+from .teams import Team
 from .operational import Allocation, Collaborator
 from .tickets import Ticket
 from .roles import Role

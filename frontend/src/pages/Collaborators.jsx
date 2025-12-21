@@ -39,7 +39,7 @@ const Collaborators = () => {
 
     role_id: '',
     role: '',
-    team_id: '',
+    team_ids: [],  // N:N - array of team IDs
     // CNH Data
     cnh_number: '',
     cnh_category: '',
@@ -186,10 +186,9 @@ const Collaborators = () => {
     try {
       const dataToSend = {
         ...formData,
-        ...formData,
         role_id: formData.role_id ? parseInt(formData.role_id) : null,
-        team_id: formData.team_id ? parseInt(formData.team_id) : null,
-        cnh_validity: formData.cnh_validity || null, // Fix: Send null instead of empty string
+        team_ids: formData.team_ids || [],  // N:N - send array of team IDs
+        cnh_validity: formData.cnh_validity || null,
       };
 
       if (editingId) {
@@ -298,7 +297,7 @@ const Collaborators = () => {
 
       role_id: collaborator.role_id || '',
       role: collaborator.role || '',
-      team_id: collaborator.team_id || '',
+      team_ids: collaborator.teams?.map(t => t.id) || [],  // N:N - extract IDs from teams array
       cnh_number: collaborator.cnh_number || '',
       cnh_category: collaborator.cnh_category || '',
       cnh_validity: collaborator.cnh_validity || '',
@@ -339,7 +338,7 @@ const Collaborators = () => {
 
   const resetForm = () => {
     setFormData({
-      registration_number: '', name: '', cpf: '', rg: '', email: '', phone: '', salary: '', role_id: '', role: '', team_id: '',
+      registration_number: '', name: '', cpf: '', rg: '', email: '', phone: '', salary: '', role_id: '', role: '', team_ids: [],
       cnh_number: '', cnh_category: '', cnh_validity: '',
     });
     setCertFormData({ name: '', type: 'NR', validity: '' });
@@ -365,7 +364,7 @@ const Collaborators = () => {
       (collaborator.registration_number && collaborator.registration_number.includes(searchTerm));
     (collaborator.cpf && collaborator.cpf.includes(searchTerm));
     const matchesRole = selectedRoleFilter ? collaborator.role_id === parseInt(selectedRoleFilter) : true;
-    const matchesTeam = selectedTeamFilter ? collaborator.team_id === parseInt(selectedTeamFilter) : true;
+    const matchesTeam = selectedTeamFilter ? collaborator.teams?.some(t => t.id === parseInt(selectedTeamFilter)) : true;
     return matchesSearch && matchesRole && matchesTeam;
   });
 
@@ -567,11 +566,54 @@ const Collaborators = () => {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label className="label">Time / Departamento</label>
-                    <select name="team_id" className="input" value={formData.team_id} onChange={handleChange}>
-                      <option value="">Selecione um time</option>
-                      {teams.map(team => <option key={team.id} value={team.id}>{team.name}</option>)}
-                    </select>
+                    <label className="label">Times / Departamentos</label>
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem',
+                      padding: '0.75rem',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '0.5rem',
+                      background: '#f8fafc',
+                      maxHeight: '120px',
+                      overflowY: 'auto'
+                    }}>
+                      {teams.length === 0 ? (
+                        <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Nenhum time cadastrado</span>
+                      ) : teams.map(team => (
+                        <label
+                          key={team.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.375rem 0.75rem',
+                            background: formData.team_ids.includes(team.id) ? '#e0e7ff' : 'white',
+                            border: formData.team_ids.includes(team.id) ? '1px solid #6366f1' : '1px solid #e2e8f0',
+                            borderRadius: '0.375rem',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem',
+                            fontWeight: formData.team_ids.includes(team.id) ? '500' : '400',
+                            color: formData.team_ids.includes(team.id) ? '#4338ca' : '#334155',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.team_ids.includes(team.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFormData({ ...formData, team_ids: [...formData.team_ids, team.id] });
+                              } else {
+                                setFormData({ ...formData, team_ids: formData.team_ids.filter(id => id !== team.id) });
+                              }
+                            }}
+                            style={{ accentColor: '#6366f1' }}
+                          />
+                          {team.name}
+                        </label>
+                      ))}
+                    </div>
                   </div>
                   <div className="form-group">
                     <label className="label">Email</label>
@@ -1063,8 +1105,7 @@ const Collaborators = () => {
                 <div className="client-details">
                   {collaborator.registration_number && (
                     <div className="detail-item">
-                      <span style={{ fontWeight: 'bold', color: '#64748b', fontSize: '0.9rem', marginRight: '4px' }}>#</span>
-                      <span>{collaborator.registration_number}</span>
+                      <span style={{ color: '#64748b' }}># {collaborator.registration_number}</span>
                     </div>
                   )}
                   {collaborator.cpf && (

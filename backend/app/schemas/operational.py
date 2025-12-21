@@ -63,6 +63,14 @@ class CollaboratorPerformanceStats(BaseModel):
     total_reviews: int
 
 # Collaborator Schemas
+class TeamSummary(BaseModel):
+    """Summary schema for Team (used in Collaborator response)"""
+    id: int
+    name: str
+    
+    class Config:
+        from_attributes = True
+
 class CollaboratorBase(BaseModel):
     name: str
     registration_number: Optional[str] = None
@@ -72,22 +80,23 @@ class CollaboratorBase(BaseModel):
     phone: Optional[str] = None
     salary: Optional[str] = None
     role_id: Optional[int] = None
-    team_id: Optional[int] = None
     role: Optional[str] = None  # Mantendo por compatibilidade
     cnh_number: Optional[str] = None
     cnh_category: Optional[str] = None
     cnh_validity: Optional[date] = None
 
 class CollaboratorCreate(CollaboratorBase):
-    pass
+    team_ids: list[int] = []  # N:N - list of team IDs
 
 class CollaboratorResponse(CollaboratorBase):
     id: int
     certifications: list[CertificationResponse] = []
     education: list[CollaboratorEducationResponse] = []
+    teams: list[TeamSummary] = []  # N:N - list of teams
     
     class Config:
         from_attributes = True
+
 
 # Allocation Schemas
 # Allocation Schemas
