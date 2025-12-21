@@ -257,3 +257,40 @@
 .allocation-cell.weekend {
   background-color: #f1f5f9;
 }
+
+/* Holiday Styling */
+.holiday-header {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%) !important;
+  border-bottom: 2px solid #ec4899 !important;
+}
+
+.holiday-header .day-date,
+.holiday-header .day-date-small {
+  color: #be185d;
+}
+
+.holiday-indicator {
+  font-size: 0.75rem;
+  margin-left: 4px;
+}
+
+.holiday-name {
+  font-size: 0.65rem;
+  color: #be185d;
+  font-weight: 500;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.holiday-date {
+  color: #be185d !important;
+  font-weight: 700;
+}
+
+.allocation-cell.holiday {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  border-right-color: #f9a8d4;
+}

@@ -5,6 +5,61 @@ import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import './Scheduler.css';
 
+// Feriados nacionais brasileiros (fixos)
+const FIXED_HOLIDAYS = [
+  { month: 1, day: 1, name: 'Confraternização Universal' },
+  { month: 4, day: 21, name: 'Tiradentes' },
+  { month: 5, day: 1, name: 'Dia do Trabalho' },
+  { month: 9, day: 7, name: 'Independência do Brasil' },
+  { month: 10, day: 12, name: 'Nossa Senhora Aparecida' },
+  { month: 11, day: 2, name: 'Finados' },
+  { month: 11, day: 15, name: 'Proclamação da República' },
+  { month: 12, day: 25, name: 'Natal' },
+];
+
+// Feriados móveis (Páscoa, Carnaval, Corpus Christi) - precalculados para alguns anos
+const MOBILE_HOLIDAYS = {
+  2024: [
+    { month: 2, day: 12, name: 'Carnaval' },
+    { month: 2, day: 13, name: 'Carnaval' },
+    { month: 3, day: 29, name: 'Sexta-feira Santa' },
+    { month: 3, day: 31, name: 'Páscoa' },
+    { month: 5, day: 30, name: 'Corpus Christi' },
+  ],
+  2025: [
+    { month: 3, day: 3, name: 'Carnaval' },
+    { month: 3, day: 4, name: 'Carnaval' },
+    { month: 4, day: 18, name: 'Sexta-feira Santa' },
+    { month: 4, day: 20, name: 'Páscoa' },
+    { month: 6, day: 19, name: 'Corpus Christi' },
+  ],
+  2026: [
+    { month: 2, day: 16, name: 'Carnaval' },
+    { month: 2, day: 17, name: 'Carnaval' },
+    { month: 4, day: 3, name: 'Sexta-feira Santa' },
+    { month: 4, day: 5, name: 'Páscoa' },
+    { month: 6, day: 4, name: 'Corpus Christi' },
+  ],
+};
+
+// Função para verificar se uma data é feriado
+const getHolidayInfo = (date) => {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  // Verificar feriados fixos
+  const fixedHoliday = FIXED_HOLIDAYS.find(h => h.month === month && h.day === day);
+  if (fixedHoliday) return fixedHoliday;
+
+  // Verificar feriados móveis
+  const mobileHolidays = MOBILE_HOLIDAYS[year] || [];
+  const mobileHoliday = mobileHolidays.find(h => h.month === month && h.day === day);
+  if (mobileHoliday) return mobileHoliday;
+
+  return null;
+};
+
 const Scheduler = () => {
   const { hasPermission } = useAuth();
   const canEdit = hasPermission('scheduler', 'edit');
@@ -255,21 +310,32 @@ const Scheduler = () => {
           {/* Header */}
           <div className="grid-header">
             <div className="resource-header">Recurso</div>
-            {days.map((day, index) => (
-              <div key={index} className={`day-header ${day.getDay() === 0 || day.getDay() === 6 ? 'weekend-header' : ''}`}>
-                {viewMode === 'week' ? (
-                  <>
-                    <div className="day-name">{day.toLocaleDateString('pt-BR', { weekday: 'short' })}</div>
-                    <div className="day-date">{day.getDate()}</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="day-weekday-letter">{day.toLocaleDateString('pt-BR', { weekday: 'narrow' }).toUpperCase()}</div>
-                    <div className="day-date-small">{day.getDate()}</div>
-                  </>
-                )}
-              </div>
-            ))}
+            {days.map((day, index) => {
+              const holidayInfo = getHolidayInfo(day);
+              const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+              const headerClass = `day-header ${isWeekend ? 'weekend-header' : ''} ${holidayInfo ? 'holiday-header' : ''}`;
+              return (
+                <div key={index} className={headerClass} title={holidayInfo?.name || ''}>
+                  {viewMode === 'week' ? (
+                    <>
+                      <div className="day-name">{day.toLocaleDateString('pt-BR', { weekday: 'short' })}</div>
+                      <div className="day-date">
+                        {day.getDate()}
+                        {holidayInfo && <span className="holiday-indicator">🎉</span>}
+                      </div>
+                      {holidayInfo && <div className="holiday-name">{holidayInfo.name}</div>}
+                    </>
+                  ) : (
+                    <>
+                      <div className="day-weekday-letter">{day.toLocaleDateString('pt-BR', { weekday: 'narrow' }).toUpperCase()}</div>
+                      <div className={`day-date-small ${holidayInfo ? 'holiday-date' : ''}`} title={holidayInfo?.name}>
+                        {day.getDate()}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Grid Body */}
@@ -289,8 +355,9 @@ const Scheduler = () => {
                 {days.map((day, dayIndex) => {
                   const cellAllocations = getAllocationsForCell(resource.originalId, resource.type, day);
                   const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+                  const holidayInfo = getHolidayInfo(day);
                   return (
-                    <div key={dayIndex} className={`allocation-cell ${isWeekend ? 'weekend' : ''}`}>
+                    <div key={dayIndex} className={`allocation-cell ${isWeekend ? 'weekend' : ''} ${holidayInfo ? 'holiday' : ''}`}>
                       {cellAllocations.map((alloc) => {
                         const left = 0;
                         const width = 100;
