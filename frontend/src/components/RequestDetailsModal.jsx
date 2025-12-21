@@ -219,9 +219,9 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
         </div>
 
         <div className="request-modal-content">
-          {/* Header Fields */}
+          {/* Header Fields - Consolidated */}
           <div className="request-header-form">
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '2 1 300px' }}>
               <label>Descrição do Pacote</label>
               <input
                 type="text"
@@ -232,7 +232,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                 disabled={!isProjectsContext || readOnly}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ flex: '1 1 150px' }}>
               <label>Solicitante</label>
               <input
                 type="text"
@@ -243,29 +243,10 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                 disabled={!isProjectsContext || readOnly}
               />
             </div>
-            <div className="form-group">
-              <label>Status Geral</label>
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleHeaderChange}
-                className="input"
-                disabled={!isProjectsContext || readOnly}
-              >
-                <option value="pending">Pendente</option>
-                <option value="approved">Aprovado</option>
-                <option value="rejected">Rejeitado</option>
-                <option value="ordered">Comprado</option>
-                <option value="received">Retirado</option>
-              </select>
-            </div>
-          </div>
 
-          {/* Service / Rental Configuration */}
-          <div className="request-header-form" style={{ marginTop: '15px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-            <div className="form-group" style={{ flex: '0 0 auto' }}>
+            <div className="form-group" style={{ flex: '0 0 auto', minWidth: '220px' }}>
               <label>Tipo de Solicitação</label>
-              <div className="radio-group" style={{ display: 'flex', gap: '15px', marginTop: '8px' }}>
+              <div className="radio-group" style={{ display: 'flex', gap: '15px', height: '38px', alignItems: 'center' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
                   <input
                     type="radio"
@@ -275,7 +256,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                     onChange={handleHeaderChange}
                     disabled={!isProjectsContext || readOnly}
                   />
-                  Compra de Material
+                  Material
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
                   <input
@@ -286,14 +267,33 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                     onChange={handleHeaderChange}
                     disabled={!isProjectsContext || readOnly}
                   />
-                  Serviço / Locação
+                  Serviço
                 </label>
               </div>
             </div>
 
+            <div className="form-group" style={{ flex: '1 1 120px' }}>
+              <label>Status Geral</label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleHeaderChange}
+                className="input"
+                disabled={true}
+                title="O Status Geral é calculado automaticamente com base nas aprovações e status dos itens."
+                style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+              >
+                <option value="pending">Pendente</option>
+                <option value="approved">Aprovado</option>
+                <option value="rejected">Rejeitado</option>
+                <option value="ordered">Comprado</option>
+                <option value="received">Retirado</option>
+              </select>
+            </div>
+
             {formData.category === 'SERVICE' && (
               <>
-                <div className="form-group">
+                <div className="form-group" style={{ flex: '1 1 150px' }}>
                   <label>Início / Mobilização</label>
                   <input
                     type="date"
@@ -305,7 +305,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                     required
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group" style={{ flex: '1 1 180px' }}>
                   <label>Término / Desmobilização</label>
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                     <input
@@ -324,7 +324,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                         onChange={handleHeaderChange}
                         disabled={!isProjectsContext || readOnly}
                       />
-                      Prazo Indeterminado
+                      Indet.
                     </label>
                   </div>
                 </div>

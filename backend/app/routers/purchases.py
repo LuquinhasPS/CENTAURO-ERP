@@ -118,6 +118,48 @@ async def get_purchase(id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Purchase request not found")
     return purchase_to_response(purchase)
 
+# Helper to recalculate status based on approvals and items
+def recalculate_purchase_status(purchase: models.PurchaseRequest):
+    # 1. Rejected takes precedence
+    if purchase.rejected_at:
+        purchase.status = "rejected"
+        return
+
+    # 2. Check Approvals
+    is_fully_approved = (
+        purchase.tech_approval_at is not None and 
+        purchase.control_approval_at is not None and 
+        purchase.finance_approval_at is not None
+    )
+
+    if not is_fully_approved:
+        purchase.status = "pending"
+        return
+
+    # 3. If approved, check items for "ordered" (Comprado) or "received" (Retirado)
+    # Status hierarchy: pending < quoted < bought < in_stock < delivered (received)
+    # item.status values: pending, quoted, bought, in_stock, delivered, cancelled
+    
+    if not purchase.items:
+        purchase.status = "approved"
+        return
+
+    active_items = [i for i in purchase.items if i.status != 'cancelled']
+    
+    if not active_items:
+         purchase.status = "approved" # Or some other state? Keep approved.
+         return
+
+    all_received = all(i.status == 'delivered' for i in active_items)
+    all_bought = all(i.status in ['bought', 'in_stock', 'delivered'] for i in active_items)
+
+    if all_received:
+        purchase.status = "received" # Retirado
+    elif all_bought:
+        purchase.status = "ordered" # Comprado
+    else:
+        purchase.status = "approved"
+
 @router.put("/purchases/{id}", response_model=schemas.PurchaseRequestResponse)
 async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.PurchaseRequest).options(selectinload(models.PurchaseRequest.items)).where(models.PurchaseRequest.id == id))
@@ -129,7 +171,7 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     db_purchase.project_id = purchase.project_id
     db_purchase.description = purchase.description
     db_purchase.requester = purchase.requester
-    db_purchase.status = purchase.status
+    # db_purchase.status = purchase.status  <-- REMOVED: Status is now automatic
     db_purchase.shipping_cost = purchase.shipping_cost
     db_purchase.category = purchase.category
     db_purchase.service_start_date = purchase.service_start_date
@@ -143,9 +185,17 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     
     # Add new items
     if purchase.items:
+        db_purchase.items = [] # clear list for recalculation logic immediately? No, need to commit first usually, but session tracks it.
+        # We need to recreate items objects
+        new_items = []
         for item in purchase.items:
             db_item = models.PurchaseItem(**item.model_dump(), request_id=db_purchase.id)
             db.add(db_item)
+            new_items.append(db_item)
+        db_purchase.items = new_items # Associate for calculation
+
+    # Recalculate status
+    recalculate_purchase_status(db_purchase)
     
     await db.commit()
     
@@ -223,11 +273,8 @@ async def approve_purchase(
     purchase.rejected_by_id = None
     purchase.rejected_at = None
     
-    # Check if all 3 approvals are complete
-    if (purchase.tech_approval_at and 
-        purchase.control_approval_at and 
-        purchase.finance_approval_at):
-        purchase.status = "approved"
+    # Recalculate Status
+    recalculate_purchase_status(purchase)
     
     await db.commit()
     
@@ -276,7 +323,9 @@ async def reject_purchase(
     purchase.rejection_reason = rejection.reason
     purchase.rejected_by_id = current_user.id
     purchase.rejected_at = datetime.utcnow()
-    purchase.status = "rejected"
+    
+    # Recalculate (will set to rejected)
+    recalculate_purchase_status(purchase)
     
     await db.commit()
     
