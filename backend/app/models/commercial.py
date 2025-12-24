@@ -72,6 +72,10 @@ class Project(Base):
     estimated_start_date = Column(Date)
     estimated_end_date = Column(Date)
     
+    # New Fields for Info Tab Refinement
+    company_id = Column(Integer, nullable=True) # 1=Centauro, 2=Other, etc.
+    estimated_days = Column(Integer, nullable=True) # Commercial estimation
+    
     # Warranty
     warranty_months = Column(Integer, nullable=True)  # Warranty period in months from end_date
 

@@ -250,6 +250,8 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
             "estimated_end_date": p.estimated_end_date,
             "warranty_months": p.warranty_months,
             "status": p.status,
+            "company_id": p.company_id,
+            "estimated_days": p.estimated_days,
             "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in p.billings],
             "invoiced": invoiced
         }
@@ -333,6 +335,8 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
         "estimated_end_date": db_project.estimated_end_date,
         "warranty_months": db_project.warranty_months,
         "status": db_project.status,
+        "company_id": db_project.company_id,
+        "estimated_days": db_project.estimated_days,
         "billings": [],
         "invoiced": 0
     }
@@ -413,6 +417,8 @@ async def update_project(project_id: int, project: schemas.ProjectCreate, db: As
         "estimated_end_date": db_project.estimated_end_date,
         "warranty_months": db_project.warranty_months,
         "status": db_project.status,
+        "company_id": db_project.company_id,
+        "estimated_days": db_project.estimated_days,
         "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in billings],
         "invoiced": invoiced
     }

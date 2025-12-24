@@ -132,6 +132,8 @@ class ProjectBase(BaseModel):
     end_date: Optional[DateType] = None
     estimated_start_date: Optional[DateType] = None
     estimated_end_date: Optional[DateType] = None
+    company_id: Optional[int] = None
+    estimated_days: Optional[int] = None
     warranty_months: Optional[int] = None  # Warranty period in months from end_date
 
 class ProjectCreate(ProjectBase):

@@ -581,7 +581,14 @@ const ProjectModal = ({ project, onClose, onEdit, onDelete, canEdit = true }) =>
                     </div>
                     <div>
                       <label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block' }}>Tamanho da Equipe</label>
-                      <span style={{ fontWeight: '500', color: '#334155' }}>{project.team_size ? `${project.team_size} pessoas` : '-'}</span>
+                      <span style={{ fontWeight: '500', color: '#334155' }}>
+                        {project.team_size ? `${project.team_size} pessoas` : '-'}
+                        {(projectDetails.estimated_days || project.estimated_days) && (
+                          <span style={{ color: '#64748b', marginLeft: '6px' }}>
+                            • {(projectDetails.estimated_days || project.estimated_days)} dias
+                          </span>
+                        )}
+                      </span>
                     </div>
                   </div>
                 </div>

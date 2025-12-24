@@ -40,6 +40,8 @@ const Projects = () => {
     estimated_start_date: '',
     estimated_end_date: '',
     warranty_months: '',
+    company_id: '',
+    estimated_days: '',
   });
 
   useEffect(() => {
@@ -114,6 +116,8 @@ const Projects = () => {
         estimated_start_date: formData.estimated_start_date || null,
         estimated_end_date: formData.estimated_end_date || null,
         warranty_months: formData.warranty_months ? parseInt(formData.warranty_months) : null,
+        company_id: formData.company_id ? parseInt(formData.company_id) : null,
+        estimated_days: formData.estimated_days ? parseInt(formData.estimated_days) : null,
       };
 
       if (editingId) {
@@ -160,6 +164,8 @@ const Projects = () => {
       project_number: project.project_number,
       invoiced: project.invoiced,
       status: project.status,
+      company_id: project.company_id || '',
+      estimated_days: project.estimated_days || '',
     });
     setEditingId(project.id);
     setShowForm(true);
@@ -213,6 +219,8 @@ const Projects = () => {
       estimated_start_date: '',
       estimated_end_date: '',
       warranty_months: '',
+      company_id: '',
+      estimated_days: '',
       status: 'Em Andamento',
     });
   };
@@ -373,6 +381,22 @@ const Projects = () => {
                     ))}
                   </select>
                 </div>
+                <div className="form-group">
+                  <label className="label">CNPJ (Empresa)</label>
+                  <select
+                    name="company_id"
+                    className="input"
+                    value={formData.company_id}
+                    onChange={handleChange}
+                  >
+                    <option value="">Selecione</option>
+                    <option value="1">1 - Engenharia</option>
+                    <option value="2">2 - Telecom</option>
+                    <option value="3">3 - ES</option>
+                    <option value="4">4 - MA</option>
+                    <option value="5">5 - SP</option>
+                  </select>
+                </div>
                 <div className="form-group full-width">
                   <label className="label">Escopo</label>
                   <textarea
@@ -421,6 +445,17 @@ const Projects = () => {
                     className="input"
                     value={formData.team_size}
                     onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="label">Dias Estimados</label>
+                  <input
+                    type="number"
+                    name="estimated_days"
+                    className="input"
+                    value={formData.estimated_days}
+                    onChange={handleChange}
+                    placeholder="Ex: 30"
                   />
                 </div>
                 <div className="form-group">
@@ -494,6 +529,18 @@ const Projects = () => {
                   </>
                 )}
                 <div className="form-group">
+                  <label className="label">Garantia (meses)</label>
+                  <input
+                    type="number"
+                    name="warranty_months"
+                    className="input"
+                    value={formData.warranty_months}
+                    onChange={handleChange}
+                    min="0"
+                    placeholder="Ex: 12"
+                  />
+                </div>
+                <div className="form-group">
                   <label className="label">Início Estimado</label>
                   <input
                     type="date"
@@ -531,18 +578,6 @@ const Projects = () => {
                     className="input"
                     value={formData.end_date}
                     onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="label">Garantia (meses)</label>
-                  <input
-                    type="number"
-                    name="warranty_months"
-                    className="input"
-                    value={formData.warranty_months}
-                    onChange={handleChange}
-                    min="0"
-                    placeholder="Ex: 12"
                   />
                 </div>
               </div>
