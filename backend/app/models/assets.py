@@ -61,6 +61,7 @@ class Fleet(Base):
     # Maintenance Relationship
     maintenances = relationship("VehicleMaintenance", back_populates="vehicle")
     fuel_costs = relationship("VehicleFuelCost", back_populates="vehicle")
+    toll_costs = relationship("VehicleTollCost", back_populates="vehicle")
 
 class Tool(Base):
     __tablename__ = "tools"
@@ -108,3 +109,17 @@ class VehicleFuelCost(Base):
     km_driven = Column(Integer, nullable=True)  # Column K - "Km Rodados"
 
     vehicle = relationship("Fleet", back_populates="fuel_costs")
+
+class VehicleTollCost(Base):
+    """Monthly toll cost record per vehicle"""
+    __tablename__ = "vehicle_toll_costs"
+    __table_args__ = (
+        UniqueConstraint('vehicle_id', 'competence_date', name='uq_vehicle_toll_month'),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    vehicle_id = Column(Integer, ForeignKey("fleet.id"), nullable=False)
+    competence_date = Column(Date, nullable=False)
+    total_cost = Column(Float, nullable=False)
+
+    vehicle = relationship("Fleet", back_populates="toll_costs")

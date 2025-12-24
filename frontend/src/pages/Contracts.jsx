@@ -204,6 +204,21 @@ const Contracts = () => {
     });
   };
 
+  const formatMoney = (value) => {
+    if (value === '' || value === null || value === undefined) return '';
+    return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value);
+  };
+
+  const handleMoneyChange = (e) => {
+    const { name, value } = e.target;
+    const cleanValue = value.replace(/\D/g, '');
+    const floatValue = cleanValue ? parseFloat(cleanValue) / 100 : '';
+    setFormData({
+      ...formData,
+      [name]: floatValue
+    });
+  };
+
   const filteredContracts = contracts.filter(contract => {
     const term = searchTerm.toLowerCase();
     const matchesSearch =
@@ -392,9 +407,29 @@ const Contracts = () => {
 
                   <div className="form-group">
                     <label className="label">Status</label>
-                    <div className="status-badge active" style={{ display: 'inline-block', padding: '0.25rem 0.75rem', borderRadius: '999px', backgroundColor: '#dcfce7', color: '#166534', fontSize: '0.875rem' }}>
-                      Ativo
-                    </div>
+                    {(() => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      const endDate = formData.end_date ? new Date(formData.end_date + 'T12:00:00') : null;
+                      const isExpired = endDate && endDate < today;
+
+                      return (
+                        <div
+                          className={`status-badge ${isExpired ? 'expired' : 'active'}`}
+                          style={{
+                            display: 'inline-block',
+                            padding: '0.25rem 0.75rem',
+                            borderRadius: '999px',
+                            backgroundColor: isExpired ? '#fee2e2' : '#dcfce7',
+                            color: isExpired ? '#991b1b' : '#166534',
+                            fontSize: '0.875rem',
+                            fontWeight: 600
+                          }}
+                        >
+                          {isExpired ? 'Vencido' : 'Ativo'}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -431,12 +466,11 @@ const Contracts = () => {
                     <div className="form-group">
                       <label className="label">Valor Global (Teto/Cap) (R$)</label>
                       <input
-                        type="number"
+                        type="text"
                         name="value"
                         className="input"
-                        value={formData.value}
-                        onChange={handleChange}
-                        step="0.01"
+                        value={formatMoney(formData.value)}
+                        onChange={handleMoneyChange}
                         placeholder="0,00"
                       />
                     </div>
@@ -445,12 +479,11 @@ const Contracts = () => {
                       <div className="form-group">
                         <label className="label">Valor Mensal (R$)</label>
                         <input
-                          type="number"
+                          type="text"
                           name="monthly_value"
                           className="input"
-                          value={formData.monthly_value}
-                          onChange={handleChange}
-                          step="0.01"
+                          value={formatMoney(formData.monthly_value)}
+                          onChange={handleMoneyChange}
                           placeholder="0,00"
                         />
                       </div>

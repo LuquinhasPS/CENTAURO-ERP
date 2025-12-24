@@ -63,6 +63,7 @@ class PurchaseItem(Base):
     total_price = Column(Float, default=0.0)
     supplier = Column(String, nullable=True)  # Fornecedor
     payment_method = Column(String, nullable=True)  # Forma de pagamento
+    installment_count = Column(Integer, default=1)  # Quantidade de parcelas
     status = Column(String, default="pending") # Status individual do item
     expected_date = Column(Date, nullable=True)  # Prazo de entrega
     notes = Column(String, nullable=True)

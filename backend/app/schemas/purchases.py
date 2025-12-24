@@ -13,6 +13,7 @@ class PurchaseItemBase(BaseModel):
     total_price: float = 0.0
     supplier: Optional[str] = None
     payment_method: Optional[str] = None
+    installment_count: int = 1
     status: str = "pending"
     expected_date: Optional[date] = None
     notes: Optional[str] = None

@@ -71,6 +71,13 @@ const Fleet = () => {
   // Search state
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Tolls state
+  const tollInputRef = useRef(null);
+  const [uploadingToll, setUploadingToll] = useState(false);
+  const [tollCosts, setTollCosts] = useState([]);
+  const [showTollPreview, setShowTollPreview] = useState(false);
+  const [tollPreviewData, setTollPreviewData] = useState(null);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && !showConfirmModal) {
@@ -294,6 +301,64 @@ const Fleet = () => {
     }
   };
 
+
+  // Toll upload handler
+  const handleTollUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingToll(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/assets/fleet/tolls/preview', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setTollPreviewData(response.data);
+      setShowTollPreview(true);
+    } catch (error) {
+      console.error('Error previewing toll report:', error);
+      alert('Erro ao processar planilha: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setUploadingToll(false);
+      e.target.value = '';
+    }
+  };
+
+  // Confirm toll import
+  const handleConfirmTollImport = async () => {
+    if (!tollPreviewData) return;
+
+    setUploadingToll(true);
+    try {
+      const response = await api.post('/assets/fleet/tolls/confirm', {
+        competence_date: tollPreviewData.competence_date,
+        rows: tollPreviewData.preview
+      });
+      alert(`✅ Importação concluída!\nProcessados: ${response.data.processed}`);
+      setShowTollPreview(false);
+      setTollPreviewData(null);
+      loadData();
+    } catch (error) {
+      console.error('Error confirming toll import:', error);
+      alert('Erro ao salvar dados: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setUploadingToll(false);
+    }
+  };
+
+  // Load toll costs
+  const loadTollCosts = async (vehicleId) => {
+    try {
+      const response = await api.get(`/assets/fleet/${vehicleId}/tolls`);
+      setTollCosts(response.data);
+    } catch (error) {
+      console.error('Error loading toll costs:', error);
+      setTollCosts([]);
+    }
+  };
+
   return (
     <div className="fleet">
       <header className="fleet-header">
@@ -341,15 +406,34 @@ const Fleet = () => {
                 style={{ display: 'none' }}
               />
               {activeTab === 'fleet' && (
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => fuelInputRef.current?.click()}
-                  disabled={uploading}
-                  style={{ marginRight: '0.5rem' }}
-                >
-                  <Upload size={18} />
-                  {uploading ? 'Importando...' : 'Importar Combustível'}
-                </button>
+                <>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => fuelInputRef.current?.click()}
+                    disabled={uploading}
+                    style={{ marginRight: '0.5rem' }}
+                  >
+                    <Upload size={18} />
+                    {uploading ? 'Importando...' : 'Importar Combustível'}
+                  </button>
+
+                  <input
+                    type="file"
+                    ref={tollInputRef}
+                    accept=".xlsx,.xls,.csv"
+                    onChange={handleTollUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => tollInputRef.current?.click()}
+                    disabled={uploadingToll}
+                    style={{ marginRight: '0.5rem' }}
+                  >
+                    <MapPin size={18} />
+                    {uploadingToll ? 'Importando...' : 'Importar Pedágio'}
+                  </button>
+                </>
               )}
               <button
                 className="btn btn-primary"
@@ -435,6 +519,21 @@ const Fleet = () => {
                   }}
                 >
                   Combustível
+                </button>
+                <button
+                  onClick={() => { setModalTab('tolls'); loadTollCosts(editingFleetId); }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: '0.5rem 0',
+                    borderBottom: modalTab === 'tolls' ? '2px solid #0284c7' : '2px solid transparent',
+                    color: modalTab === 'tolls' ? '#0284c7' : '#64748b',
+                    fontWeight: modalTab === 'tolls' ? 600 : 500,
+                    cursor: 'pointer',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  Pedágios
                 </button>
               </div>
             )}
@@ -595,6 +694,101 @@ const Fleet = () => {
                   canEdit={canEdit}
                 />
                 <div className="form-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowFleetForm(false);
+                      resetFleetForm();
+                    }}
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </>
+            ) : modalTab === 'tolls' ? (
+              /* Tolls Tab */
+              <>
+                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                  {tollCosts.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                      <MapPin size={48} />
+                      <p style={{ marginTop: '1rem' }}>Nenhum registro de pedágio encontrado.</p>
+                      <p style={{ fontSize: '0.85rem' }}>Use o botão "Importar Pedágio" na tela principal para carregar dados.</p>
+                    </div>
+                  ) : (
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+                          <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569' }}>Mês/Ano</th>
+                          <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569', textAlign: 'right' }}>Valor Total</th>
+                          {canEdit && <th style={{ padding: '0.75rem', width: '50px' }}></th>}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tollCosts.map(tc => {
+                          const date = new Date(tc.competence_date + 'T12:00:00');
+                          return (
+                            <tr key={tc.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                              <td style={{ padding: '0.75rem', fontWeight: 500 }}>
+                                {date.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })}
+                              </td>
+                              <td style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#ef4444' }}>
+                                R$ {tc.total_cost.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                              </td>
+                              {canEdit && (
+                                <td style={{ padding: '0.75rem', textAlign: 'center' }}>
+                                  <button
+                                    onClick={async () => {
+                                      if (confirm('Excluir este registro de pedágio?')) {
+                                        try {
+                                          await api.delete(`/assets/fleet/tolls/${tc.id}`);
+                                          loadTollCosts(editingFleetId);
+                                        } catch (error) {
+                                          alert('Erro ao excluir: ' + error.message);
+                                        }
+                                      }
+                                    }}
+                                    style={{
+                                      background: 'none',
+                                      border: 'none',
+                                      cursor: 'pointer',
+                                      color: '#ef4444',
+                                      padding: '0.25rem'
+                                    }}
+                                    title="Excluir registro"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                <div className="form-actions" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                  {canEdit && tollCosts.length > 0 && (
+                    <button
+                      type="button"
+                      className="btn"
+                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }}
+                      onClick={async () => {
+                        if (confirm('Excluir TODOS os registros de pedágio deste veículo?')) {
+                          try {
+                            await api.delete(`/assets/fleet/${editingFleetId}/tolls/clear`);
+                            loadTollCosts(editingFleetId);
+                          } catch (error) {
+                            alert('Erro ao limpar registros: ' + error.message);
+                          }
+                        }
+                      }}
+                    >
+                      Limpar Todos
+                    </button>
+                  )}
                   <button
                     type="button"
                     className="btn btn-secondary"
@@ -1062,6 +1256,100 @@ const Fleet = () => {
           </div>
         </div>
       )}
+      {showTollPreview && tollPreviewData && (
+        <div className="fleet-form-modal">
+          <div className="fleet-form card" style={{ maxWidth: '900px', maxHeight: '80vh' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div>
+                <h3>Pré-visualização de Pedágios</h3>
+                <p style={{ color: '#64748b', margin: 0 }}>
+                  Competência: <strong>{tollPreviewData.competence_label}</strong> |
+                  Total: <strong>{tollPreviewData.total_found} veículos</strong>
+                </p>
+              </div>
+              <button
+                className="btn-delete"
+                onClick={() => {
+                  setShowTollPreview(false);
+                  setTollPreviewData(null);
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {tollPreviewData.errors?.length > 0 && (
+              <div style={{
+                background: '#fef3c7',
+                border: '1px solid #f59e0b',
+                borderRadius: '0.5rem',
+                padding: '0.75rem',
+                marginBottom: '1rem'
+              }}>
+                <strong>⚠️ Avisos:</strong>
+                <ul style={{ margin: '0.5rem 0 0 1.5rem', padding: 0 }}>
+                  {tollPreviewData.errors.map((err, i) => (
+                    <li key={i} style={{ fontSize: '0.85rem' }}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1.5rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead style={{ position: 'sticky', top: 0, background: 'white' }}>
+                  <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+                    <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569' }}>Placa</th>
+                    <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569' }}>Veículo</th>
+                    <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569', textAlign: 'right' }}>Qtd.</th>
+                    <th style={{ padding: '0.75rem', fontWeight: 600, color: '#475569', textAlign: 'right' }}>Valor (R$)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tollPreviewData.preview.map((row, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: 600, fontFamily: 'monospace' }}>
+                        {row.license_plate}
+                      </td>
+                      <td style={{ padding: '0.75rem', color: '#64748b' }}>
+                        {row.vehicle_brand} {row.vehicle_model}
+                      </td>
+                      <td style={{ padding: '0.75rem', textAlign: 'right' }}>
+                        {row.items_count || '-'}
+                      </td>
+                      <td style={{ padding: '0.75rem', textAlign: 'right', fontWeight: 600, color: '#ef4444' }}>
+                        {row.total_cost?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="form-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  setShowTollPreview(false);
+                  setTollPreviewData(null);
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleConfirmTollImport}
+                disabled={uploadingToll}
+              >
+                {uploadingToll ? 'Salvando...' : `Confirmar Importação (${tollPreviewData.total_found} veículos)`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       <ConfirmModal
         isOpen={showConfirmModal}

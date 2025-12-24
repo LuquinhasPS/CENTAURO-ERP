@@ -79,3 +79,18 @@ class VehicleFuelCostResponse(VehicleFuelCostBase):
     
     class Config:
         from_attributes = True
+
+# Vehicle Toll Cost Schemas
+class VehicleTollCostBase(BaseModel):
+    vehicle_id: int
+    competence_date: date
+    total_cost: float
+
+class VehicleTollCostCreate(VehicleTollCostBase):
+    pass
+
+class VehicleTollCostResponse(VehicleTollCostBase):
+    id: int
+    
+    class Config:
+        from_attributes = True

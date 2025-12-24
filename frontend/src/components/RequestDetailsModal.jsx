@@ -131,6 +131,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
           total_price: 0,
           supplier: '',
           payment_method: '',
+          installment_count: 1,
           expected_date: '',
           status: 'pending'
         }
@@ -163,6 +164,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
           quantity: parseInt(item.quantity),
           unit_price: parseFloat(item.unit_price),
           total_price: parseFloat(item.total_price),
+          installment_count: parseInt(item.installment_count) || 1,
           expected_date: item.expected_date || null
         }))
       };
@@ -394,6 +396,7 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                     <th style={{ width: '8%' }}>Total</th>
                     <th style={{ width: '12%' }}>Fornecedor</th>
                     <th style={{ width: '10%' }}>Pagamento</th>
+                    <th style={{ width: '5%' }}>Parc.</th>
                     <th style={{ width: '10%' }}>Prazo</th>
                     <th style={{ width: '8%' }}>Status</th>
                     <th style={{ width: '3%' }}></th>
@@ -493,6 +496,16 @@ const RequestDetailsModal = ({ request, onClose, onUpdate, context = 'projects',
                           <option value="dinheiro">Dinheiro</option>
                           <option value="faturado">Faturado</option>
                         </select>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={item.installment_count || 1}
+                          onChange={(e) => handleItemChange(index, 'installment_count', e.target.value)}
+                          min="1"
+                          className="input-cell"
+                          disabled={isProjectsContext || readOnly}
+                        />
                       </td>
                       <td>
                         <input

@@ -1,0 +1,864 @@
+ 
+	<table border="1" cellpadding="3" cellspacing="2" align="center" class="gm_rel">
+		<tr bgcolor=C0C0C0 align=center>
+			<td colspan="17" class="Titulo"><font size=+1><b>Relat&oacute;rio Resumido de Consumo</b></font>&nbsp;</td>
+		</tr>
+		<tr bgcolor=C0C0C0>
+			<td class="FormLabel" colspan="4">Per&iacute;odo:</td>
+			<td class="FormCampo" colspan="13">01/12/2025 a 31/12/2025</td>
+		</tr>
+		
+
+		<tr bgcolor=C0C0C0>
+			<td class="FormLabel" colspan="4">Fam&iacute;lia:</td>
+			<td class="FormCampo" colspan="13">TODAS</td>
+		</tr>
+
+		
+							<tr>
+								<th rowspan="2">Placa</th>
+								<th rowspan="2">Modelo</th>
+								<th rowspan="2">Fam&iacute;lia</th>
+								<th rowspan="2">Ano</th>
+								<th rowspan="2">Marca</th>
+								<th rowspan="2">Nr.Frota</th>
+								<th rowspan="2">Tipo Combust&iacute;vel</th>
+								<th colspan="2">Cart&atilde;o R$</th>
+								<th rowspan="2">&Uacute;ltima Km e/ou H</th>
+								<th rowspan="2">Km Rodados</th>
+								<th rowspan="2">Horas Trabalhadas</th>
+								<th rowspan="2">Litros</th>
+								<th rowspan="2">Valor M&eacute;dio (R$) Litro</th>
+								<th rowspan="2">Km por Litro</th>
+								<th rowspan="2">Litros/Hora</th>
+								<th rowspan="2">Total (R$) Transa&ccedil;&atilde;o</th>
+							</tr>
+							<tr>
+								<th>Limite</th>
+								<th>Saldo</th>
+							</tr>
+							
+									<tr class="LinhaImpar">
+										<td align="center">LLV7582</td>
+										<td align="left">STRADA WORKING</td>
+										<td align="left"></td>
+										<td align="right">2013</td>
+										<td align="left">FIAT</td>
+										<td align="left">OPERACIONAL</td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">1.000,00</td>
+										<td align="right">323.965</td>
+									    
+									        <td align="right">967</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">114,88</td>
+										<td align="right">5,89</td>
+									    
+									        <td align="right">8,42</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">676,65</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">LQS5041</td>
+										<td align="left">UNO MILLE</td>
+										<td align="left"></td>
+										<td align="right">2013</td>
+										<td align="left">FIAT</td>
+										<td align="left">OPERACIONAL</td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.550,00</td>
+										<td align="right">979,03</td>
+										<td align="right">416.053</td>
+									    
+									        <td align="right">482</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">37,79</td>
+										<td align="right">5,89</td>
+									    
+									        <td align="right">12,75</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">222,58</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">KQW4792</td>
+										<td align="left">FIAT</td>
+										<td align="left">LEVE</td>
+										<td align="right">2015</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.600,00</td>
+										<td align="right">1.360,94</td>
+										<td align="right">480.566</td>
+									    
+									        <td align="right">832</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">73,32</td>
+										<td align="right">6,29</td>
+									    
+									        <td align="right">11,35</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">460,92</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">RQR3J33</td>
+										<td align="left">OROCH/EXP</td>
+										<td align="left">PICKUP LEVE</td>
+										<td align="right">2022</td>
+										<td align="left">RENAULT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">960,00</td>
+										<td align="right">88.136</td>
+									    
+									        <td align="right">264</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">38,58</td>
+										<td align="right">6,49</td>
+									    
+									        <td align="right">6,84</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">250,38</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">RQR3J79</td>
+										<td align="left">OROCH/EXP</td>
+										<td align="left">PICKUP MEDIA</td>
+										<td align="right">2022</td>
+										<td align="left">RENAULT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">727,36</td>
+										<td align="right">84.348</td>
+									    
+									        <td align="right">723</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">115,15</td>
+										<td align="right">6,46</td>
+									    
+									        <td align="right">6,28</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">743,77</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">KOE4256</td>
+										<td align="left">UNO</td>
+										<td align="left">LEVE</td>
+										<td align="right">2007</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">1.500,00</td>
+										<td align="right">115.569</td>
+									    
+									        <td align="right">358</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">66,28</td>
+										<td align="right">6,79</td>
+									    
+									        <td align="right">5,40</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">449,99</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">KWW2751</td>
+										<td align="left">CROSSFOX</td>
+										<td align="left">LEVE</td>
+										<td align="right">2010</td>
+										<td align="left">VW</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">250,00</td>
+										<td align="right">150,00</td>
+										<td align="right">350.104</td>
+									    
+									        <td align="right">712</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">17,04</td>
+										<td align="right">5,87</td>
+									    
+									        <td align="right">41,78</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">100,00</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">PUC3186</td>
+										<td align="left">UNO</td>
+										<td align="left">LEVE</td>
+										<td align="right">2014</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">590,00</td>
+										<td align="right">242.731</td>
+									    
+									        <td align="right">1.045</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">109,09</td>
+										<td align="right">5,93</td>
+									    
+									        <td align="right">9,58</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">646,49</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">GCK9D18</td>
+										<td align="left">WEEKEND</td>
+										<td align="left">LEVE</td>
+										<td align="right">2016</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">688,37</td>
+										<td align="right">191.412</td>
+									    
+									        <td align="right">702</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">80,58</td>
+										<td align="right">6,43</td>
+									    
+									        <td align="right">8,71</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">518,08</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">LUC4F47</td>
+										<td align="left">FASTBACK/TURBO</td>
+										<td align="left">NAO IDENTIFICADO</td>
+										<td align="right">2023</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">1.000,00</td>
+										<td align="right">31.777</td>
+									    
+									        <td align="right">815</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">95,12</td>
+										<td align="right">6,49</td>
+									    
+									        <td align="right">8,57</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">617,32</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">RTG4I96</td>
+										<td align="left">STRADA</td>
+										<td align="left">CAMINHONETE</td>
+										<td align="right">2022</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">430,12</td>
+										<td align="right">145.555</td>
+									    
+									        <td align="right">2.909</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">261,91</td>
+										<td align="right">5,96</td>
+									    
+									        <td align="right">11,11</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.562,27</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">COR0008</td>
+										<td align="left">CARTAO CORINGA</td>
+										<td align="left"></td>
+										<td align="right">2024</td>
+										<td align="left">NAO DEFINIDO</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">1.500,00</td>
+										<td align="right">5.879</td>
+									    
+									        <td align="right">879</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">45,66</td>
+										<td align="right">6,29</td>
+									    
+									        <td align="right">19,25</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">287,22</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">QXL0J20</td>
+										<td align="left">KWID</td>
+										<td align="left">UTILITÁRIO</td>
+										<td align="right">2021</td>
+										<td align="left">RENAULT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">900,00</td>
+										<td align="right">515,27</td>
+										<td align="right">138.603</td>
+									    
+									        <td align="right">1.814</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">157,96</td>
+										<td align="right">6,00</td>
+									    
+									        <td align="right">11,48</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">947,44</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">NAX6H44</td>
+										<td align="left">KWID</td>
+										<td align="left">UTILITÁRIO</td>
+										<td align="right">2023</td>
+										<td align="left">RENAULT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.400,00</td>
+										<td align="right">1.005,05</td>
+										<td align="right">108.908</td>
+									    
+									        <td align="right">1.113</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">82,30</td>
+										<td align="right">6,06</td>
+									    
+									        <td align="right">13,52</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">498,66</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">TOJ0A44</td>
+										<td align="left">ARGO</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">885,27</td>
+										<td align="right">16.397</td>
+									    
+									        <td align="right">3.011</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">249,36</td>
+										<td align="right">6,14</td>
+									    
+									        <td align="right">12,07</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.530,52</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">TOJ0A40</td>
+										<td align="left">ARGO</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">1.172,19</td>
+										<td align="right">18.684</td>
+									    
+									        <td align="right">3.036</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">225,52</td>
+										<td align="right">6,44</td>
+									    
+									        <td align="right">13,46</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.451,71</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">TOJ0A45</td>
+										<td align="left">ARGO</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">FIAT</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">1.043,90</td>
+										<td align="right">19.213</td>
+									    
+									        <td align="right">3.624</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">300,05</td>
+										<td align="right">6,16</td>
+									    
+									        <td align="right">12,08</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.848,51</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">COR0012</td>
+										<td align="left">CARTAO CORINGA</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">NAO DEFINIDO</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">495,22</td>
+										<td align="right">43.487</td>
+									    
+									        <td align="right">1.299</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">171,22</td>
+										<td align="right">5,88</td>
+									    
+									        <td align="right">7,59</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.006,77</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">COR0013</td>
+										<td align="left">CARTAO CORINGA</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">NAO DEFINIDO</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">530,68</td>
+										<td align="right">35.959</td>
+									    
+									        <td align="right">-34.660</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">213,79</td>
+										<td align="right">5,89</td>
+									    
+									        <td align="right">-162,12</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.260,24</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">COR0014</td>
+										<td align="left">CARTAO CORINGA</td>
+										<td align="left"></td>
+										<td align="right">2025</td>
+										<td align="left">NAO DEFINIDO</td>
+										<td align="left"></td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">543,68</td>
+										<td align="right">58.321</td>
+									    
+									        <td align="right">2.003</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">174,71</td>
+										<td align="right">5,90</td>
+									    
+									        <td align="right">11,46</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.030,64</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">TOL4D70</td>
+										<td align="left">STRADA</td>
+										<td align="left"></td>
+										<td align="right">2026</td>
+										<td align="left">FIAT</td>
+										<td align="left">036</td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">777,10</td>
+										<td align="right">3.934</td>
+									    
+									        <td align="right">1.470</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">123,72</td>
+										<td align="right">5,98</td>
+									    
+									        <td align="right">11,88</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">739,57</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">TOL4D72</td>
+										<td align="left">STRADA</td>
+										<td align="left"></td>
+										<td align="right">2026</td>
+										<td align="left">FIAT</td>
+										<td align="left">037</td>
+										<td align="left">GASOLINA COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">363,28</td>
+										<td align="right">5.865</td>
+									    
+									        <td align="right">2.999</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">240,75</td>
+										<td align="right">5,90</td>
+									    
+									        <td align="right">12,46</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">1.420,25</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">LQS5041</td>
+										<td align="left">UNO MILLE</td>
+										<td align="left"></td>
+										<td align="right">2013</td>
+										<td align="left">FIAT</td>
+										<td align="left">OPERACIONAL</td>
+										<td align="left">ETANOL</td>
+										<td align="right">1.550,00</td>
+										<td align="right">979,03</td>
+										<td align="right">417.342</td>
+									    
+									        <td align="right">1.289</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">117,76</td>
+										<td align="right">4,85</td>
+									    
+									        <td align="right">10,95</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">570,97</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">QXL0J20</td>
+										<td align="left">KWID</td>
+										<td align="left">UTILITÁRIO</td>
+										<td align="right">2021</td>
+										<td align="left">RENAULT</td>
+										<td align="left"></td>
+										<td align="left">ETANOL</td>
+										<td align="right">900,00</td>
+										<td align="right">515,27</td>
+										<td align="right">137.608</td>
+									    
+									        <td align="right">456</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">31,08</td>
+										<td align="right">4,69</td>
+									    
+									        <td align="right">14,67</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">145,77</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">KZP9I09</td>
+										<td align="left">S10</td>
+										<td align="left"></td>
+										<td align="right">2019</td>
+										<td align="left">CHEVROLET</td>
+										<td align="left"></td>
+										<td align="left">DIESEL S-10 COMUM</td>
+										<td align="right">2.500,00</td>
+										<td align="right">2.135,92</td>
+										<td align="right">213.042</td>
+									    
+									        <td align="right">2.465</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">378,63</td>
+										<td align="right">6,28</td>
+									    
+									        <td align="right">6,51</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">2.376,79</td>
+									</tr>
+
+									
+									<tr class="LinhaPar">
+										<td align="center">RMR6D75</td>
+										<td align="left">L200</td>
+										<td align="left"></td>
+										<td align="right">2022</td>
+										<td align="left">MITSUBISHI</td>
+										<td align="left"></td>
+										<td align="left">DIESEL S-10 COMUM</td>
+										<td align="right">1.000,00</td>
+										<td align="right">1.000,00</td>
+										<td align="right">179.470</td>
+									    
+									        <td align="right">820</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">109,63</td>
+										<td align="right">6,50</td>
+									    
+									        <td align="right">7,48</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">712,54</td>
+									</tr>
+
+									
+									<tr class="LinhaImpar">
+										<td align="center">RMS4F05</td>
+										<td align="left">HILUX</td>
+										<td align="left">CAMINHONETE</td>
+										<td align="right">2021</td>
+										<td align="left">TOYOTA</td>
+										<td align="left"></td>
+										<td align="left">DIESEL S-10 COMUM</td>
+										<td align="right">1.500,00</td>
+										<td align="right">483,44</td>
+										<td align="right">139.914</td>
+									    
+									        <td align="right">3.748</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">393,13</td>
+										<td align="right">6,23</td>
+									    
+									        <td align="right">9,53</td>
+									    
+									        <td align="center">-</td>
+									    
+										<td align="right">2.448,69</td>
+									</tr>
+
+									
+									<tr align="right">
+										<td class="QuebraL" colspan="12">Combust&iacute;vel: GASOLINA COMUM</td>
+										<td class="QuebraL" align="right">2.994,78</td>
+										<td class="QuebraL" align="right">6,14</td>
+										<td class="QuebraL" align="right">
+											-1,20 
+										</td>
+										<td class="QuebraL" align="right">
+											0,00 
+										</td>
+										<td class="QuebraL" align="right">18.269,98</td>
+									</tr>
+								
+									<tr align="right">
+										<td class="QuebraL" colspan="12">Combust&iacute;vel: ETANOL</td>
+										<td class="QuebraL" align="right">148,84</td>
+										<td class="QuebraL" align="right">4,77</td>
+										<td class="QuebraL" align="right">
+											11,72 
+										</td>
+										<td class="QuebraL" align="right">
+											0,00 
+										</td>
+										<td class="QuebraL" align="right">716,74</td>
+									</tr>
+								
+									<tr align="right">
+										<td class="QuebraL" colspan="12">Combust&iacute;vel: DIESEL S-10 COMUM</td>
+										<td class="QuebraL" align="right">881,39</td>
+										<td class="QuebraL" align="right">6,34</td>
+										<td class="QuebraL" align="right">
+											7,98 
+										</td>
+										<td class="QuebraL" align="right">
+											0,00 
+										</td>
+										<td class="QuebraL" align="right">5.538,02</td>
+									</tr>
+								
+				<tr align="right">
+					<td class="SubTotal" colspan="12"><font size=+1><b>Total GASOLINA COMUM:</td>
+					<td class="SubTotal"><font size=+1><b>2.994,78</td>
+					<td class="SubTotal"><font size=+1><b>6,14</td>
+					<td class="SubTotal"><font size=+1><b> -1,20 
+					</td>
+					<td class="SubTotal"><font size=+1><b> 0,00 
+					</td>
+					<td class="SubTotal"><font size=+1><b>18.269,98</td>
+				</tr>
+			
+				<tr align="right">
+					<td class="SubTotal" colspan="12"><font size=+1><b>Total ETANOL:</td>
+					<td class="SubTotal"><font size=+1><b>148,84</td>
+					<td class="SubTotal"><font size=+1><b>4,77</td>
+					<td class="SubTotal"><font size=+1><b> 11,72 
+					</td>
+					<td class="SubTotal"><font size=+1><b> 0,00 
+					</td>
+					<td class="SubTotal"><font size=+1><b>716,74</td>
+				</tr>
+			
+				<tr align="right">
+					<td class="SubTotal" colspan="12"><font size=+1><b>Total DIESEL S-10 COMUM:</td>
+					<td class="SubTotal"><font size=+1><b>881,39</td>
+					<td class="SubTotal"><font size=+1><b>6,34</td>
+					<td class="SubTotal"><font size=+1><b> 7,98 
+					</td>
+					<td class="SubTotal"><font size=+1><b> 0,00 
+					</td>
+					<td class="SubTotal"><font size=+1><b>5.538,02</td>
+				</tr>
+			
+			<tr align="right">
+				<td class="Total" colspan="12"><font size=+1><b>Total Geral:</td>
+				<td class="Total"><font size=+1><b>4.025,01</td>
+				<td class="Total"><font size=+1><b>6,06</td>
+				<td class="Total"><font size=+1><b>1,29</td>
+				<td class="Total"><font size=+1><b>0,00</td>
+				<td class="Total"><font size=+1><b>24.524,74</td>
+			</tr>
+			
+	</table>
+
+	<p align="center"><a href="javascript:history.back()">[Voltar]</a></p>
+
+	
+	
+	
+
+<p>
+    <div id="override_replataform" style="background: #eaeff5;width: 100%; height:100%;position:fixed;left:0;top:0;z-index:99999"></div>
+
+<script>if(window.addOnSubmit){ addOnSubmit();}</script>
+
+</html>

@@ -507,3 +507,242 @@ async def clear_vehicle_fuel_costs(vehicle_id: int, db: AsyncSession = Depends(g
     )
     await db.commit()
     return {"message": "Registros de combustível limpos"}
+
+# Toll Costs
+@router.get("/fleet/{vehicle_id}/tolls", response_model=List[schemas.VehicleTollCostResponse])
+async def get_vehicle_toll_costs(vehicle_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(models.VehicleTollCost)
+        .where(models.VehicleTollCost.vehicle_id == vehicle_id)
+        .order_by(models.VehicleTollCost.competence_date.desc())
+    )
+    return result.scalars().all()
+
+def parse_toll_spreadsheet(content: bytes, filename: str):
+    """Parse toll spreadsheet and return extracted data without saving"""
+    import pandas as pd
+    import io
+    import re
+    from datetime import datetime
+    
+    # Read content as string to parse metadata
+    # Try utf-8 first, then latin1
+    try:
+        text_content = content.decode('utf-8')
+    except:
+        text_content = content.decode('latin1', errors='ignore')
+        
+    lines = text_content.split('\n')
+    
+    # Extract competence from metadata
+    competence_date = None
+    
+    # Try to find "Mês de referência" lines 0-10
+    months_map = {
+        'jan': '01', 'fev': '02', 'mar': '03', 'abr': '04', 'mai': '05', 'jun': '06',
+        'jul': '07', 'ago': '08', 'set': '09', 'out': '10', 'nov': '11', 'dez': '12'
+    }
+    
+    for line in lines[:20]:
+        lower_line = line.lower()
+        if "mês de referência" in lower_line or "periodo apurado" in lower_line:
+            match = re.search(r'([a-z]{3})[./]*(\d{4})', lower_line)
+            if match:
+                month_str = match.group(1)
+                year_str = match.group(2)
+                month_num = months_map.get(month_str)
+                if month_num:
+                    competence_date = datetime.strptime(f"01/{month_num}/{year_str}", "%d/%m/%Y").date()
+                    break
+            # Try MM/YYYY
+            match_digit = re.search(r'(\d{2})/(\d{4})', lower_line)
+            if match_digit:
+                 competence_date = datetime.strptime(f"01/{match_digit.group(1)}/{match_digit.group(2)}", "%d/%m/%Y").date()
+                 break
+    
+    if not competence_date:
+        competence_date = datetime.now().date().replace(day=1)
+        
+    # Parse CSV data
+    header_row = 9
+    
+    try:
+        df = pd.read_csv(io.StringIO(text_content), skiprows=header_row, sep=';', on_bad_lines='skip')
+    except:
+        df = pd.read_csv(io.StringIO(text_content), skiprows=header_row, sep=',', on_bad_lines='skip')
+
+    # Clean columns
+    df.columns = [str(c).strip().replace('"', '') for c in df.columns]
+    
+    # Identify columns
+    col_placa = None
+    col_valor = None
+    
+    for col in df.columns:
+        c_lower = col.lower()
+        if "placa" in c_lower:
+            col_placa = col
+        if "valor cobrado" in c_lower or "valor da transação" in c_lower or "valor total" in c_lower:
+             # Prefer "valor cobrado"
+             if "valor cobrado" in c_lower:
+                 col_valor = col
+             elif not col_valor:
+                 col_valor = col
+                 
+    if not col_placa or not col_valor:
+         raise ValueError(f"Colunas obrigatórias não encontradas. (Encontradas: {list(df.columns)})")
+         
+    parsed_rows = []
+    
+    def safe_money(val):
+        if pd.isna(val): return 0.0
+        s = str(val).strip()
+        s = s.replace('.', '').replace(',', '.')
+        try:
+            return float(s)
+        except:
+            return 0.0
+
+    for idx, row in df.iterrows():
+        plate = str(row[col_placa]).strip().upper()
+        if not plate or plate == 'NAN' or plate == '' or len(plate) < 7:
+            continue
+            
+        amount = safe_money(row[col_valor])
+        total_cost = abs(amount)
+        
+        parsed_rows.append({
+            "license_plate": plate,
+            "total_cost": total_cost
+        })
+        
+    return {
+        "competence_date": competence_date.isoformat(),
+        "competence_label": competence_date.strftime("%m/%Y"),
+        "rows": parsed_rows
+    }
+
+@router.post("/fleet/tolls/preview")
+async def preview_toll_report(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
+    """Preview toll data before importing"""
+    try:
+        content = await file.read()
+        filename = file.filename or ""
+        
+        parsed = parse_toll_spreadsheet(content, filename)
+        
+        # Aggregate by vehicle
+        aggregated = {}
+        for row in parsed["rows"]:
+            plate = row["license_plate"]
+            cost = row["total_cost"]
+            
+            if plate in aggregated:
+                aggregated[plate]["total_cost"] += cost
+                aggregated[plate]["count"] += 1
+            else:
+                aggregated[plate] = {
+                    "license_plate": plate,
+                    "total_cost": cost,
+                    "count": 1
+                }
+                
+        # Enrich with vehicle info
+        preview_data = []
+        errors = []
+        
+        for plate, data in aggregated.items():
+            result = await db.execute(
+                select(models.Fleet).where(models.Fleet.license_plate == plate)
+            )
+            vehicle = result.scalar_one_or_none()
+            
+            if vehicle:
+                preview_data.append({
+                    "license_plate": plate,
+                    "total_cost": round(data["total_cost"], 2),
+                    "items_count": data["count"],
+                    "vehicle_id": vehicle.id,
+                    "vehicle_model": vehicle.model,
+                    "vehicle_brand": vehicle.brand,
+                    "found": True
+                })
+            else:
+                errors.append(f"Placa {plate} não cadastrada")
+                
+        return {
+            "success": True,
+            "competence_date": parsed["competence_date"],
+            "competence_label": parsed["competence_label"],
+            "preview": preview_data,
+            "total_found": len(preview_data),
+            "errors": errors[:10]
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Erro ao processar planilha: {str(e)}")
+
+@router.post("/fleet/tolls/confirm")
+async def confirm_toll_import(data: dict, db: AsyncSession = Depends(get_db)):
+    """Confirm and save toll data"""
+    from datetime import datetime
+    
+    try:
+        competence_date = datetime.fromisoformat(data["competence_date"]).date()
+        rows = data["rows"]
+        
+        processed = 0
+        
+        for row in rows:
+            vehicle_id = row.get("vehicle_id")
+            if not vehicle_id:
+                continue
+            
+            # Delete existing for this month (overwrite)
+            from sqlalchemy import delete
+            await db.execute(
+                delete(models.VehicleTollCost).where(
+                    models.VehicleTollCost.vehicle_id == vehicle_id,
+                    models.VehicleTollCost.competence_date == competence_date
+                )
+            )
+            
+            toll_cost = models.VehicleTollCost(
+                vehicle_id=vehicle_id,
+                competence_date=competence_date,
+                total_cost=row.get("total_cost", 0)
+            )
+            db.add(toll_cost)
+            processed += 1
+            
+        await db.commit()
+        
+        return {
+            "success": True,
+            "processed": processed
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Erro ao salvar dados: {str(e)}")
+
+@router.delete("/fleet/tolls/{toll_id}")
+async def delete_toll_cost(toll_id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(models.VehicleTollCost).where(models.VehicleTollCost.id == toll_id)
+    )
+    toll = result.scalar_one_or_none()
+    if not toll:
+        raise HTTPException(status_code=404, detail="Registro não encontrado")
+        
+    await db.delete(toll)
+    await db.commit()
+    return {"message": "Registro excluído"}
+
+@router.delete("/fleet/{vehicle_id}/tolls/clear")
+async def clear_vehicle_toll_costs(vehicle_id: int, db: AsyncSession = Depends(get_db)):
+    from sqlalchemy import delete
+    await db.execute(
+        delete(models.VehicleTollCost).where(models.VehicleTollCost.vehicle_id == vehicle_id)
+    )
+    await db.commit()
+    return {"message": "Registros limpos"}
