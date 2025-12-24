@@ -114,6 +114,28 @@ const Contracts = () => {
       .reduce((sum, b) => sum + parseFloat(b.value || 0), 0);
   };
 
+  // Helper: Get Realized Value (PAGO)
+  const getRealizedValue = (contractId) => {
+    const contractProjectIds = projects
+      .filter(p => p.contract_id === contractId)
+      .map(p => p.id);
+
+    return billings
+      .filter(b => contractProjectIds.includes(b.project_id) && b.status === 'PAGO')
+      .reduce((sum, b) => sum + parseFloat(b.gross_value || b.value || 0), 0);
+  };
+
+  // Helper: Get Pending Value (PREVISTO + EMITIDA + VENCIDA)
+  const getPendingValue = (contractId) => {
+    const contractProjectIds = projects
+      .filter(p => p.contract_id === contractId)
+      .map(p => p.id);
+
+    return billings
+      .filter(b => contractProjectIds.includes(b.project_id) && ['PREVISTO', 'EMITIDA', 'VENCIDA'].includes(b.status))
+      .reduce((sum, b) => sum + parseFloat(b.gross_value || b.value || 0), 0);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -463,17 +485,51 @@ const Contracts = () => {
 
                   {/* Campos Financeiros Condicionais */}
                   {formData.contract_type === 'LPU' ? (
-                    <div className="form-group">
-                      <label className="label">Valor Global (Teto/Cap) (R$)</label>
-                      <input
-                        type="text"
-                        name="value"
-                        className="input"
-                        value={formatMoney(formData.value)}
-                        onChange={handleMoneyChange}
-                        placeholder="0,00"
-                      />
-                    </div>
+                    <>
+                      <div className="form-group">
+                        <label className="label">Valor Global (Teto/Cap) (R$)</label>
+                        <input
+                          type="text"
+                          name="value"
+                          className="input"
+                          value={formatMoney(formData.value)}
+                          onChange={handleMoneyChange}
+                          placeholder="0,00"
+                        />
+                      </div>
+                      {editingId && (
+                        <div style={{ marginTop: '0.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                          <div className="form-group">
+                            <label className="label" style={{ fontSize: '0.8rem' }}>Já Faturado (Pago)</label>
+                            <div style={{
+                              padding: '0.5rem',
+                              backgroundColor: '#dcfce7',
+                              borderRadius: '0.5rem',
+                              border: '1px solid #bbf7d0',
+                              color: '#166534',
+                              fontWeight: '600',
+                              fontSize: '0.9rem'
+                            }}>
+                              R$ {getRealizedValue(editingId).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label className="label" style={{ fontSize: '0.8rem' }}>A Faturar (Previsto/Emitido)</label>
+                            <div style={{
+                              padding: '0.5rem',
+                              backgroundColor: '#fff7ed',
+                              borderRadius: '0.5rem',
+                              border: '1px solid #fed7aa',
+                              color: '#c2410c',
+                              fontWeight: '600',
+                              fontSize: '0.9rem'
+                            }}>
+                              R$ {getPendingValue(editingId).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <>
                       <div className="form-group">
@@ -488,17 +544,34 @@ const Contracts = () => {
                         />
                       </div>
                       {editingId && (
-                        <div className="form-group" style={{ marginTop: '0.5rem' }}>
-                          <label className="label">Valor Faturado (R$)</label>
-                          <div style={{
-                            padding: '0.75rem',
-                            backgroundColor: '#f0f9ff',
-                            borderRadius: '0.5rem',
-                            border: '1px solid #bae6fd',
-                            color: '#0369a1',
-                            fontWeight: '600'
-                          }}>
-                            R$ {getTotalBilled(editingId).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        <div style={{ marginTop: '0.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                          <div className="form-group">
+                            <label className="label" style={{ fontSize: '0.8rem' }}>Já Faturado (Pago)</label>
+                            <div style={{
+                              padding: '0.5rem',
+                              backgroundColor: '#dcfce7',
+                              borderRadius: '0.5rem',
+                              border: '1px solid #bbf7d0',
+                              color: '#166534',
+                              fontWeight: '600',
+                              fontSize: '0.9rem'
+                            }}>
+                              R$ {getRealizedValue(editingId).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label className="label" style={{ fontSize: '0.8rem' }}>A Faturar (Previsto/Emitido)</label>
+                            <div style={{
+                              padding: '0.5rem',
+                              backgroundColor: '#fff7ed',
+                              borderRadius: '0.5rem',
+                              border: '1px solid #fed7aa',
+                              color: '#c2410c',
+                              fontWeight: '600',
+                              fontSize: '0.9rem'
+                            }}>
+                              R$ {getPendingValue(editingId).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -565,7 +638,7 @@ const Contracts = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div >
       )}
 
       <div className="contracts-grid">
@@ -642,7 +715,7 @@ const Contracts = () => {
         title="Confirmar Exclusão"
         message="Tem certeza que deseja excluir este contrato? Esta ação não pode ser desfeita."
       />
-    </div>
+    </div >
   );
 };
 
