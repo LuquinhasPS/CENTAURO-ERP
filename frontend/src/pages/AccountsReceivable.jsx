@@ -406,6 +406,25 @@ const AccountsReceivable = () => {
             </div>
             <form onSubmit={handleSave}>
               <div className="form-group">
+                <label>Projeto (TAG)</label>
+                <div style={{
+                  padding: '0.5rem 0.75rem',
+                  backgroundColor: '#f1f5f9',
+                  borderRadius: '0.375rem',
+                  border: '1px solid #cbd5e1',
+                  color: '#334155',
+                  fontWeight: '600',
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <Tag size={16} />
+                  {getProjectTag(editingBilling.project_id)}
+                </div>
+              </div>
+
+              <div className="form-group">
                 <label>Status</label>
                 <select
                   value={formData.status}
