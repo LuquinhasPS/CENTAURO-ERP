@@ -9,6 +9,16 @@ import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import './Fleet.css';
 
+const formatCNPJ = (value) => {
+  return value
+    .replace(/\D/g, '') // Remove chars that are not digits
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2')
+    .substr(0, 18); // Max length 18
+};
+
 const Fleet = () => {
   const { hasPermission } = useAuth();
   const canEdit = hasPermission('fleet', 'edit');
@@ -522,8 +532,9 @@ const Fleet = () => {
                       type="text"
                       className="input"
                       value={fleetFormData.cnpj}
-                      onChange={(e) => setFleetFormData({ ...fleetFormData, cnpj: e.target.value })}
+                      onChange={(e) => setFleetFormData({ ...fleetFormData, cnpj: formatCNPJ(e.target.value) })}
                       placeholder="00.000.000/0000-00"
+                      maxLength={18}
                     />
                   </div>
                   <div className="form-group">

@@ -544,17 +544,27 @@ async def seed_contracts(db, clients):
         client_num = client.client_number
         
         contract_type = "RECORRENTE" if i % 2 != 0 else "LPU"
+        company_id = 1 # Default to Centauro (1) for seed, or random.randint(1, 2)
         
         if contract_type == "LPU":
-            prefix = "CEL"
+            prefix = f"CEL{company_id}"
             cel_count += 1
             seq = f"{cel_count:02d}"
         else:
-            prefix = "CEC"
+            prefix = f"CEC{company_id}"
             cec_count += 1
             seq = f"{cec_count:02d}"
         
-        tag = f"{prefix}_{yy}{mm}_{seq}_{client_num}"
+        # New Tag Format: CEL1_CNPJ_YYMM_SEQ (Simplified for seed as CEL1_YYMM_SEQ_CLIENT to match prev logic somewhat but with new prefix)
+        # User requested: CEL{CNPJ}_{YY}{MM}_{Seq}
+        # But wait, earlier summary said: CEL{company_id}_{YY}{MM}_{Seq}
+        # Let's stick to: PREFIX_YYMM_SEQ_CLIENT. 
+        # Actually user said: "The tag format for contracts is now CEL/CEC{CNPJ}_{YY}{MM}_{Seq}"
+        # Where {CNPJ} is really {company_id} mapped.
+        # So: CEL1_2412_01 (Client ID is not in the user's requested format 'CEL{CNPJ}_{YY}{MM}_{Seq}'?)
+        # Let's assume the user meant CEL{company_id}_{YY}{MM}_{Seq}
+        
+        tag = f"{prefix}_{yy}{mm}_{seq}"
         
         # Date logic
         if i in [2, 3]: # Vencidos
@@ -587,7 +597,8 @@ async def seed_contracts(db, clients):
             value=value,
             monthly_value=monthly_value,
             due_day=due_day,
-            readjustment_index=readjustment_index
+            readjustment_index=readjustment_index,
+            company_id=company_id
         )
         db.add(contract)
         created_contracts.append(contract)
@@ -610,7 +621,10 @@ async def seed_projects(db, clients, contracts):
         client = clients[i] # Use first 2 clients
         seq = f"{i+1:02d}"
         client_num = client.client_number
-        tag = f"CEP_{yy}{mm}_{seq}_{client_num}"
+        
+        company_id = 1
+        # Tag format: CEP{company_id}_{YY}{MM}_{Client}_{Seq}
+        tag = f"CEP{company_id}_{yy}{mm}_{client_num}_{seq}"
         
         # Project 2 will be expired
         if i == 1:
@@ -632,7 +646,10 @@ async def seed_projects(db, clients, contracts):
             status="Em Andamento", # Will be auto-finalized if expired
             service_value=random.randint(10000, 50000),
             material_value=random.randint(1000, 5000),
-            budget=random.randint(15000, 60000)
+            budget=random.randint(15000, 60000),
+            company_id=company_id,
+            estimated_days=random.randint(30, 120),
+            warranty_months=random.choice([12, 24, 36])
         )
         db.add(project)
         created_projects.append(project)
@@ -648,6 +665,7 @@ async def seed_projects(db, clients, contracts):
         for j in range(count):
             proj_count += 1
             seq = f"{j+1:02d}"
+            # Linked projects inherit contract tag prefix usually, or append Pxx
             tag = f"{contract.contract_number}_P{seq}"
             
             # Inherit dates from contract roughly, but some expired
@@ -672,7 +690,10 @@ async def seed_projects(db, clients, contracts):
                 status="Em Andamento",
                 service_value=random.randint(10000, 50000),
                 material_value=random.randint(1000, 5000),
-                budget=random.randint(15000, 60000)
+                budget=random.randint(15000, 60000),
+                company_id=contract.company_id,
+                estimated_days=random.randint(30, 120),
+                warranty_months=random.choice([12, 24, 36])
             )
             db.add(project)
             created_projects.append(project)
@@ -1044,6 +1065,48 @@ async def seed_allocations(db, collaborators, fleet, projects, tools):
     await db.flush()
     print(f"✅ Recursos vinculados e {len(created_allocations)} alocações diárias criadas.")
 
+async def assign_user_to_all_teams(db, target_email: str):
+    """Adiciona um usuário específico a todos os times existentes"""
+    print(f"🔄 Adicionando {target_email} a todos os times...")
+    
+    # Get Collaborator linked to this email
+    # Assuming email matches or we find by name if email differs (Lucas Silva / lucas.silva)
+    # The collab seed uses email logic: name.lower()...
+    # The user seed uses: lucas.silva@centauro.com.br
+    # Let's find collab by name "Lucas Silva"
+    
+    stmt_collab = select(Collaborator).where(Collaborator.name == "Lucas Silva")
+    result_collab = await db.execute(stmt_collab)
+    collab = result_collab.scalars().first()
+    
+    if not collab:
+        print("⚠️ Colaborador Lucas Silva não encontrado para associação aos times.")
+        return
+
+    # Get All Teams
+    stmt_teams = select(Team)
+    result_teams = await db.execute(stmt_teams)
+    teams = result_teams.scalars().all()
+    
+    count = 0
+    for team in teams:
+        # Check if already member (using sync checking or direct insert ignore)
+        # We can just try to insert and ignore error or check first.
+        # Check via query
+        stmt_check = select(collaborator_teams).where(
+            (collaborator_teams.c.collaborator_id == collab.id) & 
+            (collaborator_teams.c.team_id == team.id)
+        )
+        res_check = await db.execute(stmt_check)
+        if not res_check.first():
+            await db.execute(
+                collaborator_teams.insert().values(collaborator_id=collab.id, team_id=team.id)
+            )
+            count += 1
+            
+    await db.flush()
+    print(f"✅ Lucas Silva adicionado a {count} novos times (Total: {len(teams)}).")
+
 async def seed_users(db):
     print("🔍 Seeding Users...")
     admin_email = "admin@centauro.com"
@@ -1096,6 +1159,9 @@ async def seed_users(db):
             print("⚠️ Author Lucas Silva not found (unexpected).")
     else:
         print(f"ℹ️ User {lucas_email} already exists.")
+        
+    # Assign Lucas Silva to all teams
+    await assign_user_to_all_teams(db, lucas_email)
         
     # Return list of users for other seeds
     stmt_all = select(User)

@@ -224,7 +224,7 @@ const Tools = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="label">Número de Série *</label>
+                  <label className="label">Patrimônio *</label>
                   <input
                     type="text"
                     name="serial_number"
@@ -314,7 +314,7 @@ const Tools = () => {
                 </span>
               </div>
               <h3 className="tool-name">{tool.name}</h3>
-              <p className="tool-serial">SN: {tool.serial_number}</p>
+              <p className="tool-serial">Patrimônio: {tool.serial_number}</p>
               <div className="tool-details">
                 <div className="detail-item">
                   <User size={16} color="#64748b" />
