@@ -14,7 +14,8 @@ import {
   ShoppingCart,
   DollarSign,
   Settings,
-  LogOut
+  LogOut,
+  TrendingUp
 } from 'lucide-react';
 import './Layout.css';
 
@@ -32,6 +33,7 @@ const Layout = ({ children }) => {
     { path: '/', icon: LayoutDashboard, label: 'Dashboard', permission: 'dashboard' }, // Added dashboard permission key
     { path: '/scheduler', icon: Calendar, label: 'Scheduler', permission: 'scheduler' },
     { path: '/kanban', icon: KanbanSquare, label: 'Kanban', permission: 'kanban' },
+    { path: '/commercial', icon: TrendingUp, label: 'Comercial/CRM', permission: 'projects' }, // Using projects perm for now
     { path: '/clients', icon: Users, label: 'Clientes', permission: 'clients' },
     { path: '/collaborators', icon: UserCircle, label: 'Colaboradores', permission: 'collaborators' },
 

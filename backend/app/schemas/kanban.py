@@ -14,6 +14,15 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     pass
 
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    assignee: Optional[str] = None
+    project_id: Optional[int] = None
+    collaborator_id: Optional[int] = None
+
 class TaskResponse(TaskBase):
     id: int
 

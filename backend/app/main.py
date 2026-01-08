@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles, auth, teams, maintenance, finance_payroll
+from app.routers import commercial, assets, operational, tickets, kanban, project_resources, purchases, roles, auth, teams, maintenance, finance_payroll, proposals
 from app.database import engine, Base
 
 app = FastAPI(title="Centauro ERP")
@@ -16,6 +16,7 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(commercial.router, prefix="/commercial", tags=["Commercial"])
+app.include_router(proposals.router) # Prefix defined in router
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(operational.router, prefix="/operational", tags=["Operational"])
 app.include_router(tickets.router, prefix="/tickets", tags=["Tickets"])

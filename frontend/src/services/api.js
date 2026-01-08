@@ -38,6 +38,13 @@ export const previewTaxesImport = (formData) => api.post('/commercial/billings/i
 });
 export const confirmTaxesImport = (data) => api.post('/commercial/billings/import-taxes/confirm', data);
 
+// Commercial Proposals (CRM)
+export const getProposals = () => api.get('/commercial/proposals');
+export const createProposal = (data) => api.post('/commercial/proposals', data);
+export const updateProposal = (id, data) => api.put(`/commercial/proposals/${id}`, data);
+export const deleteProposal = (id) => api.delete(`/commercial/proposals/${id}`);
+export const convertProposalToProject = (id, data) => api.post(`/commercial/proposals/${id}/convert`, data);
+
 // Assets
 export const getInsurances = () => api.get('/assets/insurances');
 export const createInsurance = (data) => api.post('/assets/insurances', data);

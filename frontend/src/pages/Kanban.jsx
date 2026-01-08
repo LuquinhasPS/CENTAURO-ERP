@@ -1,7 +1,19 @@
-import { useState, useEffect } from 'react';
-import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  DndContext,
+  closestCorners,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  useDroppable
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Plus, GripVertical, Trash2, Edit, X, User, Briefcase } from 'lucide-react';
 import { getTasks, createTask, updateTask, deleteTask, getProjects, getCollaborators } from '../services/api';
@@ -9,13 +21,42 @@ import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import './Kanban.css';
 
-const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName, canEdit }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+// --- COMPONENTS ---
 
+const DroppableArea = ({ id, children }) => {
+  const { setNodeRef } = useDroppable({ id });
+  return (
+    <div ref={setNodeRef} className="droppable-area">
+      {children}
+    </div>
+  );
+};
+
+const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName, canEdit, isOverlay }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
+
+  // If overlay, we might want to skip some Sortable logic or just render raw
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.5 : 1,
   };
+
+  // If it's an overlay, we don't need sortable wrappers, just the visual
+  if (isOverlay) {
+    return (
+      <div className="task-card overlay">
+        <div className="task-header">
+          <div className="task-drag">
+            <GripVertical size={16} color="#94a3b8" />
+          </div>
+        </div>
+        <div className="task-content">
+          <h4 className="task-title">{task.title}</h4>
+        </div>
+      </div>
+    )
+  }
 
   const priorityColors = {
     low: '#10b981',
@@ -24,12 +65,12 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="task-card">
+    <div ref={setNodeRef} style={style} className="task-card" {...attributes} {...listeners}>
       <div className="task-header">
-        <div className="task-drag" {...attributes} {...listeners}>
+        <div className="task-drag">
           <GripVertical size={16} color="#94a3b8" />
         </div>
-        <div className="task-actions">
+        <div className="task-actions" onPointerDown={e => e.stopPropagation()}>
           {canEdit && (
             <>
               <button className="btn-icon-small" onClick={() => onEdit(task)}>
@@ -44,7 +85,7 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
       </div>
       <div className="task-content">
         <h4 className="task-title">{task.title}</h4>
-        <p className="task-description">{task.description}</p>
+        {task.description && <p className="task-description">{task.description}</p>}
 
         <div className="task-meta">
           {task.project_id && (
@@ -66,7 +107,7 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
             className="task-priority"
             style={{ background: `${priorityColors[task.priority]}15`, color: priorityColors[task.priority] }}
           >
-            {task.priority}
+            {task.priority === 'low' ? 'Baixa' : task.priority === 'high' ? 'Alta' : 'Média'}
           </span>
         </div>
       </div>
@@ -83,17 +124,19 @@ const Column = ({ column, tasks, onAddTask, onEditTask, onDeleteTask, getProject
       </div>
       <div className="column-content">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onEdit={onEditTask}
-              onDelete={onDeleteTask}
-              getProjectName={getProjectName}
-              getCollaboratorName={getCollaboratorName}
-              canEdit={canEdit}
-            />
-          ))}
+          <DroppableArea id={column.id}>
+            {tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onEdit={onEditTask}
+                onDelete={onDeleteTask}
+                getProjectName={getProjectName}
+                getCollaboratorName={getCollaboratorName}
+                canEdit={canEdit}
+              />
+            ))}
+          </DroppableArea>
         </SortableContext>
         {canEdit && (
           <button className="add-task-btn" onClick={() => onAddTask(column.id)}>
@@ -109,10 +152,14 @@ const Column = ({ column, tasks, onAddTask, onEditTask, onDeleteTask, getProject
 const Kanban = () => {
   const { hasPermission } = useAuth();
   const canEdit = hasPermission('kanban', 'edit');
+
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [activeId, setActiveId] = useState(null); // DnD Active State
+
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -171,28 +218,55 @@ const Kanban = () => {
     })
   );
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = async (event) => {
     const { active, over } = event;
+    setActiveId(null);
 
     if (!over) return;
 
-    if (active.id !== over.id) {
-      const oldIndex = tasks.findIndex(t => t.id === active.id);
-      const newIndex = tasks.findIndex(t => t.id === over.id);
+    const activeId = active.id;
+    const overId = over.id;
 
-      // Optimistic update for sorting within same column
-      if (tasks[oldIndex].status === tasks[newIndex].status) {
-        setTasks((tasks) => arrayMove(tasks, oldIndex, newIndex));
+    const task = tasks.find(t => t.id === activeId);
+    if (!task) return;
+
+    // Check if dropped on column (empty area) or task (reorder)
+    let newStatus = columns.some(c => c.id === overId) ? overId : null;
+
+    if (!newStatus) {
+      // Dropped on another task, find that task's status
+      const overTask = tasks.find(t => t.id === overId);
+      if (overTask) {
+        newStatus = overTask.status;
       }
     }
 
-    // Handle status change if dropped in different column area (not implemented in this simple dnd-kit setup without droppable columns)
-    // For this implementation, we'll rely on the column structure. 
-    // Actually, dnd-kit sortable context handles reordering. 
-    // To handle moving between columns, we need to detect which column we dropped into.
-    // Since we are using a simple list, let's just implement the CRUD first.
-    // Drag and drop between columns requires more complex setup with dnd-kit.
-    // For now, let's keep the reordering visual and focus on CRUD.
+    if (!newStatus) return; // Should not happen if over is valid
+
+    if (task.status !== newStatus) {
+      // Changed Column
+      setTasks(prev => prev.map(t =>
+        t.id === activeId ? { ...t, status: newStatus } : t
+      ));
+      try {
+        await updateTask(activeId, { status: newStatus });
+      } catch (error) {
+        console.error("Failed to update status", error);
+        loadData(); // Revert
+      }
+    } else {
+      // Reordering in same column
+      if (activeId !== overId) {
+        const oldIndex = tasks.findIndex(t => t.id === activeId);
+        const newIndex = tasks.findIndex(t => t.id === overId);
+        setTasks((items) => arrayMove(items, oldIndex, newIndex));
+        // Note: If backend supports ordering, send update here.
+      }
+    }
   };
 
   const handleAddTask = (status) => {
@@ -231,7 +305,7 @@ const Kanban = () => {
       await deleteTask(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
-      loadTasks();
+      loadData();
     } catch (error) {
       console.error('Error deleting task:', error);
       alert('Erro ao excluir tarefa');
@@ -241,10 +315,15 @@ const Kanban = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Clean up empty strings
+      const payload = { ...formData };
+      if (!payload.project_id) delete payload.project_id;
+      if (!payload.collaborator_id) delete payload.collaborator_id;
+
       if (editingId) {
-        await updateTask(editingId, formData);
+        await updateTask(editingId, payload);
       } else {
-        await createTask(formData);
+        await createTask(payload);
       }
       setShowForm(false);
       loadData();
@@ -264,6 +343,10 @@ const Kanban = () => {
   const getTasksByStatus = (status) => {
     return tasks.filter(task => task.status === status);
   };
+
+  const activeTask = useMemo(() =>
+    activeId ? tasks.find(t => t.id === activeId) : null
+    , [activeId, tasks]);
 
   return (
     <div className="kanban">
@@ -382,7 +465,12 @@ const Kanban = () => {
         </div>
       )}
 
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
         <div className="kanban-board">
           {columns.map((column) => (
             <Column
@@ -398,6 +486,18 @@ const Kanban = () => {
             />
           ))}
         </div>
+
+        <DragOverlay>
+          {activeTask ? (
+            <TaskCard
+              task={activeTask}
+              isOverlay={true}
+              canEdit={false}
+              getProjectName={getProjectName}
+              getCollaboratorName={getCollaboratorName}
+            />
+          ) : null}
+        </DragOverlay>
       </DndContext>
 
       <ConfirmModal

@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Scheduler from './pages/Scheduler';
 import Kanban from './pages/Kanban';
+import Commercial from './pages/Commercial';
 import Projects from './pages/Projects';
 import Contracts from './pages/Contracts';
 import Clients from './pages/Clients';
@@ -43,6 +44,7 @@ function App() {
 
           <Route path="/scheduler" element={<PrivateRoute requiredPermission="scheduler"><Layout><Scheduler /></Layout></PrivateRoute>} />
           <Route path="/kanban" element={<PrivateRoute requiredPermission="kanban"><Layout><Kanban /></Layout></PrivateRoute>} />
+          <Route path="/commercial" element={<PrivateRoute requiredPermission="projects"><Layout><Commercial /></Layout></PrivateRoute>} />
           <Route path="/clients" element={<PrivateRoute requiredPermission="clients"><Layout><Clients /></Layout></PrivateRoute>} />
           <Route path="/contracts" element={<PrivateRoute requiredPermission="contracts"><Layout><Contracts /></Layout></PrivateRoute>} />
           <Route path="/collaborators" element={<PrivateRoute requiredPermission="collaborators"><Layout><Collaborators /></Layout></PrivateRoute>} />
