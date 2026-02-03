@@ -124,26 +124,23 @@ const AICopilotWidget = () => {
 
           {/* Header */}
           <div className="ai-widget-header">
-            <div className="flex items-center gap-2.5">
-              <div className="bg-indigo-600 p-1.5 rounded-lg shadow-lg shadow-indigo-500/20 text-white">
-                <Bot size={20} className="" />
+            <div className="flex items-center gap-2">
+              <div className="text-indigo-600 bg-indigo-50 p-1.5 rounded-lg">
+                <Bot size={20} />
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-indigo-500">Centauro AI</h3>
-                <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium ml-0.5">Assistant</span>
-              </div>
+              <h3 className="text-sm font-semibold text-slate-800">
+                Centauro Assistant
+              </h3>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 ai-header-actions">
               <button
                 onClick={clearHistory}
-                className="p-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-700 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 transition-all"
                 title="Limpar Conversa"
               >
                 <Trash2 size={16} />
               </button>
               <button
                 onClick={toggleChat}
-                className="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full text-slate-400 hover:text-red-500 transition-all"
               >
                 <X size={18} />
               </button>
@@ -162,7 +159,7 @@ const AICopilotWidget = () => {
                 >
                   <ReactMarkdown
                     components={{
-                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      p: ({ children }) => <p>{children}</p>,
                       ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
                       ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
                       li: ({ children }) => <li className="mb-0.5">{children}</li>,
@@ -176,12 +173,10 @@ const AICopilotWidget = () => {
               </div>
             ))}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="ai-loading-bubble">
-                  <span className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce"></span>
-                  <span className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.15s]"></span>
-                  <span className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.3s]"></span>
-                </div>
+              <div className="ai-loading-bubble">
+                <div className="ai-loading-dot"></div>
+                <div className="ai-loading-dot"></div>
+                <div className="ai-loading-dot"></div>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -192,7 +187,7 @@ const AICopilotWidget = () => {
             {/* Quick Suggestions */}
             {messages.length < 5 && !isLoading && (
               <div className="ai-suggestions-container">
-                {['Resumir Projetos', 'Status da Frota', 'Contratos Vencendo', 'Previsão de Faturamento'].map((sug) => (
+                {['Resumir Projetos', 'Status da Frota', 'Contratos Vencendo', 'Previsão'].map((sug) => (
                   <button
                     key={sug}
                     onClick={() => handleQuickSuggestion(sug)}
@@ -204,13 +199,13 @@ const AICopilotWidget = () => {
               </div>
             )}
 
-            <div className="ai-input-container">
+            <div className="ai-input-wrapper">
               <textarea
                 ref={textareaRef}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Pergunte sobre projetos, financeiro..."
+                placeholder="Pergunte algo..."
                 rows={1}
                 className="ai-input-textarea"
                 disabled={isLoading}
@@ -221,16 +216,15 @@ const AICopilotWidget = () => {
                 className="ai-send-btn"
               >
                 {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
-                  <Send size={18} className={inputText.trim() ? 'ml-0.5' : ''} />
+                  <Send size={16} />
                 )}
               </button>
             </div>
-            <div className="text-center mt-3">
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium h-[15px]">
-                {isLoading ? 'Analisando dados do ERP...' : 'Powered by Gemini 1.5 Flash'}
-              </p>
+
+            <div className="ai-powered-by">
+              Powered by Gemini 1.5 Flash
             </div>
           </div>
         </div>
