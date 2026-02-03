@@ -5,8 +5,102 @@ import MaintenanceTab from '../assets/MaintenanceTab';
 
 const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, onDelete }) => {
   const [modalTab, setModalTab] = useState('details');
-  // ... state ...
-  // ... hooks ...
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    license_plate: '',
+    model: '',
+    brand: '',
+    year: new Date().getFullYear(),
+    color: '',
+    fuel_type: '',
+    odometer: '',
+    cnpj: '',
+    status: 'ACTIVE',
+    insurance_id: ''
+  });
+
+  const [fuelCosts, setFuelCosts] = useState([]);
+  const [tollCosts, setTollCosts] = useState([]);
+
+  useEffect(() => {
+    if (vehicle) {
+      setFormData({
+        license_plate: vehicle.license_plate || '',
+        model: vehicle.model || '',
+        brand: vehicle.brand || '',
+        year: vehicle.year || '',
+        color: vehicle.color || '',
+        fuel_type: vehicle.fuel_type || '',
+        odometer: vehicle.odometer || '',
+        cnpj: vehicle.cnpj || '',
+        status: vehicle.status || 'ACTIVE',
+        insurance_id: vehicle.insurance_id || ''
+      });
+      loadCosts();
+    }
+  }, [vehicle]);
+
+  // Handle Escape Key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  const loadCosts = async () => {
+    if (!vehicle) return;
+    try {
+      // Assuming these endpoints exist based on usage patterns
+      const [fuelRes, tollRes] = await Promise.all([
+        api.get(`/assets/fleet/${vehicle.id}/fuel`),
+        api.get(`/assets/fleet/${vehicle.id}/tolls`)
+      ]);
+      setFuelCosts(fuelRes.data);
+      setTollCosts(tollRes.data);
+    } catch (error) {
+      console.error("Error loading vehicle costs", error);
+    }
+  };
+
+  const loadTollCosts = async () => {
+    if (!vehicle) return;
+    try {
+      const res = await api.get(`/assets/fleet/${vehicle.id}/tolls`);
+      setTollCosts(res.data);
+    } catch (error) { console.error(error); }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (vehicle) {
+        await updateFleet(vehicle.id, formData);
+      } else {
+        await createFleet(formData);
+      }
+      onSuccess();
+      onClose();
+    } catch (error) {
+      alert('Erro ao salvar veículo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatCNPJ = (value) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/^(\d{2})(\d)/, '$1.$2')
+      .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/\.(\d{3})(\d)/, '.$1/$2')
+      .replace(/(\d{4})(\d)/, '$1-$2')
+      .slice(0, 18);
+  };
 
   return (
     <div className="fleet-form-modal">
