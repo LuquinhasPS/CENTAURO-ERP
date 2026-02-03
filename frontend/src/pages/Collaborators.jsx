@@ -142,7 +142,7 @@ const Collaborators = () => {
   ];
 
   return (
-    <div className="clients">
+    <div className="collaborators-page">
       <header className="clients-header">
         <div className="header-content">
           <div>

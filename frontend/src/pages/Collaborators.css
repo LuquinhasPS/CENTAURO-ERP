@@ -1,4 +1,26 @@
 /* Filter Styles (Matched with Projects.css) */
+.collaborators-page {
+  max-width: 100%;
+  padding: 0;
+  /* Remove default padding if needed, or keeping it but ensuring 100% width usage */
+}
+
+/* Ensure text doesn't overflow */
+.collaborators-page .clients-header {
+  padding: 2rem 2rem 0 2rem;
+  /* Add padding to header since we might remove it from container */
+}
+
+/* Add padding to the card */
+.collaborators-page .card {
+  margin: 0 2rem 1rem 2rem;
+}
+
+/* Add padding to the table container */
+.collaborators-page>div:last-child {
+  padding: 0 2rem 2rem 2rem !important;
+}
+
 .search-filters {
   padding: 1rem;
 }

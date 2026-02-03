@@ -78,12 +78,14 @@ const DataTable = ({
                 <th
                   key={index}
                   style={{
-                    padding: '0.75rem 1rem',
+                    padding: '0.35rem 0.5rem',
                     textAlign: 'left',
                     fontWeight: '600',
                     color: '#475569',
                     cursor: col.accessor ? 'pointer' : 'default',
-                    userSelect: 'none'
+                    userSelect: 'none',
+                    whiteSpace: 'nowrap',
+                    fontSize: '0.75rem'
                   }}
                   onClick={() => col.accessor && requestSort(col.accessor)}
                 >
@@ -93,7 +95,7 @@ const DataTable = ({
                   </div>
                 </th>
               ))}
-              {actions && <th style={{ padding: '0.75rem 1rem', width: '100px', textAlign: 'right' }}>Ações</th>}
+              {actions && <th style={{ padding: '0.35rem 0.5rem', width: '100px', textAlign: 'right', whiteSpace: 'nowrap', fontSize: '0.75rem' }}>Ações</th>}
             </tr>
           </thead>
           <tbody>
@@ -103,28 +105,29 @@ const DataTable = ({
                 style={{
                   borderBottom: rowIndex === currentData.length - 1 ? 'none' : '1px solid #f1f5f9',
                   transition: 'background 0.1s',
-                  cursor: onRowClick ? 'pointer' : 'default'
+                  cursor: onRowClick ? 'pointer' : 'default',
+                  fontSize: '0.75rem'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'white'}
                 onClick={() => onRowClick && onRowClick(row)}
               >
                 {columns.map((col, colIndex) => (
-                  <td key={colIndex} style={{ padding: '0.75rem 1rem', color: '#334155' }}>
+                  <td key={colIndex} style={{ padding: '0.35rem 0.5rem', color: '#334155', whiteSpace: 'nowrap' }}>
                     {col.render ? col.render(row) : (col.accessor ? row[col.accessor] : '')}
                   </td>
                 ))}
                 {actions && (
-                  <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
+                  <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right' }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                       {onEdit && (
                         <button
                           onClick={() => onEdit(row)}
                           className="btn-icon-small"
                           title="Editar"
-                          style={{ color: '#3b82f6', background: '#eff6ff', padding: '6px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+                          style={{ color: '#3b82f6', background: '#eff6ff', padding: '2px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
                         >
-                          <Edit size={16} />
+                          <Edit size={14} />
                         </button>
                       )}
                       {onDelete && (
@@ -132,9 +135,9 @@ const DataTable = ({
                           onClick={() => onDelete(row)}
                           className="btn-icon-small danger"
                           title="Excluir"
-                          style={{ color: '#ef4444', background: '#fef2f2', padding: '6px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+                          style={{ color: '#ef4444', background: '#fef2f2', padding: '2px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} />
                         </button>
                       )}
                     </div>
