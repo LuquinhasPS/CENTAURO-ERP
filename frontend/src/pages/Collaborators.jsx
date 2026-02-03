@@ -7,7 +7,9 @@ import ConfirmModal from '../components/shared/ConfirmModal';
 import DataTable from '../components/shared/DataTable';
 import StatusBadge from '../components/shared/StatusBadge';
 import CollaboratorModal from '../components/hr/CollaboratorModal';
+
 import './Clients.css';
+import './Collaborators.css';
 
 const Collaborators = () => {
   const { hasPermission } = useAuth();
@@ -172,29 +174,51 @@ const Collaborators = () => {
         </div>
 
         {viewMode === 'collaborators' && (
-          <div className="filters-bar" style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div className="search-input-container" style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
-              <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+          // Filters moved outside header to match Projects layout
+          null
+        )}
+      </header>
+
+      {viewMode === 'collaborators' && (
+        <div className="card" style={{ marginBottom: '1rem' }}>
+          <div className="search-filters">
+            <div className="search-bar">
               <input
                 type="text"
                 className="input"
                 placeholder="Buscar por nome, email ou matrícula..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ paddingLeft: '40px', width: '100%' }}
+                style={{ width: '100%' }}
               />
             </div>
-            <select className="input" value={selectedRoleFilter} onChange={(e) => setSelectedRoleFilter(e.target.value)}>
-              <option value="">Todas as Funções</option>
-              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-            </select>
-            <select className="input" value={selectedTeamFilter} onChange={(e) => setSelectedTeamFilter(e.target.value)}>
-              <option value="">Todos os Times</option>
-              {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
+            <div className="filters-row">
+              <div className="filter-group">
+                <label className="label">Função</label>
+                <select
+                  className="input"
+                  value={selectedRoleFilter}
+                  onChange={(e) => setSelectedRoleFilter(e.target.value)}
+                >
+                  <option value="">Todas as Funções</option>
+                  {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label className="label">Time</label>
+                <select
+                  className="input"
+                  value={selectedTeamFilter}
+                  onChange={(e) => setSelectedTeamFilter(e.target.value)}
+                >
+                  <option value="">Todos os Times</option>
+                  {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </div>
+            </div>
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {viewMode === 'teams' ? (
         <Teams ref={teamsRef} embedded={true} />
@@ -206,6 +230,7 @@ const Collaborators = () => {
             <DataTable
               columns={columns}
               data={filteredCollaborators}
+              actions={false}
               onRowClick={handleEdit}
             />
           )}
