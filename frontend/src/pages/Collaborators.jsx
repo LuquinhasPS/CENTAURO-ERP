@@ -65,6 +65,8 @@ const Collaborators = () => {
       await deleteCollaborator(itemToDelete);
       setShowConfirmModal(false);
       setItemToDelete(null);
+      setShowForm(false);
+      setEditingCollaborator(null);
       loadData();
     } catch (error) {
       alert('Erro ao excluir colaborador');
@@ -197,9 +199,7 @@ const Collaborators = () => {
             <DataTable
               columns={columns}
               data={filteredCollaborators}
-              onEdit={canEdit ? handleEdit : null}
-              onDelete={canEdit ? handleDelete : null}
-              actions={canEdit}
+              onRowClick={handleEdit}
             />
           )}
         </div>
@@ -213,6 +213,7 @@ const Collaborators = () => {
           roles={roles}
           teams={teams}
           canEdit={canEdit}
+          onDelete={() => handleDelete(editingCollaborator)}
         />
       )}
 

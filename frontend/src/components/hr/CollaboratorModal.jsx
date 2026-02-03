@@ -8,7 +8,7 @@ import api, {
   getCollaboratorReviews, createCollaboratorReview, deleteCollaboratorReview, getCollaboratorPerformance
 } from '../../services/api';
 
-const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams = [], canEdit = true }) => {
+const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams = [], canEdit = true, onDelete }) => {
   const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' }
@@ -62,6 +62,17 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
       loadSubData();
     }
   }, [collaborator]);
+
+  // Handle Escape Key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -202,23 +213,36 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3>{collaborator ? 'Editar Colaborador' : 'Cadastrar Colaborador'}</h3>
 
-          <div style={{ display: 'flex', gap: '0.5rem', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
-            {['general', 'certifications', 'education', 'performance'].map(tab => (
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+              {['general', 'certifications', 'education', 'performance'].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  disabled={!collaborator && tab !== 'general'}
+                  style={{
+                    padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: !collaborator && tab !== 'general' ? 'not-allowed' : 'pointer',
+                    background: activeTab === tab ? 'white' : 'transparent',
+                    color: !collaborator && tab !== 'general' ? '#ccc' : activeTab === tab ? '#0f172a' : '#64748b',
+                    fontWeight: activeTab === tab ? '600' : '500',
+                    boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
+                  }}
+                >
+                  {{ general: 'Geral', certifications: 'Certificações', education: 'Formação', performance: 'Desempenho' }[tab]}
+                </button>
+              ))}
+            </div>
+            {collaborator && canEdit && onDelete && (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                disabled={!collaborator && tab !== 'general'}
-                style={{
-                  padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: !collaborator && tab !== 'general' ? 'not-allowed' : 'pointer',
-                  background: activeTab === tab ? 'white' : 'transparent',
-                  color: !collaborator && tab !== 'general' ? '#ccc' : activeTab === tab ? '#0f172a' : '#64748b',
-                  fontWeight: activeTab === tab ? '600' : '500',
-                  boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.1)' : 'none'
-                }}
+                type="button"
+                className="btn-icon-small danger"
+                onClick={onDelete}
+                title="Excluir Colaborador"
+                style={{ padding: '8px', borderRadius: '8px', color: '#ef4444', background: '#fee2e2', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                {{ general: 'Geral', certifications: 'Certificações', education: 'Formação', performance: 'Desempenho' }[tab]}
+                <Trash2 size={20} />
               </button>
-            ))}
+            )}
           </div>
         </div>
 

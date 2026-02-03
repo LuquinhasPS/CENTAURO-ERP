@@ -52,6 +52,17 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
     loadAllData();
   }, [initialProject.id]);
 
+  // Handle Escape Key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const loadAllData = async () => {
     setLoading(true);
     try {
