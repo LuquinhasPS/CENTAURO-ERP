@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, MapPin } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import api, { createFleet, updateFleet } from '../../services/api';
 import MaintenanceTab from '../assets/MaintenanceTab';
+import Input from '../shared/Input';
+import Select from '../shared/Select';
+import Button from '../shared/Button';
 
 const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, onDelete }) => {
   const [modalTab, setModalTab] = useState('details');
@@ -54,7 +57,6 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
   const loadCosts = async () => {
     if (!vehicle) return;
     try {
-      // Assuming these endpoints exist based on usage patterns
       const [fuelRes, tollRes] = await Promise.all([
         api.get(`/assets/fleet/${vehicle.id}/fuel`),
         api.get(`/assets/fleet/${vehicle.id}/tolls`)
@@ -102,6 +104,26 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
       .slice(0, 18);
   };
 
+  const handleChange = (field) => (e) => {
+    let value = e.target.value;
+    if (field === 'cnpj') {
+      value = formatCNPJ(value);
+    }
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const FUEL_TYPES = [
+    { value: 'Gasolina', label: 'Gasolina' },
+    { value: 'Alcool', label: 'Álcool' },
+    { value: 'Flex', label: 'Flex' },
+    { value: 'Diesel', label: 'Diesel' }
+  ];
+
+  const STATUS_OPTIONS = [
+    { value: 'ACTIVE', label: 'Ativo' },
+    { value: 'MAINTENANCE', label: 'Manutenção' }
+  ];
+
   return (
     <div className="fleet-form-modal">
       <div className="fleet-form card" onClick={e => e.stopPropagation()}>
@@ -136,26 +158,28 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
         {modalTab === 'details' && (
           <form onSubmit={handleSubmit}>
             <div className="form-grid">
-              <div className="form-group"><label className="label">Placa *</label><input className="input" value={formData.license_plate} onChange={e => setFormData({ ...formData, license_plate: e.target.value })} required placeholder="ABC-1234" /></div>
-              <div className="form-group"><label className="label">Modelo *</label><input className="input" value={formData.model} onChange={e => setFormData({ ...formData, model: e.target.value })} required /></div>
-              <div className="form-group"><label className="label">Marca *</label><input className="input" value={formData.brand} onChange={e => setFormData({ ...formData, brand: e.target.value })} required /></div>
-              <div className="form-group"><label className="label">Ano *</label><input type="number" className="input" value={formData.year} onChange={e => setFormData({ ...formData, year: e.target.value })} required /></div>
-              <div className="form-group"><label className="label">Cor</label><input className="input" value={formData.color} onChange={e => setFormData({ ...formData, color: e.target.value })} /></div>
-              <div className="form-group"><label className="label">Combustível</label><select className="input" value={formData.fuel_type} onChange={e => setFormData({ ...formData, fuel_type: e.target.value })}><option value="">Selecione...</option><option value="Gasolina">Gasolina</option><option value="Alcool">Álcool</option><option value="Flex">Flex</option><option value="Diesel">Diesel</option></select></div>
-              <div className="form-group"><label className="label">KM Atual</label><input type="number" className="input" value={formData.odometer} onChange={e => setFormData({ ...formData, odometer: e.target.value })} /></div>
-              <div className="form-group"><label className="label">CNPJ</label><input className="input" value={formData.cnpj} onChange={e => setFormData({ ...formData, cnpj: formatCNPJ(e.target.value) })} maxLength={18} /></div>
-              <div className="form-group"><label className="label">Status *</label><select className="input" value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })} required><option value="ACTIVE">Ativo</option><option value="MAINTENANCE">Manutenção</option></select></div>
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="label">Seguro</label>
-                <select className="input" value={formData.insurance_id} onChange={e => setFormData({ ...formData, insurance_id: e.target.value })}>
-                  <option value="">Sem seguro</option>
-                  {insurances.map(i => <option key={i.id} value={i.id}>{i.insurance_company} - {i.policy_number}</option>)}
-                </select>
-              </div>
+              <Input label="Placa *" value={formData.license_plate} onChange={handleChange('license_plate')} required placeholder="ABC-1234" />
+              <Input label="Modelo *" value={formData.model} onChange={handleChange('model')} required />
+              <Input label="Marca *" value={formData.brand} onChange={handleChange('brand')} required />
+              <Input label="Ano *" type="number" value={formData.year} onChange={handleChange('year')} required />
+              <Input label="Cor" value={formData.color} onChange={handleChange('color')} />
+              <Select label="Combustível" value={formData.fuel_type} onChange={handleChange('fuel_type')} options={FUEL_TYPES} placeholder="Selecione..." />
+              <Input label="KM Atual" type="number" value={formData.odometer} onChange={handleChange('odometer')} />
+              <Input label="CNPJ" value={formData.cnpj} onChange={handleChange('cnpj')} maxLength={18} />
+              <Select label="Status *" value={formData.status} onChange={handleChange('status')} options={STATUS_OPTIONS} required />
+              <Select
+                label="Seguro"
+                value={formData.insurance_id}
+                onChange={handleChange('insurance_id')}
+                placeholder="Sem seguro"
+                wrapperClassName="full-width"
+              >
+                {insurances.map(i => <option key={i.id} value={i.id}>{i.insurance_company} - {i.policy_number}</option>)}
+              </Select>
             </div>
             <div className="form-actions">
-              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              {canEdit && <button type="submit" className="btn btn-primary">Salvar</button>}
+              <Button variant="secondary" type="button" onClick={onClose}>Cancelar</Button>
+              {canEdit && <Button variant="primary" type="submit" isLoading={loading}>Salvar</Button>}
             </div>
           </form>
         )}
@@ -163,7 +187,9 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
         {modalTab === 'maintenance' && (
           <div>
             <MaintenanceTab vehicle={{ id: vehicle.id, odometer: formData.odometer }} onUpdate={onSuccess} canEdit={canEdit} />
-            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}><button className="btn btn-secondary" onClick={onClose}>Fechar</button></div>
+            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <Button variant="secondary" onClick={onClose}>Fechar</Button>
+            </div>
           </div>
         )}
 
@@ -201,7 +227,9 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
                 </tbody>
               </table>
             )}
-            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}><button className="btn btn-secondary" onClick={onClose}>Fechar</button></div>
+            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <Button variant="secondary" onClick={onClose}>Fechar</Button>
+            </div>
           </div>
         )}
 
@@ -224,7 +252,9 @@ const VehicleModal = ({ vehicle, insurances = [], onClose, onSuccess, canEdit, o
                 </tbody>
               </table>
             )}
-            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}><button className="btn btn-secondary" onClick={onClose}>Fechar</button></div>
+            <div className="form-actions" style={{ justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <Button variant="secondary" onClick={onClose}>Fechar</Button>
+            </div>
           </div>
         )}
 

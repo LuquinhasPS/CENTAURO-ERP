@@ -4,6 +4,9 @@ import api, { getClients, createClient, deleteClient, updateClient } from '../se
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/shared/ConfirmModal';
 import DataTable from '../components/shared/DataTable';
+import Input from '../components/shared/Input';
+import Select from '../components/shared/Select';
+import Button from '../components/shared/Button';
 import './Clients.css';
 
 // Department colors
@@ -359,84 +362,16 @@ const Clients = () => {
             {activeTab === 'general' && (
               <form onSubmit={handleSubmit}>
                 <div className="form-grid">
-                  <div className="form-group">
-                    <label className="label">Nome / Razão Social *</label>
-                    <input
-                      type="text"
-                      name="name"
-                      className="input"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Nome do cliente"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label">Número do Cliente</label>
-                    <input
-                      type="text"
-                      name="client_number"
-                      className="input"
-                      value={formData.client_number}
-                      onChange={handleChange}
-                      placeholder="Ex: 01, 02, 03..."
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label">CNPJ *</label>
-                    <input
-                      type="text"
-                      name="cnpj"
-                      className="input"
-                      value={formData.cnpj}
-                      onChange={handleChange}
-                      required
-                      placeholder="00.000.000/0000-00"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label">Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="input"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="email@exemplo.com"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label">Telefone</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      className="input"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
-                  <div className="form-group full-width">
-                    <label className="label">Endereço</label>
-                    <input
-                      type="text"
-                      name="address"
-                      className="input"
-                      value={formData.address}
-                      onChange={handleChange}
-                      placeholder="Endereço completo"
-                    />
-                  </div>
+                  <Input label="Nome / Razão Social *" name="name" value={formData.name} onChange={handleChange} required placeholder="Nome do cliente" />
+                  <Input label="Número do Cliente" name="client_number" value={formData.client_number} onChange={handleChange} placeholder="Ex: 01, 02, 03..." />
+                  <Input label="CNPJ *" name="cnpj" value={formData.cnpj} onChange={handleChange} required placeholder="00.000.000/0000-00" />
+                  <Input label="Email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="email@exemplo.com" />
+                  <Input label="Telefone" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="(00) 00000-0000" />
+                  <Input label="Endereço" name="address" value={formData.address} onChange={handleChange} placeholder="Endereço completo" fullWidth />
                 </div>
                 <div className="form-actions">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
-                    Cancelar
-                  </button>
-                  {canEdit && (
-                    <button type="submit" className="btn btn-primary">
-                      Salvar Cliente
-                    </button>
-                  )}
+                  <Button variant="secondary" type="button" onClick={() => setShowForm(false)}>Cancelar</Button>
+                  {canEdit && <Button variant="primary" type="submit">Salvar Cliente</Button>}
                 </div>
               </form>
             )}
@@ -467,62 +402,16 @@ const Clients = () => {
                       {editingContactId ? 'Editar Contato' : 'Novo Contato'}
                     </h4>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                      <div className="form-group">
-                        <label className="label">Nome *</label>
-                        <input
-                          type="text"
-                          className="input"
-                          value={contactFormData.name}
-                          onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })}
-                          required
-                          placeholder="Nome do contato"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="label">Departamento</label>
-                        <select
-                          className="input"
-                          value={contactFormData.department}
-                          onChange={(e) => setContactFormData({ ...contactFormData, department: e.target.value })}
-                        >
-                          {DEPARTMENTS.map(dept => (
-                            <option key={dept} value={dept}>{dept}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label className="label">Email</label>
-                        <input
-                          type="email"
-                          className="input"
-                          value={contactFormData.email}
-                          onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })}
-                          placeholder="email@exemplo.com"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="label">Telefone</label>
-                        <input
-                          type="tel"
-                          className="input"
-                          value={contactFormData.phone}
-                          onChange={(e) => setContactFormData({ ...contactFormData, phone: formatPhone(e.target.value) })}
-                          placeholder="(00) 00000-0000"
-                        />
-                      </div>
+                      <Input label="Nome *" value={contactFormData.name} onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })} required placeholder="Nome do contato" />
+                      <Select label="Departamento" value={contactFormData.department} onChange={(e) => setContactFormData({ ...contactFormData, department: e.target.value })}>
+                        {DEPARTMENTS.map(dept => <option key={dept} value={dept}>{dept}</option>)}
+                      </Select>
+                      <Input label="Email" type="email" value={contactFormData.email} onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })} placeholder="email@exemplo.com" />
+                      <Input label="Telefone" type="tel" value={contactFormData.phone} onChange={(e) => setContactFormData({ ...contactFormData, phone: formatPhone(e.target.value) })} placeholder="(00) 00000-0000" />
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-                      <button type="submit" className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
-                        {editingContactId ? 'Salvar' : 'Adicionar'}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => { setShowContactForm(false); setEditingContactId(null); }}
-                        style={{ padding: '0.5rem 1rem' }}
-                      >
-                        Cancelar
-                      </button>
+                      <Button variant="primary" type="submit">{editingContactId ? 'Salvar' : 'Adicionar'}</Button>
+                      <Button variant="secondary" type="button" onClick={() => { setShowContactForm(false); setEditingContactId(null); }}>Cancelar</Button>
                     </div>
                   </form>
                 )}

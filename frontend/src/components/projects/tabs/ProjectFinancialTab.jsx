@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { DollarSign, Plus, Trash2 } from 'lucide-react';
-import { createProjectBilling, deleteProjectBilling } from '../../../services/api'; // Check path! ../../../services/api
+import { createProjectBilling, deleteProjectBilling } from '../../../services/api';
 import { formatDateUTC, formatCurrency } from '../../../utils/formatters';
+import Input from '../../shared/Input';
+import Select from '../../shared/Select';
+import Button from '../../shared/Button';
 
 const ProjectFinancialTab = ({ project, billings, projectDetails, canEdit, onUpdate }) => {
   const [showBillingForm, setShowBillingForm] = useState(false);
@@ -116,40 +119,36 @@ const ProjectFinancialTab = ({ project, billings, projectDetails, canEdit, onUpd
       {showBillingForm && (
         <form className="resource-form" onSubmit={handleAddBilling} style={{ marginBottom: '1.5rem', background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', marginBottom: '10px' }}>
-            <select
-              className="input"
+            <Select
               value={billingFormData.category}
               onChange={(e) => setBillingFormData({ ...billingFormData, category: e.target.value })}
               required
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-            >
-              <option value="SERVICE">Serviço</option>
-              <option value="MATERIAL">Material</option>
-            </select>
-            <input
+              options={[
+                { value: 'SERVICE', label: 'Serviço' },
+                { value: 'MATERIAL', label: 'Material' }
+              ]}
+            />
+            <Input
               type="number"
               placeholder="Valor Bruto (R$)"
               step="0.01"
               value={billingFormData.gross_value}
               onChange={(e) => setBillingFormData({ ...billingFormData, gross_value: e.target.value })}
               required
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '90%' }}
             />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px', width: '100%' }}>
-            <input
+            <Input
               type="text"
               placeholder="Descrição (ex: 1ª Medição)"
               value={billingFormData.description}
               onChange={(e) => setBillingFormData({ ...billingFormData, description: e.target.value })}
               required
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '96%' }}
             />
           </div>
-
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px' }}>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowBillingForm(false)}>Cancelar</button>
-            <button type="submit" className="btn btn-primary btn-sm">Salvar</button>
+            <Button variant="secondary" size="sm" type="button" onClick={() => setShowBillingForm(false)}>Cancelar</Button>
+            <Button variant="primary" size="sm" type="submit">Salvar</Button>
           </div>
         </form>
       )}

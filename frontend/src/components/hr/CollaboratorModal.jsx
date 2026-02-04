@@ -7,6 +7,9 @@ import api, {
   getCollaboratorEducation, createCollaboratorEducation, deleteCollaboratorEducation,
   getCollaboratorReviews, createCollaboratorReview, deleteCollaboratorReview, getCollaboratorPerformance
 } from '../../services/api';
+import Input from '../shared/Input';
+import Select from '../shared/Select';
+import Button from '../shared/Button';
 
 const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams = [], canEdit = true, onDelete }) => {
   const [activeTab, setActiveTab] = useState('general');
@@ -249,29 +252,13 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
         {activeTab === 'general' && (
           <form onSubmit={handleSubmit}>
             <div className="form-grid">
-              <div className="form-group">
-                <label className="label">Matrícula</label>
-                <input name="registration_number" className="input" value={formData.registration_number} onChange={handleChange} placeholder="000000" />
-              </div>
-              <div className="form-group">
-                <label className="label">Nome *</label>
-                <input name="name" className="input" value={formData.name} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label className="label">CPF</label>
-                <input name="cpf" className="input" value={formData.cpf} onChange={handleChange} />
-              </div>
-              <div className="form-group">
-                <label className="label">RG</label>
-                <input name="rg" className="input" value={formData.rg} onChange={handleChange} />
-              </div>
-              <div className="form-group">
-                <label className="label">Cargo *</label>
-                <select name="role_id" className="input" value={formData.role_id} onChange={handleChange} required>
-                  <option value="">Selecione...</option>
-                  {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                </select>
-              </div>
+              <Input name="registration_number" label="Matrícula" value={formData.registration_number} onChange={handleChange} placeholder="000000" />
+              <Input name="name" label="Nome *" value={formData.name} onChange={handleChange} required />
+              <Input name="cpf" label="CPF" value={formData.cpf} onChange={handleChange} />
+              <Input name="rg" label="RG" value={formData.rg} onChange={handleChange} />
+              <Select name="role_id" label="Cargo *" value={formData.role_id} onChange={handleChange} required placeholder="Selecione...">
+                {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+              </Select>
               <div className="form-group">
                 <label className="label">Times</label>
                 <div style={{ maxHeight: '100px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '0.5rem', padding: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -290,24 +277,15 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
                   ))}
                 </div>
               </div>
-              <div className="form-group">
-                <label className="label">Email</label>
-                <input name="email" className="input" value={formData.email} onChange={handleChange} type="email" />
-              </div>
-              <div className="form-group">
-                <label className="label">Telefone</label>
-                <input name="phone" className="input" value={formData.phone} onChange={handleChange} />
-              </div>
-              <div className="form-group">
-                <label className="label">Salário</label>
-                <input name="salary" className="input" value={formData.salary} onChange={handleChange} />
-              </div>
+              <Input name="email" label="Email" value={formData.email} onChange={handleChange} type="email" />
+              <Input name="phone" label="Telefone" value={formData.phone} onChange={handleChange} />
+              <Input name="salary" label="Salário" value={formData.salary} onChange={handleChange} />
             </div>
 
             <h4 style={{ margin: '1rem 0', borderBottom: '1px solid #eee' }}>Dados CNH</h4>
             <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
-              <div className="form-group"><label className="label">Número</label><input name="cnh_number" className="input" value={formData.cnh_number} onChange={handleChange} /></div>
-              <div className="form-group"><label className="label">Categoria</label><input name="cnh_category" className="input" value={formData.cnh_category} onChange={handleChange} /></div>
+              <Input name="cnh_number" label="Número" value={formData.cnh_number} onChange={handleChange} />
+              <Input name="cnh_category" label="Categoria" value={formData.cnh_category} onChange={handleChange} />
               <div className="form-group">
                 <label className="label">Validade</label>
                 <div style={{ display: 'flex', gap: '8px' }}>
@@ -326,8 +304,8 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
             </div>
 
             <div className="form-actions" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-              <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-              {canEdit && <button type="submit" className="btn btn-primary" disabled={loading}>Salvar Alterações</button>}
+              <Button variant="secondary" type="button" onClick={onClose}>Cancelar</Button>
+              {canEdit && <Button variant="primary" type="submit" isLoading={loading}>Salvar Alterações</Button>}
             </div>
           </form>
         )}
