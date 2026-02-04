@@ -3,6 +3,8 @@ import { ShoppingCart, Plus, Filter, Package } from 'lucide-react';
 import { getPurchases, createPurchase, getProjects } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import RequestDetailsModal from '../components/purchases/RequestDetailsModal';
+import DataTable from '../components/shared/DataTable';
+import StatusBadge from '../components/shared/StatusBadge';
 import './Purchases.css';
 
 const Purchases = () => {
@@ -163,59 +165,39 @@ const Purchases = () => {
         </div>
       </div>
 
-      <div className="purchases-list card">
-        {loading ? (
-          <div className="loading">Carregando solicitações...</div>
-        ) : filteredRequests.length === 0 ? (
-          <div className="empty-state">
-            <Package size={48} />
-            <p>Nenhuma solicitação encontrada.</p>
-          </div>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Descrição / Pacote</th>
-                <th>Solicitante</th>
-                <th>Projeto</th>
-                <th>Data</th>
-                <th>Total Estimado</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRequests.map((request) => (
-                <tr
-                  key={request.id}
-                  onClick={() => setSelectedRequest(request)}
-                  className="clickable-row"
-                >
-                  <td>#{request.id}</td>
-                  <td><strong>{request.description}</strong></td>
-                  <td>{request.requester || '-'}</td>
-                  <td>{getProjectName(request.project_id)}</td>
-                  <td>{new Date(request.created_at).toLocaleDateString('pt-BR')}</td>
-                  <td>R$ {calculateTotal(request).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td>
-                    <span className={`status-badge ${request.status}`}>
-                      {
-                        {
-                          'pending': 'Pendente',
-                          'approved': 'Aprovado',
-                          'rejected': 'Rejeitado',
-                          'ordered': 'Comprado',
-                          'received': 'Retirado',
-                          'cancelled': 'Cancelado'
-                        }[request.status] || request.status
-                      }
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div style={{ paddingBottom: '2rem' }}>
+        <DataTable
+          columns={[
+            { header: 'ID', accessor: 'id', render: row => <span style={{ color: '#64748b' }}>#{row.id}</span> },
+            { header: 'Descrição / Pacote', accessor: 'description', render: row => <strong>{row.description}</strong> },
+            { header: 'Solicitante', accessor: 'requester', render: row => row.requester || '-' },
+            { header: 'Projeto', accessor: 'project_id', render: row => getProjectName(row.project_id) },
+            { header: 'Data', accessor: 'created_at', render: row => new Date(row.created_at).toLocaleDateString('pt-BR') },
+            {
+              header: 'Total Estimado', accessor: 'total', render: row => (
+                <span style={{ textAlign: 'right', display: 'block' }}>
+                  R$ {calculateTotal(row).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              )
+            },
+            {
+              header: 'Status', accessor: 'status', render: row => {
+                const statusLabels = {
+                  'pending': 'Pendente',
+                  'approved': 'Aprovado',
+                  'rejected': 'Rejeitado',
+                  'ordered': 'Comprado',
+                  'received': 'Retirado',
+                  'cancelled': 'Cancelado'
+                };
+                return <StatusBadge status={statusLabels[row.status] || row.status} />;
+              }
+            }
+          ]}
+          data={filteredRequests}
+          actions={false}
+          onRowClick={(request) => setSelectedRequest(request)}
+        />
       </div>
 
       {selectedRequest && (

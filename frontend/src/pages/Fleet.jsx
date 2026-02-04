@@ -160,17 +160,6 @@ const Fleet = () => {
       <header className="fleet-header">
         <div><h1>Gestão de Frota</h1><p>Controle de veículos e seguros</p></div>
         <div className="header-actions">
-          <div className="search-input-container" style={{ position: 'relative', minWidth: '250px' }}>
-            <Search size={18} style={{ position: 'absolute', left: 12, top: 10, color: '#94a3b8' }} />
-            <input className="input" placeholder="Buscar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={{ paddingLeft: 35 }} />
-          </div>
-
-          <div className="tab-switcher-container">
-            <div className={`tab-glider ${activeTab}`} />
-            <button className={`tab-btn ${activeTab === 'fleet' ? 'active' : ''}`} onClick={() => setActiveTab('fleet')}><Car size={18} /> Veículos</button>
-            <button className={`tab-btn ${activeTab === 'insurance' ? 'active' : ''}`} onClick={() => setActiveTab('insurance')}><Shield size={18} /> Seguros</button>
-          </div>
-
           {canEdit && (
             <>
               <input type="file" ref={fuelInputRef} hidden onChange={e => handleUpload(e, 'fuel')} />
@@ -190,7 +179,33 @@ const Fleet = () => {
         </div>
       </header>
 
-      <div style={{ padding: '0 2rem 2rem' }}>
+      {/* Search and Filters Card */}
+      <div className="card" style={{ marginBottom: '1rem' }}>
+        <div className="search-filters">
+          <div className="search-bar">
+            <input
+              type="text"
+              className="input"
+              placeholder="Buscar por placa, modelo ou marca..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div className="filters-row">
+            <div className="filter-group">
+              <label className="label">Visualizar</label>
+              <div className="tab-switcher-container">
+                <div className={`tab-glider ${activeTab}`} />
+                <button className={`tab-btn ${activeTab === 'fleet' ? 'active' : ''}`} onClick={() => setActiveTab('fleet')}><Car size={16} /> Veículos</button>
+                <button className={`tab-btn ${activeTab === 'insurance' ? 'active' : ''}`} onClick={() => setActiveTab('insurance')}><Shield size={16} /> Seguros</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ paddingBottom: '2rem' }}>
         {activeTab === 'fleet' ? (
           <DataTable
             columns={fleetColumns}

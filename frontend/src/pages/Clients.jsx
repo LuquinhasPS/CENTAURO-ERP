@@ -249,49 +249,48 @@ const Clients = () => {
   return (
     <div className="clients">
       <header className="clients-header">
-        {/* ... header content kept same ... */}
-        <div className="header-content">
-          <div>
-            <h1>Gestão de Clientes</h1>
-            <p>Cadastro e controle de clientes</p>
-          </div>
-          {canEdit && (
-            <button className="btn btn-primary" onClick={() => {
-              setEditingId(null);
-              setEditingClient(null);
-              setContacts([]);
-              setFormData({
-                name: '',
-                client_number: '',
-                cnpj: '',
-                contact_person: '',
-                email: '',
-                phone: '',
-                address: '',
-              });
-              setActiveTab('general');
-              setShowForm(true);
-            }} style={{ marginTop: '1rem' }}>
-              <Plus size={20} />
-              Novo Cliente
-            </button>
-          )}
+        <div>
+          <h1>Gestão de Clientes</h1>
+          <p>Cadastro e controle de clientes</p>
         </div>
+        {canEdit && (
+          <button className="btn btn-primary" onClick={() => {
+            setEditingId(null);
+            setEditingClient(null);
+            setContacts([]);
+            setFormData({
+              name: '',
+              client_number: '',
+              cnpj: '',
+              contact_person: '',
+              email: '',
+              phone: '',
+              address: '',
+            });
+            setActiveTab('general');
+            setShowForm(true);
+          }}>
+            <Plus size={20} />
+            Novo Cliente
+          </button>
+        )}
+      </header>
 
-        <div className="filters-bar" style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <div className="search-input-container" style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
-            <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+      {/* Search and Filters Card */}
+      <div className="card" style={{ marginBottom: '1rem' }}>
+        <div className="search-filters">
+          <div className="search-bar">
             <input
               type="text"
               className="input"
               placeholder="Buscar por nome, email, telefone ou CNPJ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: '40px', width: '100%' }}
+              style={{ width: '100%' }}
             />
           </div>
         </div>
-      </header>
+      </div>
 
       {showForm && (
         <div className="clients-form-modal">
@@ -512,14 +511,12 @@ const Clients = () => {
         </div>
       )}
 
-      <div style={{ padding: '0 2rem 2rem' }}>
-        <DataTable
-          columns={columns}
-          data={filteredClients}
-          actions={false}
-          onRowClick={(client) => handleEdit(client)}
-        />
-      </div>
+      <DataTable
+        columns={columns}
+        data={filteredClients}
+        actions={false}
+        onRowClick={(client) => handleEdit(client)}
+      />
 
 
       <ConfirmModal

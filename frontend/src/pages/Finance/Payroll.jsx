@@ -284,48 +284,45 @@ const Payroll = () => {
             </div>
 
             <div style={{ background: 'white', borderRadius: '0.5rem', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-              <div style={{ padding: '1rem 1.5rem', background: '#f1f5f9', borderBottom: '1px solid #e2e8f0', fontWeight: '600', color: '#475569' }}>
-                Detalhamento por Colaborador
-              </div>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead style={{ background: '#f8fafc' }}>
-                    <tr>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Matrícula</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Nome</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Custo Total</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'center', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Dias Alocados</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Custo Diário</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Não Alocado</th>
-                      <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>Distribuição</th>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'left', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Matrícula</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'left', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Nome</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Custo Total</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'center', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Dias Alocados</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Custo Diário</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Não Alocado</th>
+                      <th style={{ padding: '0.35rem 0.5rem', textAlign: 'left', fontWeight: '600', color: '#475569', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Distribuição</th>
                     </tr>
                   </thead>
                   <tbody>
                     {details.details.map((item) => (
                       <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '0.75rem 1.5rem', fontSize: '0.9rem', color: '#64748b' }}>{item.registration_number || '-'}</td>
-                        <td style={{ padding: '0.75rem 1.5rem', fontSize: '0.9rem', fontWeight: '500', color: '#1e293b' }}>{item.collaborator_name}</td>
-                        <td style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.9rem', color: '#1e293b' }}>{formatCurrency(item.total_cost)}</td>
-                        <td style={{ padding: '0.75rem 1.5rem', textAlign: 'center' }}>
+                        <td style={{ padding: '0.35rem 0.5rem', fontSize: '0.75rem', color: '#64748b' }}>{item.registration_number || '-'}</td>
+                        <td style={{ padding: '0.35rem 0.5rem', fontSize: '0.75rem', fontWeight: '500', color: '#1e293b' }}>{item.collaborator_name}</td>
+                        <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontSize: '0.75rem', color: '#1e293b' }}>{formatCurrency(item.total_cost)}</td>
+                        <td style={{ padding: '0.35rem 0.5rem', textAlign: 'center' }}>
                           <span style={{
-                            padding: '0.25rem 0.5rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: '600',
+                            padding: '2px 8px', borderRadius: '999px', fontSize: '0.75rem', fontWeight: '600',
                             background: item.total_days_found > 0 ? '#dcfce7' : '#fee2e2',
                             color: item.total_days_found > 0 ? '#166534' : '#991b1b'
                           }}>
                             {item.total_days_found} dias
                           </span>
                         </td>
-                        <td style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.9rem', color: '#64748b' }}>
+                        <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontSize: '0.75rem', color: '#64748b' }}>
                           {item.total_days_found > 0 ? formatCurrency(item.calculated_daily_rate) : '-'}
                         </td>
-                        <td style={{ padding: '0.75rem 1.5rem', textAlign: 'right', fontSize: '0.9rem', fontWeight: item.unallocated_cost > 0 ? '600' : '400', color: item.unallocated_cost > 0 ? '#ef4444' : '#cbd5e1' }}>
+                        <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontSize: '0.75rem', fontWeight: item.unallocated_cost > 0 ? '600' : '400', color: item.unallocated_cost > 0 ? '#ef4444' : '#cbd5e1' }}>
                           {formatCurrency(item.unallocated_cost)}
                         </td>
-                        <td style={{ padding: '0.75rem 1.5rem', fontSize: '0.85rem' }}>
+                        <td style={{ padding: '0.35rem 0.5rem', fontSize: '0.75rem' }}>
                           {item.project_costs.length > 0 ? (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
                               {item.project_costs.map((pc, idx) => (
-                                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', color: '#475569' }}>
+                                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', color: '#475569', gap: '1rem' }}>
                                   <span>{pc.project_name}:</span>
                                   <span style={{ fontWeight: '500' }}>{pc.days_worked}d ({formatCurrency(pc.cost_value)})</span>
                                 </div>

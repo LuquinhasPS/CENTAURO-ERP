@@ -305,66 +305,71 @@ const Contracts = () => {
   return (
     <div className="contracts">
       <header className="contracts-header">
-        {/* ... header content ... */}
-        <div className="header-content">
-          <div>
-            <h1>Gestão de Contratos</h1>
-            <p>Contratos guarda-chuva vinculados a clientes</p>
-          </div>
-          {canEdit && (
-            <button className="btn btn-primary" onClick={() => {
-              setEditingId(null);
-              resetForm();
-              setShowForm(true);
-            }} style={{ marginTop: '1rem' }}>
-              <Plus size={20} />
-              Novo Contrato
-            </button>
-          )}
+        <div>
+          <h1>Gestão de Contratos</h1>
+          <p>Contratos guarda-chuva vinculados a clientes</p>
         </div>
-
-        <div className="filters-bar" style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <div className="search-input-container" style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
-            <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-            <input
-              type="text"
-              className="input"
-              placeholder="Buscar por descrição ou número..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: '40px', width: '100%' }}
-            />
-          </div>
-          <div className="filter-group" style={{ minWidth: '200px' }}>
-            <select
-              className="input"
-              value={filterClient}
-              onChange={(e) => setFilterClient(e.target.value)}
-            >
-              <option value="">Todos os Clientes</option>
-              {clients.map(client => (
-                <option key={client.id} value={client.id}>{client.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="filter-group" style={{ minWidth: '150px' }}>
-            <select
-              className="input"
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-            >
-              <option value="">Todos os Tipos</option>
-              <option value="LPU">LPU</option>
-              <option value="RECORRENTE">Recorrente</option>
-            </select>
-          </div>
-        </div>
+        {canEdit && (
+          <button className="btn btn-primary" onClick={() => {
+            setEditingId(null);
+            resetForm();
+            setShowForm(true);
+          }}>
+            <Plus size={20} />
+            Novo Contrato
+          </button>
+        )}
       </header>
+
+      {/* Search and Filters Card */}
+      <div style={{ padding: '0 2rem' }}>
+        <div className="card" style={{ marginBottom: '1rem' }}>
+          <div className="search-filters">
+            <div className="search-bar">
+              <input
+                type="text"
+                className="input"
+                placeholder="Buscar por descrição ou número..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div className="filters-row">
+              <div className="filter-group">
+                <label className="label">Cliente</label>
+                <select
+                  className="input"
+                  value={filterClient}
+                  onChange={(e) => setFilterClient(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  {clients.map(client => (
+                    <option key={client.id} value={client.id}>{client.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label className="label">Tipo</label>
+                <select
+                  className="input"
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="LPU">LPU</option>
+                  <option value="RECORRENTE">Recorrente</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {showForm && (
         <div className="contract-form-modal">
           {/* Preservation of Modal Content Logic */}
-          <div className="contract-form card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', width: '90%' }}>
+          <div className="contract-form card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', width: '90%', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h3>{editingId ? 'Editar Contrato' : 'Criar Contrato'}</h3>
               {editingId && canEdit && (

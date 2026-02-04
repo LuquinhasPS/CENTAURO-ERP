@@ -357,7 +357,6 @@ const AccountsReceivable = () => {
       <div className="billings-table-container">
         <DataTable
           columns={[
-            { header: 'Status', accessor: 'status', render: row => getStatusBadge(row.status) },
             { header: 'Vencimento', accessor: 'date', render: row => row.date ? new Date(row.date).toLocaleDateString('pt-BR') : '-' },
             { header: 'Cliente', accessor: 'client_name', render: row => getClientName(row.project_id) },
             { header: 'Descrição', accessor: 'description' },
@@ -366,7 +365,7 @@ const AccountsReceivable = () => {
               header: 'Valor',
               accessor: 'value',
               render: billing => (
-                <div className="text-right font-medium">
+                <div style={{ textAlign: 'right', fontWeight: 500 }}>
                   <div>
                     R$ {parseFloat(billing.gross_value || billing.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </div>
@@ -385,7 +384,6 @@ const AccountsReceivable = () => {
                       (parseFloat(billing.value_st) || 0)
                     );
                     const real = net - taxToPay;
-                    // Only show if there are taxes to pay, otherwise it's redundant
                     if (taxToPay > 0) {
                       return (
                         <div style={{ fontSize: '0.75em', color: '#166534', fontWeight: '600' }}>
@@ -398,7 +396,8 @@ const AccountsReceivable = () => {
                 </div>
               )
             },
-            { header: 'Nº Nota', accessor: 'invoice_number', className: 'text-right', render: row => row.invoice_number || '-' }
+            { header: 'Nº Nota', accessor: 'invoice_number', render: row => row.invoice_number || '-' },
+            { header: 'Status', accessor: 'status', render: row => getStatusBadge(row.status) }
           ]}
           data={filteredBillings}
           actions={false}

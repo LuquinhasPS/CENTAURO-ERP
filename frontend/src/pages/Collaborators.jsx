@@ -144,39 +144,31 @@ const Collaborators = () => {
   return (
     <div className="collaborators-page">
       <header className="clients-header">
-        <div className="header-content">
-          <div>
-            <h1>Gestão de Colaboradores</h1>
-            <p>Cadastro e controle de equipe</p>
-          </div>
-
-          <div className="header-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center', alignSelf: 'flex-start', marginTop: '1rem' }}>
-            <div className="tab-switcher-container">
-              <div className={`tab-glider ${viewMode === 'collaborators' ? 'left' : 'right'}`} style={{ transform: viewMode === 'collaborators' ? 'translateX(0)' : 'translateX(100%)' }} />
-              <button className={`tab-btn ${viewMode === 'collaborators' ? 'active' : ''}`} onClick={() => setViewMode('collaborators')}>
-                <Users size={18} /> Colaboradores
-              </button>
-              <button className={`tab-btn ${viewMode === 'teams' ? 'active' : ''}`} onClick={() => setViewMode('teams')}>
-                <Users size={18} /> Times
-              </button>
-            </div>
-
-            {canEdit && (
-              <button className="btn btn-primary" onClick={() => {
-                if (viewMode === 'collaborators') handleCreate();
-                else teamsRef.current?.openForm();
-              }}>
-                <Plus size={20} />
-                {viewMode === 'collaborators' ? 'Novo Colaborador' : 'Novo Time'}
-              </button>
-            )}
-          </div>
+        <div>
+          <h1>Gestão de Colaboradores</h1>
+          <p>Cadastro e controle de equipe</p>
         </div>
+        <div className="header-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="tab-switcher-container">
+            <div className={`tab-glider ${viewMode === 'collaborators' ? 'left' : 'right'}`} style={{ transform: viewMode === 'collaborators' ? 'translateX(0)' : 'translateX(100%)' }} />
+            <button className={`tab-btn ${viewMode === 'collaborators' ? 'active' : ''}`} onClick={() => setViewMode('collaborators')}>
+              <Users size={18} /> Colaboradores
+            </button>
+            <button className={`tab-btn ${viewMode === 'teams' ? 'active' : ''}`} onClick={() => setViewMode('teams')}>
+              <Users size={18} /> Times
+            </button>
+          </div>
 
-        {viewMode === 'collaborators' && (
-          // Filters moved outside header to match Projects layout
-          null
-        )}
+          {canEdit && (
+            <button className="btn btn-primary" onClick={() => {
+              if (viewMode === 'collaborators') handleCreate();
+              else teamsRef.current?.openForm();
+            }}>
+              <Plus size={20} />
+              {viewMode === 'collaborators' ? 'Novo Colaborador' : 'Novo Time'}
+            </button>
+          )}
+        </div>
       </header>
 
       {viewMode === 'collaborators' && (
