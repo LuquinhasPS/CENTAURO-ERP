@@ -16,6 +16,7 @@ from app.models.finance import BillingStatus, ProjectBilling
 from app.schemas import commercial as schemas
 from app.auth import get_current_active_user
 from app.services.commercial.project_service import ProjectService
+from app.utils.messages import Msg
 
 router = APIRouter()
 
@@ -90,7 +91,7 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
     result = await db.execute(select(models.Client).where(models.Client.id == project.client_id))
     client = result.scalar_one_or_none()
     if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
+        raise HTTPException(status_code=404, detail=Msg.CLIENT_NOT_FOUND)
     
     # 2. Determine Project Number and TAG
     # 2. Determine Project Number and TAG
@@ -146,7 +147,7 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Project).options(selectinload(models.Project.billings)).where(models.Project.id == project_id))
     project = result.scalar_one_or_none()
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail=Msg.PROJECT_NOT_FOUND)
     
     # Apply Overdue Logic for Billings
     today = date.today()
@@ -181,7 +182,7 @@ async def update_project(project_id: int, project: schemas.ProjectCreate, db: As
     result = await db.execute(select(models.Project).where(models.Project.id == project_id))
     db_project = result.scalar_one_or_none()
     if not db_project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail=Msg.PROJECT_NOT_FOUND)
     
     for key, value in project.model_dump().items():
         setattr(db_project, key, value)
@@ -228,10 +229,10 @@ async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Project).where(models.Project.id == project_id))
     project = result.scalar_one_or_none()
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail=Msg.PROJECT_NOT_FOUND)
     await db.delete(project)
     await db.commit()
-    return {"message": "Project deleted successfully"}
+    return {"message": Msg.PROJECT_DELETED}
 
 
 # ========== PROJECT FEEDBACKS ==========

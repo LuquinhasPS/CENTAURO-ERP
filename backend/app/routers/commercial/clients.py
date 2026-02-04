@@ -12,6 +12,7 @@ from app.database import get_db
 from app.models import commercial as models
 from app.models.client_contacts import ClientContact
 from app.schemas import commercial as schemas
+from app.utils.messages import Msg
 
 router = APIRouter()
 
@@ -41,7 +42,7 @@ async def update_client(client_id: int, client: schemas.ClientCreate, db: AsyncS
     result = await db.execute(select(models.Client).where(models.Client.id == client_id))
     db_client = result.scalar_one_or_none()
     if not db_client:
-        raise HTTPException(status_code=404, detail="Client not found")
+        raise HTTPException(status_code=404, detail=Msg.CLIENT_NOT_FOUND)
     
     for key, value in client.model_dump().items():
         setattr(db_client, key, value)
@@ -56,10 +57,10 @@ async def delete_client(client_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Client).where(models.Client.id == client_id))
     client = result.scalar_one_or_none()
     if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
+        raise HTTPException(status_code=404, detail=Msg.CLIENT_NOT_FOUND)
     await db.delete(client)
     await db.commit()
-    return {"message": "Client deleted successfully"}
+    return {"message": Msg.CLIENT_DELETED}
 
 
 # ========== CLIENT CONTACTS ==========
@@ -70,7 +71,7 @@ async def add_client_contact(client_id: int, contact: schemas.ClientContactCreat
     result = await db.execute(select(models.Client).where(models.Client.id == client_id))
     client = result.scalar_one_or_none()
     if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
+        raise HTTPException(status_code=404, detail=Msg.CLIENT_NOT_FOUND)
     
     db_contact = ClientContact(**contact.model_dump(), client_id=client_id)
     db.add(db_contact)

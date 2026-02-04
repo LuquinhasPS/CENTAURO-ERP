@@ -6,6 +6,7 @@ import ConfirmModal from '../components/shared/ConfirmModal';
 import ProjectModal from '../components/projects/ProjectModal';
 import DataTable from '../components/shared/DataTable';
 import StatusBadge from '../components/shared/StatusBadge';
+import { PROJECT_STATUS, PROJECT_STATUS_OPTIONS } from '../utils/constants';
 import './Projects.css';
 
 const Projects = () => {
@@ -223,7 +224,7 @@ const Projects = () => {
       warranty_months: '',
       company_id: '',
       estimated_days: '',
-      status: 'Em Andamento',
+      status: PROJECT_STATUS.EM_ANDAMENTO,
     });
   };
 
@@ -303,7 +304,7 @@ const Projects = () => {
     { header: 'Fim', accessor: 'end_date', render: row => row.end_date ? new Date(row.end_date).toLocaleDateString('pt-BR') : '-' },
     {
       header: 'Status', accessor: 'status', render: row => (
-        <StatusBadge status={row.status || 'Em Andamento'} />
+        <StatusBadge status={row.status || PROJECT_STATUS.EM_ANDAMENTO} />
       )
     },
   ];
@@ -449,12 +450,12 @@ const Projects = () => {
                   <select
                     name="status"
                     className="input"
-                    value={formData.status || 'Em Andamento'}
+                    value={formData.status || PROJECT_STATUS.EM_ANDAMENTO}
                     onChange={handleChange}
                   >
-                    <option value="Em Andamento">Em Andamento</option>
-                    <option value="Concluído">Concluído</option>
-                    <option value="Cancelado">Cancelado</option>
+                    {PROJECT_STATUS_OPTIONS.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                     <option value="Suspenso">Suspenso</option>
                   </select>
                 </div>
@@ -667,8 +668,8 @@ const Projects = () => {
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
                 <option value="">Todos</option>
-                <option value="em_andamento">Em Andamento</option>
-                <option value="concluido">Concluído</option>
+                <option value="em_andamento">{PROJECT_STATUS.EM_ANDAMENTO}</option>
+                <option value="concluido">{PROJECT_STATUS.CONCLUIDO}</option>
               </select>
             </div>
           </div>
