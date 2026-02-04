@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Users, Plus, Trash2, Calendar } from 'lucide-react';
+import { Users, Plus, Trash2, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { addProjectCollaborator, removeProjectCollaborator } from '../../../services/api';
 // Note: api.js redirects to operational.js which exports these.
 import { formatDateUTC } from '../../../utils/formatters';
+import ConfirmModal from '../../shared/ConfirmModal';
 
 const ProjectTeamTab = ({ project, projectCollaborators, availableCollaborators, canEdit, onUpdate }) => {
   const [showCollabForm, setShowCollabForm] = useState(false);
@@ -13,6 +14,15 @@ const ProjectTeamTab = ({ project, projectCollaborators, availableCollaborators,
     end_date: '',
     include_weekends: false
   });
+
+
+  const [expanded, setExpanded] = useState({});
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [collaboratorToDelete, setCollaboratorToDelete] = useState(null);
+
+  const toggleExpand = (id) => {
+    setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const getCollaboratorName = (id) => {
     const c = availableCollaborators.find(col => col.id === id);
@@ -37,11 +47,18 @@ const ProjectTeamTab = ({ project, projectCollaborators, availableCollaborators,
     }
   };
 
-  const handleRemoveCollaborator = async (id) => {
-    if (!confirm('Remover este colaborador do projeto?')) return;
+  const handleRemoveCollaborator = (id) => {
+    setCollaboratorToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!collaboratorToDelete) return;
     try {
-      await removeProjectCollaborator(id);
+      await removeProjectCollaborator(collaboratorToDelete);
       onUpdate();
+      setShowConfirmModal(false);
+      setCollaboratorToDelete(null);
     } catch (error) {
       alert('Erro ao remover: ' + error.message);
     }
@@ -122,37 +139,131 @@ const ProjectTeamTab = ({ project, projectCollaborators, availableCollaborators,
       )}
 
       <div className="resource-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        {projectCollaborators.map(pc => (
-          <div key={pc.id} className="resource-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
-            <div className="resource-info" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <Users size={20} color="#64748b" />
-              <div>
-                <strong style={{ display: 'block', color: '#334155' }}>{getCollaboratorName(pc.collaborator_id)}</strong>
-                {pc.role && <span className="resource-role" style={{ fontSize: '0.85rem', color: '#64748b' }}>{pc.role}</span>}
-                {pc.start_date && (
-                  <div className="resource-dates" style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                    <Calendar size={12} />
-                    {formatDateUTC(pc.start_date)}
-                    {pc.end_date && ` - ${formatDateUTC(pc.end_date)}`}
-                  </div>
-                )}
-              </div>
-            </div>
-            {canEdit && (
-              <button
-                className="btn-icon-small danger"
-                onClick={() => handleRemoveCollaborator(pc.id)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}
+        {projectCollaborators.map(pc => {
+          const isExpanded = expanded[pc.collaborator_id];
+          const hasPeriods = pc.periods && pc.periods.length > 0;
+
+          return (
+            <div key={pc.id} className="resource-item-container" style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '6px', overflow: 'hidden' }}>
+              <div
+                className="resource-item-header"
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', cursor: 'pointer', background: isExpanded ? '#f8fafc' : '#fff' }}
+                onClick={() => toggleExpand(pc.collaborator_id)}
               >
-                <Trash2 size={16} />
-              </button>
-            )}
-          </div>
-        ))}
+                <div className="resource-info" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <Users size={20} color="#64748b" />
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <strong style={{ display: 'block', color: '#334155' }}>{getCollaboratorName(pc.collaborator_id)}</strong>
+                      {pc.days_count !== undefined && pc.days_count > 0 && (
+                        <span style={{
+                          background: '#eff6ff',
+                          color: '#3b82f6',
+                          padding: '1px 6px',
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontWeight: '600'
+                        }}>
+                          {pc.days_count} {pc.days_count === 1 ? 'dia' : 'dias'}
+                        </span>
+                      )}
+                    </div>
+
+                    {pc.role && <span className="resource-role" style={{ fontSize: '0.85rem', color: '#64748b', display: 'block' }}>{pc.role}</span>}
+
+                    {/* Overall Range (collapsed) */}
+                    {!isExpanded && (pc.real_start_date || pc.start_date) && (
+                      <div className="resource-dates" style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                        <Calendar size={12} />
+                        {formatDateUTC(pc.real_start_date || pc.start_date)}
+                        {(pc.real_end_date || pc.end_date) && ` - ${formatDateUTC(pc.real_end_date || pc.end_date)}`}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
+                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Accordion Body: Periods & Safe Delete */}
+              {isExpanded && (
+                <div className="resource-periods" style={{ padding: '0.5rem 0.75rem 0.75rem 3.5rem', borderTop: '1px solid #f1f5f9', background: '#f8fafc' }}>
+
+                  {hasPeriods ? (
+                    <>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#64748b', marginBottom: '4px' }}>Períodos de Alocação:</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {pc.periods.map((period, idx) => (
+                          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#334155' }}>
+                            <Calendar size={12} color="#94a3b8" />
+                            <span>
+                              {formatDateUTC(period.start)} até {formatDateUTC(period.end)}
+                            </span>
+                            <span style={{ color: '#64748b', fontSize: '0.75rem' }}>
+                              ({period.days} {period.days === 1 ? 'dia' : 'dias'})
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', marginBottom: '8px' }}>
+                      Nenhuma alocação ativa neste período.
+                    </div>
+                  )}
+
+                  {/* Footer: Safe Delete Area */}
+                  {canEdit && (
+                    <div className="resource-item-footer" style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+                      <button
+                        className="btn btn-sm"
+                        onClick={(e) => { e.stopPropagation(); handleRemoveCollaborator(pc.id); }}
+                        style={{
+                          background: '#fff1f2',
+                          border: '1px solid #fecdd3',
+                          color: '#e11d48',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 12px',
+                          borderRadius: '4px',
+                          fontSize: '0.8rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                        Desvincular Colaborador
+                      </button>
+                      <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px', marginBottom: 0 }}>
+                        Esta ação removerá todas as alocações deste colaborador neste projeto.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
         {projectCollaborators.length === 0 && !showCollabForm && (
           <p className="empty-message" style={{ textAlign: 'center', color: '#94a3b8', padding: '1rem' }}>Nenhum colaborador alocado neste projeto.</p>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        onClose={() => {
+          setShowConfirmModal(false);
+          setCollaboratorToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Desvincular Colaborador"
+        message="Tem certeza que deseja desvincular este colaborador? Todas as alocações dele neste projeto serão removidas permanentemente."
+      />
     </div>
   );
 };

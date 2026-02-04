@@ -12,11 +12,94 @@ router = APIRouter()
 
 # Project Collaborators
 @router.get("/projects/{project_id}/collaborators", response_model=List[schemas.ProjectCollaboratorResponse])
+@router.get("/projects/{project_id}/collaborators", response_model=List[schemas.ProjectCollaboratorResponse])
 async def get_project_collaborators(project_id: int, db: AsyncSession = Depends(get_db)):
+    # 1. Fetch Project Collaborators
+    # We fetch all of them, but we will deduplicate by collaborator_id in Python
     result = await db.execute(
         select(models.ProjectCollaborator).where(models.ProjectCollaborator.project_id == project_id)
     )
-    return result.scalars().all()
+    all_collabs_rows = result.scalars().all()
+    
+    # Deduplicate: Keep the first occurrence of each collaborator_id
+    # This is to avoid showing the same person multiple times if they were added multiple times
+    collaborators_map = {}
+    for c in all_collabs_rows:
+        if c.collaborator_id not in collaborators_map:
+            collaborators_map[c.collaborator_id] = c
+    
+    unique_collaborators = list(collaborators_map.values())
+
+    # 2. Fetch ALL Allocations for this project (Person type) to compute clusters
+    # We fetch everything and process in Python (efficient enough for project size)
+    alloc_result = await db.execute(
+        select(Allocation)
+        .where(
+            Allocation.project_id == project_id,
+            Allocation.resource_type == "PERSON"
+        )
+        .order_by(Allocation.resource_id, Allocation.date)
+    )
+    all_allocations = alloc_result.scalars().all()
+
+    # Group allocations by resource_id
+    from collections import defaultdict
+    resource_allocs = defaultdict(list)
+    for alloc in all_allocations:
+        resource_allocs[alloc.resource_id].append(alloc.date)
+
+    # 3. Compute Stats & Clusters for each resource
+    alloc_data_map = {}
+    for resource_id, dates in resource_allocs.items():
+        if not dates:
+            continue
+            
+        # Ensure sorted (DB should have sorted, but safety first)
+        dates.sort()
+        
+        # Clustering Algorithm
+        periods = []
+        if dates:
+            start_p = dates[0]
+            prev_p = dates[0]
+            count_p = 1
+            
+            for d in dates[1:]:
+                # If date is consecutive (allow 1 day gap? No, strict continuity)
+                if (d - prev_p).days == 1:
+                    prev_p = d
+                    count_p += 1
+                else:
+                    # Gap detected, close period
+                    periods.append({"start": start_p, "end": prev_p, "days": count_p})
+                    start_p = d
+                    prev_p = d
+                    count_p = 1
+            # Close last period
+            periods.append({"start": start_p, "end": prev_p, "days": count_p})
+
+        alloc_data_map[resource_id] = {
+            "real_start": dates[0],
+            "real_end": dates[-1],
+            "days_count": len(dates),
+            "periods": periods
+        }
+
+    # 4. Merge Data into Response
+    response = []
+    for col in unique_collaborators:
+        stats = alloc_data_map.get(col.collaborator_id, {})
+        
+        # Clone/Annotate object
+        col_obj = col
+        setattr(col_obj, "real_start_date", stats.get("real_start"))
+        setattr(col_obj, "real_end_date", stats.get("real_end"))
+        setattr(col_obj, "days_count", stats.get("days_count", 0))
+        setattr(col_obj, "periods", stats.get("periods", []))
+        
+        response.append(col_obj)
+        
+    return response
 
 @router.post("/projects/{project_id}/collaborators", response_model=schemas.ProjectCollaboratorResponse)
 async def add_project_collaborator(project_id: int, data: schemas.ProjectCollaboratorCreate, db: AsyncSession = Depends(get_db)):
