@@ -171,10 +171,76 @@ async def remove_project_collaborator(id: int, db: AsyncSession = Depends(get_db
 # Project Tools
 @router.get("/projects/{project_id}/tools", response_model=List[schemas.ProjectToolResponse])
 async def get_project_tools(project_id: int, db: AsyncSession = Depends(get_db)):
+    # 1. Fetch Project Tools (All)
     result = await db.execute(
         select(models.ProjectTool).where(models.ProjectTool.project_id == project_id)
     )
-    return result.scalars().all()
+    all_rows = result.scalars().all()
+    
+    # Deduplicate by tool_id
+    item_map = {}
+    for item in all_rows:
+        if item.tool_id not in item_map:
+            item_map[item.tool_id] = item
+    unique_items = list(item_map.values())
+    
+    # 2. Fetch Allocations (TOOL)
+    alloc_result = await db.execute(
+        select(Allocation)
+        .where(
+            Allocation.project_id == project_id,
+            Allocation.resource_type == "TOOL"
+        )
+        .order_by(Allocation.resource_id, Allocation.date)
+    )
+    all_allocs = alloc_result.scalars().all()
+    
+    # 3. Cluster Logic
+    from collections import defaultdict
+    resource_allocs = defaultdict(list)
+    for a in all_allocs:
+        resource_allocs[a.resource_id].append(a.date)
+    
+    alloc_data_map = {}
+    for resource_id, dates in resource_allocs.items():
+        if not dates: continue
+        dates.sort()
+        
+        periods = []
+        if dates:
+            start_p = dates[0]
+            prev_p = dates[0]
+            count_p = 1
+            for d in dates[1:]:
+                if (d - prev_p).days == 1:
+                    prev_p = d
+                    count_p += 1
+                else:
+                    periods.append({"start": start_p, "end": prev_p, "days": count_p})
+                    start_p = d
+                    prev_p = d
+                    count_p = 1
+            periods.append({"start": start_p, "end": prev_p, "days": count_p})
+            
+        alloc_data_map[resource_id] = {
+            "real_start": dates[0],
+            "real_end": dates[-1],
+            "days_count": len(dates),
+            "periods": periods
+        }
+
+    # 4. Merge
+    response = []
+    for item in unique_items:
+        stats = alloc_data_map.get(item.tool_id, {})
+        item_obj = item
+        setattr(item_obj, "real_start_date", stats.get("real_start"))
+        setattr(item_obj, "real_end_date", stats.get("real_end"))
+        setattr(item_obj, "days_count", stats.get("days_count", 0))
+        setattr(item_obj, "periods", stats.get("periods", []))
+        response.append(item_obj)
+        
+    return response
 
 @router.post("/projects/{project_id}/tools", response_model=schemas.ProjectToolResponse)
 async def add_project_tool(project_id: int, data: schemas.ProjectToolCreate, db: AsyncSession = Depends(get_db)):
@@ -245,10 +311,75 @@ async def remove_project_tool(id: int, db: AsyncSession = Depends(get_db)):
 # Project Vehicles
 @router.get("/projects/{project_id}/vehicles", response_model=List[schemas.ProjectVehicleResponse])
 async def get_project_vehicles(project_id: int, db: AsyncSession = Depends(get_db)):
+    # 1. Fetch Project Vehicles
     result = await db.execute(
         select(models.ProjectVehicle).where(models.ProjectVehicle.project_id == project_id)
     )
-    return result.scalars().all()
+    all_rows = result.scalars().all()
+    
+    # Deduplicate
+    item_map = {}
+    for item in all_rows:
+        if item.vehicle_id not in item_map:
+            item_map[item.vehicle_id] = item
+    unique_items = list(item_map.values())
+
+    # 2. Fetch Allocations (VEHICLE)
+    alloc_result = await db.execute(
+        select(Allocation)
+        .where(
+            Allocation.project_id == project_id,
+            Allocation.resource_type == "CAR"
+        )
+        .order_by(Allocation.resource_id, Allocation.date)
+    )
+    all_allocs = alloc_result.scalars().all()
+
+    # 3. Cluster
+    from collections import defaultdict
+    resource_allocs = defaultdict(list)
+    for a in all_allocs:
+        resource_allocs[a.resource_id].append(a.date)
+        
+    alloc_data_map = {}
+    for resource_id, dates in resource_allocs.items():
+        if not dates: continue
+        dates.sort()
+        periods = []
+        if dates:
+            start_p = dates[0]
+            prev_p = dates[0]
+            count_p = 1
+            for d in dates[1:]:
+                if (d - prev_p).days == 1:
+                    prev_p = d
+                    count_p += 1
+                else:
+                    periods.append({"start": start_p, "end": prev_p, "days": count_p})
+                    start_p = d
+                    prev_p = d
+                    count_p = 1
+            periods.append({"start": start_p, "end": prev_p, "days": count_p})
+        
+        alloc_data_map[resource_id] = {
+            "real_start": dates[0],
+            "real_end": dates[-1],
+            "days_count": len(dates),
+            "periods": periods
+        }
+        
+    # 4. Merge
+    response = []
+    for item in unique_items:
+        stats = alloc_data_map.get(item.vehicle_id, {})
+        item_obj = item
+        setattr(item_obj, "real_start_date", stats.get("real_start"))
+        setattr(item_obj, "real_end_date", stats.get("real_end"))
+        setattr(item_obj, "days_count", stats.get("days_count", 0))
+        setattr(item_obj, "periods", stats.get("periods", []))
+        response.append(item_obj)
+        
+    return response
 
 @router.post("/projects/{project_id}/vehicles", response_model=schemas.ProjectVehicleResponse)
 async def add_project_vehicle(project_id: int, data: schemas.ProjectVehicleCreate, db: AsyncSession = Depends(get_db)):

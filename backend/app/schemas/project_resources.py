@@ -43,6 +43,11 @@ class ProjectToolCreate(ProjectToolBase):
 
 class ProjectToolResponse(ProjectToolBase):
     id: int
+    # Dynamic fields from Allocations
+    real_start_date: Optional[date] = None
+    real_end_date: Optional[date] = None
+    days_count: Optional[int] = 0
+    periods: Optional[list[AllocationPeriod]] = []
 
     class Config:
         from_attributes = True
@@ -59,6 +64,11 @@ class ProjectVehicleCreate(ProjectVehicleBase):
 
 class ProjectVehicleResponse(ProjectVehicleBase):
     id: int
+    # Dynamic fields from Allocations
+    real_start_date: Optional[date] = None
+    real_end_date: Optional[date] = None
+    days_count: Optional[int] = 0
+    periods: Optional[list[AllocationPeriod]] = []
 
     class Config:
         from_attributes = True
