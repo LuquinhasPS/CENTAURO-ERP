@@ -52,6 +52,9 @@ class ToolBase(BaseModel):
     current_holder: str
     current_location: Optional[str] = None
     status: str = "AVAILABLE"
+    category: Optional[str] = "OTHER"
+    condition: Optional[str] = "GOOD"
+    next_maintenance: Optional[date] = None
 
 class ToolCreate(ToolBase):
     pass

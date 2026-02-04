@@ -19,7 +19,7 @@ from app.models.operational import Collaborator, Certification, CertificationTyp
 from app.models.commercial import Client, Contract, Project, ProjectFeedback, FeedbackType
 from app.models.finance import ProjectBilling, BillingStatus
 from app.models.project_resources import ProjectCollaborator, ProjectVehicle, ProjectTool
-from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus
+from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus, ToolCategory, ToolCondition, FleetStatus
 from app.models.tickets import Ticket, TicketStatus, TicketPriority
 from app.models.purchases import PurchaseRequest, PurchaseItem
 from app.models.users import User, UserRole
@@ -215,73 +215,73 @@ async def seed_fleet(db, insurances):
     vehicles = [
         # FIAT Vehicles
         {"license_plate": "LLV7582", "model": "STRADA WORKING", "brand": "FIAT", "year": 2013, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "LQS5041", "model": "UNO MILLE", "brand": "FIAT", "year": 2013, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "KQW4792", "model": "PALIO", "brand": "FIAT", "year": 2015, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "KOE4256", "model": "UNO", "brand": "FIAT", "year": 2007, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "PUC3186", "model": "UNO", "brand": "FIAT", "year": 2014, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "GCK9D18", "model": "WEEKEND", "brand": "FIAT", "year": 2016, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "LUC4F47", "model": "FASTBACK/TURBO", "brand": "FIAT", "year": 2023, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Preto",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Preto",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "RTG4I96", "model": "STRADA", "brand": "FIAT", "year": 2022, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Vermelho",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Vermelho",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "TOJ0A44", "model": "ARGO", "brand": "FIAT", "year": 2025, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "TOJ0A40", "model": "ARGO", "brand": "FIAT", "year": 2025, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "TOJ0A45", "model": "ARGO", "brand": "FIAT", "year": 2025, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Azul",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Azul",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "TOL4D70", "model": "STRADA", "brand": "FIAT", "year": 2026, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
         {"license_plate": "TOL4D72", "model": "STRADA", "brand": "FIAT", "year": 2026, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.198.164/0001-60", "insurance_id": insurances[0].id if insurances else None},
 
         # RENAULT Vehicles
         {"license_plate": "RQR3J33", "model": "OROCH/EXP", "brand": "RENAULT", "year": 2022, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "33.448.150/0001-11", "insurance_id": insurances[1].id if len(insurances) > 1 else None},
         {"license_plate": "RQR3J79", "model": "OROCH/EXP", "brand": "RENAULT", "year": 2022, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "33.448.150/0001-11", "insurance_id": insurances[1].id if len(insurances) > 1 else None},
         {"license_plate": "QXL0J20", "model": "KWID", "brand": "RENAULT", "year": 2021, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Vermelho",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Vermelho",
          "cnpj": "33.448.150/0001-11", "insurance_id": insurances[1].id if len(insurances) > 1 else None},
         {"license_plate": "NAX6H44", "model": "KWID", "brand": "RENAULT", "year": 2023, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "33.448.150/0001-11", "insurance_id": insurances[1].id if len(insurances) > 1 else None},
         # VW
         {"license_plate": "KWW2751", "model": "CROSSFOX", "brand": "VW", "year": 2010, 
-         "fuel_type": FuelType.GASOLINA, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.GASOLINA, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "33.164.021/0001-00", "insurance_id": insurances[2].id if len(insurances) > 2 else None},
         # CHEVROLET Diesel
         {"license_plate": "KZP9I09", "model": "S10", "brand": "CHEVROLET", "year": 2019, 
-         "fuel_type": FuelType.DIESEL, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.DIESEL, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.074.175/0001-38", "insurance_id": insurances[0].id if insurances else None},
         # MITSUBISHI Diesel
         {"license_plate": "RMR6D75", "model": "L200", "brand": "MITSUBISHI", "year": 2022, 
-         "fuel_type": FuelType.DIESEL, "status": "ACTIVE", "color": "Prata",
+         "fuel_type": FuelType.DIESEL, "status": FleetStatus.ACTIVE, "color": "Prata",
          "cnpj": "61.074.175/0001-38", "insurance_id": insurances[0].id if insurances else None},
         # TOYOTA Diesel
         {"license_plate": "RMS4F05", "model": "HILUX", "brand": "TOYOTA", "year": 2021, 
-         "fuel_type": FuelType.DIESEL, "status": "ACTIVE", "color": "Branco",
+         "fuel_type": FuelType.DIESEL, "status": FleetStatus.ACTIVE, "color": "Branco",
          "cnpj": "61.573.796/0001-66", "insurance_id": insurances[1].id if len(insurances) > 1 else None},
     ]
     
@@ -502,11 +502,66 @@ async def seed_tools(db):
     print("🔍 Criando 5 ferramentas...")
     
     tools_data = [
-        {"name": "Furadeira de Impacto", "serial_number": "FUR-001", "current_holder": "Almoxarifado", "current_location": "Almoxarifado", "status": ToolStatus.AVAILABLE},
-        {"name": "Parafusadeira", "serial_number": "PAR-002", "current_holder": "João Silva", "current_location": "Projeto Vinculado 1", "status": ToolStatus.IN_USE},
-        {"name": "Multímetro Digital", "serial_number": "MUL-003", "current_holder": "Maria Santos", "current_location": "Projeto Vinculado 2", "status": ToolStatus.IN_USE},
-        {"name": "Alicate Amperímetro", "serial_number": "ALI-004", "current_holder": "Almoxarifado", "current_location": "Almoxarifado", "status": ToolStatus.MAINTENANCE},
-        {"name": "Jogo de Chaves", "serial_number": "JOG-005", "current_holder": "Almoxarifado", "current_location": "Escritório", "status": ToolStatus.AVAILABLE},
+        {
+            "name": "Furadeira de Impacto Bosch", 
+            "serial_number": "FUR-001", 
+            "category": ToolCategory.POWER_TOOL,
+            "condition": ToolCondition.GOOD,
+            "current_holder": "Almoxarifado", 
+            "current_location": "Almoxarifado", 
+            "status": ToolStatus.AVAILABLE,
+            "next_maintenance": None
+        },
+        {
+            "name": "Máquina de Fusão Fujikura", 
+            "serial_number": "FUS-88S", 
+            "category": ToolCategory.INSTRUMENT,
+            "condition": ToolCondition.GOOD,
+            "current_holder": "João Silva", 
+            "current_location": "Projeto Vinculado 1", 
+            "status": ToolStatus.IN_USE,
+            "next_maintenance": date.today() + timedelta(days=15) # Warning range
+        },
+        {
+            "name": "OTDR Exfo MaxTester", 
+            "serial_number": "OTDR-730", 
+            "category": ToolCategory.INSTRUMENT,
+            "condition": ToolCondition.NEW,
+            "current_holder": "Maria Santos", 
+            "current_location": "Projeto Vinculado 2", 
+            "status": ToolStatus.IN_USE,
+            "next_maintenance": date.today() + timedelta(days=120)
+        },
+        {
+            "name": "Alicate Amperímetro Fluke", 
+            "serial_number": "ALI-376", 
+            "category": ToolCategory.INSTRUMENT,
+            "condition": ToolCondition.FAIR,
+            "current_holder": "Almoxarifado", 
+            "current_location": "Almoxarifado", 
+            "status": ToolStatus.MAINTENANCE,
+            "next_maintenance": date.today() - timedelta(days=5) # Expired
+        },
+        {
+            "name": "Kit Ferramentas Básico", 
+            "serial_number": "KIT-005", 
+            "category": ToolCategory.KIT,
+            "condition": ToolCondition.GOOD,
+            "current_holder": "Almoxarifado", 
+            "current_location": "Escritório", 
+            "status": ToolStatus.AVAILABLE,
+            "next_maintenance": None
+        },
+        {
+            "name": "Escada Extensiva 7M",
+            "serial_number": "ESC-010",
+            "category": ToolCategory.ACCESS,
+            "condition": ToolCondition.GOOD,
+            "current_holder": "Pedro Souza",
+            "current_location": "Viatura 01",
+            "status": ToolStatus.IN_USE,
+            "next_maintenance": None
+        }
     ]
     
     tools = []

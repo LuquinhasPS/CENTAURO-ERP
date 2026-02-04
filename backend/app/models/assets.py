@@ -4,13 +4,27 @@ from app.database import Base
 import enum
 
 class FleetStatus(str, enum.Enum):
-    ACTIVE = "ACTIVE"
-    MAINTENANCE = "MAINTENANCE"
+    ACTIVE = "ATIVO"
+    MAINTENANCE = "MANUTENÇÃO"
 
 class ToolStatus(str, enum.Enum):
     AVAILABLE = "AVAILABLE"
     IN_USE = "IN_USE"
     MAINTENANCE = "MAINTENANCE"
+
+class ToolCategory(str, enum.Enum):
+    INSTRUMENT = "INSTRUMENT"
+    POWER_TOOL = "POWER_TOOL"
+    ACCESS = "ACCESS"
+    KIT = "KIT"
+    OTHER = "OTHER"
+
+class ToolCondition(str, enum.Enum):
+    NEW = "NEW"
+    GOOD = "GOOD"
+    FAIR = "FAIR"
+    POOR = "POOR"
+    BROKEN = "BROKEN"
 
 class FuelType(str, enum.Enum):
     ALCOOL = "Alcool"
@@ -75,6 +89,10 @@ class Tool(Base):
     current_holder = Column(String, nullable=False) 
     # "Onde" - Optional
     current_location = Column(String, nullable=True)
+
+    category = Column(Enum(ToolCategory), default=ToolCategory.OTHER)
+    condition = Column(Enum(ToolCondition), default=ToolCondition.GOOD)
+    next_maintenance = Column(Date, nullable=True)
 
 class VehicleMaintenance(Base):
     __tablename__ = "vehicle_maintenances"
