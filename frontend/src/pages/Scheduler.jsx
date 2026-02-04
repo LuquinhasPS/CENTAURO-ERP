@@ -4,6 +4,7 @@ import { getAllocations, getCollaborators, getFleet, getTools, getProjects, getC
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/shared/ConfirmModal';
+import { ResourceRow } from '../components/Scheduler';
 import './Scheduler.css';
 
 // Feriados nacionais brasileiros (fixos)
@@ -272,17 +273,56 @@ const Scheduler = () => {
     }
   };
 
-  // Get allocations for a specific resource and day
+  // Get allocations for a specific resource and day - kept for backward compatibility
   const getAllocationsForCell = (resourceId, resourceType, day) => {
-    // Use local date string comparison to avoid UTC shifts
     const dayStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
-
     return allocations.filter(alloc => {
       if (!alloc.date) return false;
       return alloc.date === dayStr &&
         alloc.resource_type === resourceType &&
         alloc.resource_id === resourceId;
     });
+  };
+
+  // Handler for empty cell clicks (fallback when popover not used)
+  const handleCellClick = ({ date, resourceId, resourceType }) => {
+    if (!canEdit) return;
+
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    setFormData({
+      resource_id: resourceId.toString(),
+      resource_type: resourceType,
+      project_id: '',
+      start_date: dateStr,
+      end_date: dateStr,
+      include_weekends: true
+    });
+    setEditingId(null);
+    setShowForm(true);
+  };
+
+  // Quick Allocation: Create allocation directly from popover selection
+  const handleQuickAllocation = async (projectId, date, resourceId, resourceType) => {
+    if (!canEdit) return;
+
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    try {
+      await createAllocation({
+        resource_id: resourceId,
+        resource_type: resourceType,
+        project_id: projectId,
+        start_date: dateStr,
+        end_date: dateStr,
+        include_weekends: true,
+        type: 'RESERVATION'
+      });
+      loadData(); // Refresh data
+    } catch (error) {
+      console.error('Error creating quick allocation:', error);
+      alert('Erro ao criar alocação rápida');
+    }
   };
 
   return (
@@ -456,70 +496,26 @@ const Scheduler = () => {
             })}
           </div>
 
-          {/* Grid Body */}
+          {/* Grid Body - Using ResourceRow component */}
           {resources.length === 0 ? (
             <div className="empty-resources">
               <p>Nenhum recurso cadastrado. Cadastre colaboradores e veículos primeiro.</p>
             </div>
           ) : (
             resources.map((resource) => (
-              <div key={resource.id} className="grid-row">
-                <div className="resource-cell">
-                  <span className={`resource-badge ${resource.type.toLowerCase()}`}>
-                    {resource.type === 'PERSON' ? '👤' : (resource.type === 'CAR' ? '🚗' : '🔧')}
-                  </span>
-                  <span className="resource-name">{resource.name}</span>
-                </div>
-                {days.map((day, dayIndex) => {
-                  const cellAllocations = getAllocationsForCell(resource.originalId, resource.type, day);
-                  const isWeekend = day.getDay() === 0 || day.getDay() === 6;
-                  const holidayInfo = getHolidayInfo(day);
-                  return (
-                    <div key={dayIndex} className={`allocation-cell ${isWeekend ? 'weekend' : ''} ${holidayInfo ? 'holiday' : ''}`}>
-                      {cellAllocations.map((alloc) => {
-                        const left = 0;
-                        const width = 100;
-                        return (
-                          <div
-                            key={alloc.id}
-                            className="allocation-bar"
-                            style={{
-                              left: `${left}%`,
-                              width: `${width}%`,
-                              backgroundColor: alloc.status === 'CONFIRMED' ? '#3b82f6' : '#f59e0b'
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditAllocation(alloc);
-                            }}
-                            title={(() => {
-                              const proj = projects.find(p => p.id === alloc.project_id);
-                              const client = proj ? clients.find(c => c.id === proj.client_id) : null;
-                              return proj ? `${client?.name || 'Cliente'} | ${proj.tag}` : 'Clique para editar';
-                            })()}
-                          >
-                            {(() => {
-                              const proj = projects.find(p => p.id === alloc.project_id);
-                              if (!proj) return <span className="allocation-tag">Proj #{alloc.project_id}</span>;
-
-                              const client = clients.find(c => c.id === proj.client_id);
-                              // Show shorter client name
-                              const clientName = client?.name?.split(' ')[0] || '-';
-
-                              return (
-                                <>
-                                  <span className="allocation-tag">{proj.tag || proj.name}</span>
-                                  <span className="allocation-client">{clientName}</span>
-                                </>
-                              );
-                            })()}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
+              <ResourceRow
+                key={resource.id}
+                resource={resource}
+                days={days}
+                allocations={allocations}
+                projects={projects}
+                clients={clients}
+                getHolidayInfo={getHolidayInfo}
+                onCellClick={handleCellClick}
+                onAllocationClick={handleEditAllocation}
+                onQuickAllocate={handleQuickAllocation}
+                canEdit={canEdit}
+              />
             ))
           )}
         </div>
