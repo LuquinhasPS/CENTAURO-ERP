@@ -349,19 +349,19 @@ const Projects = () => {
                     ))}
                   </select>
                 </div>
-                <div className="form-group">
-                  <label className="label">Nº Projeto {editingId ? '' : '(Manual/Opcional)'}</label>
-                  <input
-                    type="number"
-                    name="project_number"
-                    className="input"
-                    value={formData.project_number || ''}
-                    onChange={handleChange}
-                    readOnly={!!editingId}
-                    disabled={!!editingId}
-                    placeholder={!editingId ? "Automático se vazio" : ""}
-                  />
-                </div>
+                {!editingId && (
+                  <div className="form-group">
+                    <label className="label">Nº Projeto (Manual/Opcional)</label>
+                    <input
+                      type="number"
+                      name="project_number"
+                      className="input"
+                      value={formData.project_number || ''}
+                      onChange={handleChange}
+                      placeholder="Automático se vazio"
+                    />
+                  </div>
+                )}
                 {editingId && (
                   <div className="form-group">
                     <label className="label">Tag</label>
@@ -419,16 +419,6 @@ const Projects = () => {
                     <option value="5">5 - SP</option>
                   </select>
                 </div>
-                <div className="form-group full-width">
-                  <label className="label">Escopo</label>
-                  <textarea
-                    name="scope"
-                    className="input textarea"
-                    value={formData.scope}
-                    onChange={handleChange}
-                    rows="3"
-                  />
-                </div>
                 <div className="form-group">
                   <label className="label">Coordenador</label>
                   <select
@@ -444,6 +434,16 @@ const Projects = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className="form-group full-width">
+                  <label className="label">Escopo</label>
+                  <textarea
+                    name="scope"
+                    className="input textarea"
+                    value={formData.scope}
+                    onChange={handleChange}
+                    rows="3"
+                  />
                 </div>
                 <div className="form-group">
                   <label className="label">Status</label>
