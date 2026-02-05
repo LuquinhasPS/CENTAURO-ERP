@@ -297,7 +297,7 @@
   margin-top: 16px;
 }
 
-.purchases-list {
+.project-purchases-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -308,6 +308,11 @@
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.purchase-item:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .purchase-header {

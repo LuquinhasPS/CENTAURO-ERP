@@ -26,7 +26,7 @@ const ProjectPurchasesTab = ({ project, purchases, canEdit, onSelectRequest, onU
         )}
       </div>
 
-      <div className="purchases-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div className="project-purchases-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {purchases.length === 0 ? (
           <div className="empty-message" style={{ textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>
             <Package size={32} />
@@ -38,7 +38,7 @@ const ProjectPurchasesTab = ({ project, purchases, canEdit, onSelectRequest, onU
               key={request.id}
               className="purchase-item clickable"
               onClick={() => onSelectRequest(request)}
-              style={{ cursor: 'pointer', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '1rem' }}
+              style={{ cursor: 'pointer' }}
             >
               <div className="purchase-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <strong style={{ color: '#0f172a' }}>#{request.id} - {request.description}</strong>
