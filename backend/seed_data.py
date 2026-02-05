@@ -620,7 +620,7 @@ async def seed_contracts(db, clients):
         # So: CEL1_2412_01 (Client ID is not in the user's requested format 'CEL{CNPJ}_{YY}{MM}_{Seq}'?)
         # Let's assume the user meant CEL{company_id}_{YY}{MM}_{Seq}
         
-        tag = f"{prefix}_{yy}{mm}_{seq}"
+        tag = f"{prefix}_{yy}{mm}_{client_num}_{seq}"
         
         # Date logic
         if i in [2, 3]: # Vencidos

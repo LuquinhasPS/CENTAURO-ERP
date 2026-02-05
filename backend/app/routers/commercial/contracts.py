@@ -63,7 +63,7 @@ async def create_contract(contract: schemas.ContractCreate, db: AsyncSession = D
     nn = f"{next_number:02d}"
     ccc = client.client_number if client.client_number else "00" # Default to 00 if missing
     
-    tag = f"{prefix}_{yy}{mm}_{nn}_{ccc}"
+    tag = f"{prefix}_{yy}{mm}_{ccc}_{nn}"
 
     # 5. Create Contract
     db_contract = models.Contract(**contract.model_dump())
