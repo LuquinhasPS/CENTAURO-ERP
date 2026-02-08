@@ -1,3 +1,15 @@
+# =========================================
+# TIMEZONE CONFIGURATION - MUST BE FIRST!
+# =========================================
+# Set timezone to Brasilia (UTC-3) for ALL datetime operations
+import os
+import time
+os.environ['TZ'] = 'America/Sao_Paulo'
+# time.tzset() only works on Unix, but setting TZ still helps with pytz
+if hasattr(time, 'tzset'):
+    time.tzset()
+# =========================================
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import assets, operational, tickets, kanban, project_resources, purchases, roles, auth, teams, maintenance, finance_payroll, proposals
@@ -101,7 +113,38 @@ async def startup():
             except Exception:
                 print(f"Migrating: Adding {col} to {table}")
                 await conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {dtype}"))
+    
+    # Start the email scheduler
+    from app.services.scheduler_service import start_scheduler
+    start_scheduler()
+
+@app.on_event("shutdown")
+async def shutdown():
+    from app.services.scheduler_service import stop_scheduler
+    stop_scheduler()
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to Centauro ERP API"}
+
+@app.get("/debug/timezone")
+async def debug_timezone():
+    """
+    Endpoint de diagnóstico para verificar configuração de timezone.
+    """
+    from datetime import datetime
+    from app.utils.timezone import now_brazil, today_brazil, BRAZIL_TZ
+    import pytz
+    
+    utc_now = datetime.utcnow()
+    local_now = datetime.now()
+    brazil_now = now_brazil()
+    
+    return {
+        "utc_time": utc_now.strftime("%d/%m/%Y %H:%M:%S"),
+        "local_time (datetime.now)": local_now.strftime("%d/%m/%Y %H:%M:%S"),
+        "brazil_time (now_brazil)": brazil_now.strftime("%d/%m/%Y %H:%M:%S"),
+        "brazil_date (today_brazil)": today_brazil().strftime("%d/%m/%Y"),
+        "timezone_env": os.environ.get('TZ', 'NOT SET'),
+        "expected_brazil_time": "Should match your local clock if you are in Brazil"
+    }

@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta
 
 from app.database import get_db
 from app.models import proposals as models
+from app.utils.timezone import now_brazil, today_brazil, end_of_day_brazil
 from app.models import commercial as commercial_models
 from app.schemas import proposals as schemas
 
@@ -165,9 +166,9 @@ async def get_pending_tasks(db: AsyncSession = Depends(get_db)):
     Listar tarefas pendentes (vencidas ou para hoje).
     Retorna: {id, title, due_date, proposal_title, client_name, is_overdue}
     """
-    today = datetime.utcnow().date()
-    # End of today
-    end_of_day = datetime(today.year, today.month, today.day, 23, 59, 59)
+    today = today_brazil()
+    # End of today (Brasilia Time)
+    end_of_day = end_of_day_brazil(today)
 
     # Simple join to get client name if available
     stmt = (
@@ -292,14 +293,14 @@ async def complete_proposal_task(task_id: int, db: AsyncSession = Depends(get_db
     
     # Mark as completed
     db_task.is_completed = True
-    db_task.completed_at = datetime.utcnow()
+    db_task.completed_at = now_brazil()
     
     next_task_created = False
     new_task_id = None
     
     # Se é recorrente e ainda está ativa, criar próxima tarefa automaticamente
     if db_task.recurrence_days and db_task.is_active:
-        next_due_date = datetime.utcnow() + timedelta(days=db_task.recurrence_days)
+        next_due_date = now_brazil() + timedelta(days=db_task.recurrence_days)
         
         new_task = models.ProposalTask(
             proposal_id=db_task.proposal_id,
