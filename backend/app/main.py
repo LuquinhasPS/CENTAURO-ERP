@@ -148,3 +148,19 @@ async def debug_timezone():
         "timezone_env": os.environ.get('TZ', 'NOT SET'),
         "expected_brazil_time": "Should match your local clock if you are in Brazil"
     }
+
+@app.post("/api/seed_database", tags=["Admin"])
+async def trigger_seed_database(confirm: str = "yes"):
+    """
+    ATENÇÃO: Este endpoint DELETA e repopula todos os dados do banco.
+    Usar apenas uma vez em produção!
+    """
+    if confirm != "CONFIRMAR_SEED":
+        return {"error": "Envie confirm='CONFIRMAR_SEED' para rodar este comando extremamente arriscado."}
+    
+    import seed_data
+    try:
+        await seed_data.main()
+        return {"message": "Seed executado com sucesso! Verifique os logs."}
+    except Exception as e:
+        return {"error": f"Erro durante o seed: {str(e)}"}
