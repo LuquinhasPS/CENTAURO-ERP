@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   // Configure axios defaults
   const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000',
     timeout: 5000, // 5 seconds timeout for faster feedback
   });
 
