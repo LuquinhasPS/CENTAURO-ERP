@@ -303,14 +303,14 @@ async def complete_proposal_task(task_id: int, db: AsyncSession = Depends(get_db
     
     # Mark as completed
     db_task.is_completed = True
-    db_task.completed_at = now_brazil()
+    db_task.completed_at = now_brazil().replace(tzinfo=None)
     
     next_task_created = False
     new_task_id = None
     
     # Se é recorrente e ainda está ativa, criar próxima tarefa automaticamente
     if db_task.recurrence_days and db_task.is_active:
-        next_due_date = now_brazil() + timedelta(days=db_task.recurrence_days)
+        next_due_date = (now_brazil() + timedelta(days=db_task.recurrence_days)).replace(tzinfo=None)
         
         new_task = models.ProposalTask(
             proposal_id=db_task.proposal_id,

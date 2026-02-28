@@ -37,8 +37,14 @@ async def create_fleet_item(
     db_fleet = models.Fleet(**fleet.model_dump())
     db.add(db_fleet)
     await db.commit()
-    await db.refresh(db_fleet)
-    return db_fleet
+    
+    # Reload with relationships
+    result = await db.execute(
+        select(models.Fleet)
+        .options(selectinload(models.Fleet.insurance), selectinload(models.Fleet.maintenances))
+        .where(models.Fleet.id == db_fleet.id)
+    )
+    return result.scalar_one()
 
 @router.put("/fleet/{fleet_id}", response_model=schemas.FleetResponse)
 async def update_fleet_item(
@@ -59,8 +65,14 @@ async def update_fleet_item(
         setattr(db_fleet, key, value)
     
     await db.commit()
-    await db.refresh(db_fleet)
-    return db_fleet
+    
+    # Reload with relationships
+    result = await db.execute(
+        select(models.Fleet)
+        .options(selectinload(models.Fleet.insurance), selectinload(models.Fleet.maintenances))
+        .where(models.Fleet.id == db_fleet.id)
+    )
+    return result.scalar_one()
 
 @router.delete("/fleet/{fleet_id}")
 async def delete_fleet_item(
