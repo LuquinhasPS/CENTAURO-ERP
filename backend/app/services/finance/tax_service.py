@@ -30,8 +30,21 @@ class TaxService:
         else:
             raise ValueError("Formato não suportado. Use .xlsx ou .xls")
         
-        # Read first 20 rows to find the header
-        df_preview = pd.read_excel(io.BytesIO(file_content), header=None, nrows=20, engine=engine).astype(str)
+        # Try to read as Excel first, then fall back to HTML (common for web-exported .xls files)
+        is_html = False
+        try:
+            # Read first 20 rows to find the header
+            df_preview = pd.read_excel(io.BytesIO(file_content), header=None, nrows=20, engine=engine).astype(str)
+        except Exception:
+            # File might be HTML disguised as .xls (common from accounting systems)
+            try:
+                tables = pd.read_html(io.BytesIO(file_content))
+                if not tables:
+                    raise ValueError("Nenhuma tabela encontrada no arquivo")
+                df_preview = tables[0].head(20).astype(str)
+                is_html = True
+            except Exception as html_error:
+                raise ValueError(f"Não foi possível ler o arquivo. Verifique se é um Excel válido (.xlsx ou .xls).")
         
         header_row_index = 0
         found_header = False
@@ -39,7 +52,7 @@ class TaxService:
         # Keywords to identify the header row
         # We look for a row that contains ("NOTA" OR "NUMERO") AND ("VALOR" OR "EMISSAO" OR "DATA" OR "ICMS")
         for i, row in df_preview.iterrows():
-            row_str = " ".join(row.values).upper()
+            row_str = " ".join(str(v) for v in row.values).upper()
             row_str_norm = remove_accents(row_str)  # Remove accents for matching
             
             has_id = "NOTA" in row_str_norm or "NUMERO" in row_str_norm or "NF" in row_str_norm
@@ -51,7 +64,14 @@ class TaxService:
                 break
         
         # Reload with correct header
-        df = pd.read_excel(io.BytesIO(file_content), header=header_row_index, engine=engine)
+        if is_html:
+            tables = pd.read_html(io.BytesIO(file_content))
+            df_full = tables[0]
+            # Use the detected header row
+            df = df_full.iloc[header_row_index + 1:].reset_index(drop=True)
+            df.columns = [str(c) for c in df_full.iloc[header_row_index].values]
+        else:
+            df = pd.read_excel(io.BytesIO(file_content), header=header_row_index, engine=engine)
         
         # Normalize columns: Uppercase, remove accents, remove special chars, single spaces
         def normalize_col(col):

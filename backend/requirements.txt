@@ -23,6 +23,7 @@ chromadb
 pandas
 openpyxl
 xlrd>=2.0.1
+lxml
 holidays
 fastapi-mail>=1.4.1
 apscheduler>=3.10.0
