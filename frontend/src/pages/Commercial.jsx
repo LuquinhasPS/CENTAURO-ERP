@@ -59,6 +59,9 @@ const Commercial = () => {
 
   // Edit/Convert/Loss selection
   const [selectedProposal, setSelectedProposal] = useState(null);
+  const [convertFormData, setConvertFormData] = useState({});
+  const [pendingLossProposalId, setPendingLossProposalId] = useState(null);
+  const [lossReason, setLossReason] = useState('');
   // Tasks (Tarefas de Follow-up) - MOVED TO MODAL
   // const [tasks, setTasks] = useState([]);
   // const [activeTab, setActiveTab] = useState('info'); 
