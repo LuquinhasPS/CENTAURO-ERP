@@ -25,8 +25,14 @@ async def upload_payroll(
     # 1. Read Excel with Pandas
     content = await file.read()
     try:
+        # Determine engine based on file extension
+        filename = file.filename or ""
+        if filename.endswith('.xls') and not filename.endswith('.xlsx'):
+            engine = 'xlrd'
+        else:
+            engine = 'openpyxl'
         # Assuming header is row 0
-        df = pd.read_excel(io.BytesIO(content))
+        df = pd.read_excel(io.BytesIO(content), engine=engine)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid Excel file: {str(e)}")
 

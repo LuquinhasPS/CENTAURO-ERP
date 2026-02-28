@@ -23,11 +23,15 @@ class TaxService:
             return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
         
         # Determine engine
-        if not (filename.endswith('.xlsx') or filename.endswith('.xls')):
+        if filename.endswith('.xlsx'):
+            engine = 'openpyxl'
+        elif filename.endswith('.xls'):
+            engine = 'xlrd'
+        else:
             raise ValueError("Formato não suportado. Use .xlsx ou .xls")
         
         # Read first 20 rows to find the header
-        df_preview = pd.read_excel(io.BytesIO(file_content), header=None, nrows=20).astype(str)
+        df_preview = pd.read_excel(io.BytesIO(file_content), header=None, nrows=20, engine=engine).astype(str)
         
         header_row_index = 0
         found_header = False
@@ -47,7 +51,7 @@ class TaxService:
                 break
         
         # Reload with correct header
-        df = pd.read_excel(io.BytesIO(file_content), header=header_row_index)
+        df = pd.read_excel(io.BytesIO(file_content), header=header_row_index, engine=engine)
         
         # Normalize columns: Uppercase, remove accents, remove special chars, single spaces
         def normalize_col(col):
