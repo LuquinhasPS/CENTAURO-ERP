@@ -417,6 +417,16 @@ async def create_collaborator(collaborator: schemas.CollaboratorCreate, db: Asyn
     db_collaborator = models.Collaborator(**collaborator_data)
     db.add(db_collaborator)
     await db.flush()  # Get the ID
+
+    # Sync role name from Role table
+    if db_collaborator.role_id:
+        from app.models.roles import Role
+        role_result = await db.execute(select(Role).where(Role.id == db_collaborator.role_id))
+        role_obj = role_result.scalar_one_or_none()
+        if role_obj:
+            db_collaborator.role = role_obj.name
+    else:
+        db_collaborator.role = None
     
     # Add teams
     if team_ids:
@@ -448,6 +458,16 @@ async def update_collaborator(collaborator_id: int, collaborator: schemas.Collab
     # Update collaborator attributes
     for key, value in collaborator_data.items():
         setattr(db_collaborator, key, value)
+
+    # Sync role name from Role table
+    if db_collaborator.role_id:
+        from app.models.roles import Role
+        role_result = await db.execute(select(Role).where(Role.id == db_collaborator.role_id))
+        role_obj = role_result.scalar_one_or_none()
+        if role_obj:
+            db_collaborator.role = role_obj.name
+    else:
+        db_collaborator.role = None
     
     # Update teams (replace all)
     if team_ids is not None:
