@@ -37,7 +37,7 @@ class EmailService:
         rows = ""
         for task in tasks:
             due_color = "#d9534f" if task.get('is_overdue') else "#27ae60"
-            due_text = "Atrasada" if task.get('is_overdue') else task.get('due_date', '-')
+            due_text = task.get('due_date', '-')
 
             rows += f"""
             <tr>
