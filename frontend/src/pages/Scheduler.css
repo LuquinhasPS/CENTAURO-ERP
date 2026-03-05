@@ -312,11 +312,11 @@
 
 /* Weekend Styling */
 .weekend {
-  background-color: #f8fafc;
+  background-color: #e9ecef;
 }
 
 .weekend-header {
-  background-color: #f1f5f9;
+  background-color: #dee2e6;
 }
 
 .day-weekday-letter {
@@ -328,7 +328,7 @@
 }
 
 .allocation-cell.weekend {
-  background-color: #f1f5f9;
+  background-color: #e9ecef;
 }
 
 /* Holiday Styling */

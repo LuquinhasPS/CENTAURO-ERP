@@ -1,5 +1,5 @@
 .commercial-page {
-  padding: 20px;
+  padding: 10px 20px 20px;
   height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
@@ -10,7 +10,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   flex-shrink: 0;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .page-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: #1e293b;
   margin: 0;
@@ -30,7 +30,8 @@
 .page-header p {
   color: #64748b;
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 
@@ -94,7 +95,7 @@
 }
 
 .kanban-column {
-  background: #f1f5f9;
+  background: #e2e6eb;
   min-width: 280px;
   width: 280px;
   border-radius: 8px;
@@ -136,7 +137,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 8px 10px;
-  margin-bottom: 6px;
+  margin-bottom: 0.2px;
   cursor: grab;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;

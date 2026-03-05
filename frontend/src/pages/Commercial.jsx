@@ -633,11 +633,12 @@ const SortableProposalCard = ({ proposal, onClick }) => {
     >
       <div className="card-header">
         <span className="internal-id">{proposal.internal_id || 'PROP-???'}</span>
+        <span className="client" style={{ flex: 1, textAlign: 'center', fontSize: '0.7rem', color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '0 4px' }}>{proposal.client_name || 'Prospect'}</span>
         <span className="value">R$ {parseFloat(proposal.value || 0).toLocaleString('pt-BR')}</span>
       </div>
       <h4>{proposal.title}</h4>
       <div className="card-details">
-        <span className="client"><FileText size={11} /> {proposal.client_name || 'Prospect'}</span>
+        {proposal.responsible && <span className="client" style={{ fontStyle: 'italic' }}>Resp: {proposal.responsible}</span>}
         {proposal.converted_project_id && <span className="badge-converted">Gerou Obra</span>}
       </div>
     </div>

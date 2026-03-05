@@ -21,6 +21,7 @@ class ProposalStatus(str, Enum):
 class ProposalBase(BaseModel):
     title: str
     description: Optional[str] = None
+    responsible: Optional[str] = None
     client_name: Optional[str] = None
     client_id: Optional[int] = None
     value: Optional[Decimal] = None
@@ -41,6 +42,7 @@ class ProposalCreate(ProposalBase):
 class ProposalUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
+    responsible: Optional[str] = None
     client_name: Optional[str] = None
     client_id: Optional[int] = None
     value: Optional[Decimal] = None

@@ -86,6 +86,7 @@ async def startup():
 
             # Commercial Proposals
             ("commercial_proposals", "decision_date", "DATE"),
+            ("commercial_proposals", "responsible", "VARCHAR"),
             
             # Project Billings Migrations
             ("project_billings", "substitution_reason", "VARCHAR"),

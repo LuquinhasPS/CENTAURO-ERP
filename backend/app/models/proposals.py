@@ -25,6 +25,7 @@ class CommercialProposal(Base):
     internal_id = Column(String, index=True, nullable=True)  # e.g. "PROP-001"
     title = Column(String, index=True)
     description = Column(String, nullable=True)
+    responsible = Column(String, nullable=True) # Nome do responsável
     
     client_name = Column(String, nullable=True)  # For prospects
     client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)  # For existing clients

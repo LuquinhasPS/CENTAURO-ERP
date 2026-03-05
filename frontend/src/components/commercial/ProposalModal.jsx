@@ -7,7 +7,7 @@ import {
   createProposal, updateProposal,
   getProposalTasks, createProposalTask, deleteProposalTask,
   completeProposalTask, stopTaskRecurrence,
-  getClients
+  getClients, getCollaborators
 } from '../../services/api'; // Adjust path based on location
 
 const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = [] }) => {
@@ -26,6 +26,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
   });
 
   const [clients, setClients] = useState(initialClients);
+  const [collaborators, setCollaborators] = useState([]);
   const [tasks, setTasks] = useState([]);
 
   // New Task State
@@ -44,7 +45,8 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
           value: proposal.value ? parseFloat(proposal.value).toFixed(2) : '0.00',
           labor_value: proposal.labor_value ? parseFloat(proposal.labor_value).toFixed(2) : '0.00',
           material_value: proposal.material_value ? parseFloat(proposal.material_value).toFixed(2) : '0.00',
-          client_name: proposal.client_name || (proposal.client?.name) || ''
+          client_name: proposal.client_name || (proposal.client?.name) || '',
+          responsible: proposal.responsible || ''
         });
         loadTasks(proposal.id);
       } else {
@@ -53,6 +55,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
           title: '',
           client_name: '',
           client_id: '',
+          responsible: '',
           value: '0.00',
           labor_value: '0.00',
           material_value: '0.00',
@@ -68,6 +71,9 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
       // Fetch clients if needed (and not provided or empty)
       if (clients.length === 0) {
         fetchClients();
+      }
+      if (collaborators.length === 0) {
+        fetchCollaborators();
       }
     }
   }, [isOpen, proposal]);
@@ -89,6 +95,15 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
       setClients(res.data);
     } catch (error) {
       console.error("Error fetching clients:", error);
+    }
+  };
+
+  const fetchCollaborators = async () => {
+    try {
+      const res = await getCollaborators();
+      setCollaborators(res.data);
+    } catch (error) {
+      console.error("Error fetching collaborators:", error);
     }
   };
 
@@ -143,7 +158,8 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
         material_value: parseFloat(formData.material_value) || 0,
         company_id: formData.company_id ? parseInt(formData.company_id) : null,
         proposal_type: formData.proposal_type || null,
-        client_id: formData.client_id ? parseInt(formData.client_id) : null
+        client_id: formData.client_id ? parseInt(formData.client_id) : null,
+        responsible: formData.responsible || null
       };
 
       if (proposal) {
@@ -283,6 +299,18 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
                 placeholder="Ex: Reforma Loja XYZ"
                 style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
               />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500, color: '#334155' }}>Responsável</label>
+              <select
+                value={formData.responsible || ''}
+                onChange={e => setFormData({ ...formData, responsible: e.target.value })}
+                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+              >
+                <option value="">Selecione...</option>
+                {collaborators.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+              </select>
             </div>
 
             <div className="form-group" style={{ marginBottom: '16px' }}>
