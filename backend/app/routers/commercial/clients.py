@@ -17,6 +17,10 @@ from app.utils.messages import Msg
 router = APIRouter()
 
 
+from sqlalchemy import func
+from app.models.commercial import Project
+from app.models.finance import ProjectBilling, BillingStatus
+
 # ========== CLIENTS CRUD ==========
 
 @router.get("/clients", response_model=List[schemas.ClientResponse])
@@ -24,8 +28,29 @@ async def get_clients(db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(models.Client).options(selectinload(models.Client.contacts))
     )
-    clients = result.scalars().all()
-    return clients
+    clients_db = result.scalars().all()
+    
+    # Compute total_faturado per client from their projects
+    stmt = (
+        select(Project.client_id, func.sum(ProjectBilling.gross_value).label("total"))
+        .join(ProjectBilling, Project.id == ProjectBilling.project_id)
+        .where(ProjectBilling.status.in_([
+            BillingStatus.EMITIDA, 
+            BillingStatus.VENCIDA, 
+            BillingStatus.PAGO
+        ]))
+        .group_by(Project.client_id)
+    )
+    billing_sums = await db.execute(stmt)
+    sums_map = {row.client_id: row.total or 0.0 for row in billing_sums.all()}
+    
+    clients_resp = []
+    for c in clients_db:
+        c_obj = schemas.ClientResponse.model_validate(c)
+        c_obj.total_faturado = sums_map.get(c.id, 0.0)
+        clients_resp.append(c_obj)
+        
+    return clients_resp
 
 
 @router.post("/clients", response_model=schemas.ClientResponse)

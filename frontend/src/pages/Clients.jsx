@@ -40,8 +40,6 @@ const Clients = () => {
     client_number: '',
     cnpj: '',
     contact_person: '',
-    email: '',
-    phone: '',
     address: '',
   });
 
@@ -100,8 +98,6 @@ const Clients = () => {
         client_number: '',
         cnpj: '',
         contact_person: '',
-        email: '',
-        phone: '',
         address: '',
       });
       loadClients();
@@ -156,8 +152,6 @@ const Clients = () => {
       client_number: client.client_number || '',
       cnpj: client.cnpj || '',
       contact_person: client.contact_person || '',
-      email: client.email || '',
-      phone: client.phone || '',
       address: client.address || '',
     });
     setEditingId(client.id);
@@ -226,13 +220,20 @@ const Clients = () => {
 
   const filteredClients = clients.filter(client => {
     const term = searchTerm.toLowerCase();
-    return (
+
+    const matchesClientStats =
       client.name.toLowerCase().includes(term) ||
-      (client.email && client.email.toLowerCase().includes(term)) ||
-      (client.phone && client.phone.includes(term)) ||
       (client.cnpj && client.cnpj.includes(term)) ||
-      (client.contact_person && client.contact_person.toLowerCase().includes(term))
+      (client.contact_person && client.contact_person.toLowerCase().includes(term));
+
+    const matchesContacts = client.contacts?.some(
+      contact =>
+        contact.name.toLowerCase().includes(term) ||
+        (contact.email && contact.email.toLowerCase().includes(term)) ||
+        (contact.phone && contact.phone.includes(term))
     );
+
+    return matchesClientStats || matchesContacts;
   });
 
   const getDeptStyle = (dept) => DEPARTMENT_COLORS[dept] || DEPARTMENT_COLORS['Geral'];
@@ -241,9 +242,12 @@ const Clients = () => {
     { header: 'Cod', accessor: 'client_number', render: row => <span className="font-bold">#{row.client_number}</span> },
     { header: 'Nome / Razão Social', accessor: 'name' },
     { header: 'CNPJ', accessor: 'cnpj' },
-    { header: 'Email', accessor: 'email', render: row => row.email || '-' },
-    { header: 'Telefone', accessor: 'phone', render: row => row.phone || '-' },
     { header: 'Contatos', accessor: 'contacts', render: row => row.contacts?.length || 0 },
+    {
+      header: 'Faturado',
+      accessor: 'total_faturado',
+      render: row => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.total_faturado || 0)
+    },
   ];
 
   return (
@@ -263,8 +267,6 @@ const Clients = () => {
               client_number: '',
               cnpj: '',
               contact_person: '',
-              email: '',
-              phone: '',
               address: '',
             });
             setActiveTab('general');
@@ -364,8 +366,6 @@ const Clients = () => {
                   <Input label="Nome / Razão Social *" name="name" value={formData.name} onChange={handleChange} required placeholder="Nome do cliente" />
                   <Input label="Número do Cliente" name="client_number" value={formData.client_number} onChange={handleChange} placeholder="Ex: 01, 02, 03..." />
                   <Input label="CNPJ *" name="cnpj" value={formData.cnpj} onChange={handleChange} required placeholder="00.000.000/0000-00" />
-                  <Input label="Email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="email@exemplo.com" />
-                  <Input label="Telefone" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="(00) 00000-0000" />
                   <Input label="Endereço" name="address" value={formData.address} onChange={handleChange} placeholder="Endereço completo" fullWidth />
                 </div>
                 <div className="form-actions">

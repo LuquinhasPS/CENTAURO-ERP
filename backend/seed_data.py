@@ -18,10 +18,13 @@ from app.models.collaborator_teams import collaborator_teams
 from app.models.operational import Collaborator, Certification, CertificationType, Allocation, ResourceType, AllocationType, CollaboratorEducation, EducationType, CollaboratorReview
 from app.models.commercial import Client, Contract, Project, ProjectFeedback, FeedbackType
 from app.models.finance import ProjectBilling, BillingStatus
+from app.models.finance_payroll import MonthlyLaborCost, ProjectLaborCost
 from app.models.project_resources import ProjectCollaborator, ProjectVehicle, ProjectTool
-from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus, ToolCategory, ToolCondition, FleetStatus
+from app.models.assets import Fleet, FuelType, Insurance, Tool, ToolStatus, ToolCategory, ToolCondition, FleetStatus, VehicleMaintenance, VehicleFuelCost, VehicleTollCost
 from app.models.tickets import Ticket, TicketStatus, TicketPriority
 from app.models.purchases import PurchaseRequest, PurchaseItem
+from app.models.proposals import CommercialProposal, ProposalTask
+from app.models.client_contacts import ClientContact
 from app.models.users import User, UserRole
 from app.auth import get_password_hash
 from sqlalchemy import select, delete, update
@@ -31,6 +34,13 @@ async def clear_data(db):
     print("🧹 Limpando dados existentes...")
     
     # Ordem importa devido a Foreign Keys
+    await db.execute(delete(ProjectLaborCost))
+    await db.execute(delete(MonthlyLaborCost))
+    await db.execute(delete(VehicleMaintenance))
+    await db.execute(delete(VehicleFuelCost))
+    await db.execute(delete(VehicleTollCost))
+    await db.execute(delete(ProposalTask))
+    await db.execute(delete(CommercialProposal))
     await db.execute(delete(PurchaseItem))
     await db.execute(delete(PurchaseRequest))
     await db.execute(delete(Ticket))
@@ -65,13 +75,14 @@ async def clear_data(db):
 
     await db.execute(delete(Collaborator))
     await db.execute(delete(Team))
+    await db.execute(delete(ClientContact)) # Delete client contacts
     await db.execute(delete(Fleet))
     await db.execute(delete(Insurance))
-    await db.execute(delete(Client))
+    # await db.execute(delete(Client)) # Ignorado para preservar importações do Excel
     await db.execute(delete(Role))
     
     await db.commit()
-    print("✨ Dados limpos!")
+    print("✨ Dados limpos! (Mantendo a tabela Clientes)")
 
 async def seed_roles(db):
     """Cria os cargos padrão"""
@@ -136,45 +147,21 @@ async def seed_roles(db):
     return roles_map
 
 async def seed_clients(db):
-    """Cria 10 clientes fictícios"""
-    print("🔍 Criando clientes...")
+    """Obtém clientes do banco (usando os dados reais inseridos)"""
+    print("🔍 Obtendo clientes...")
     
-    company_suffixes = ["Ltda", "S.A.", "Soluções", "Tecnologia", "Engenharia", "Comércio", "Serviços", "Logística", "Consultoria", "Sistemas"]
-    company_names = ["Alpha", "Beta", "Gamma", "Delta", "Omega", "Sigma", "Titan", "Atlas", "Orion", "Nova", 
-                     "Global", "Nacional", "Brasil", "Paulista", "Sul", "Norte", "Leste", "Oeste", "Central", "União"]
+    from sqlalchemy import select
+    from app.models.commercial import Client
     
-    streets = ["Av. Paulista", "Rua Augusta", "Av. Faria Lima", "Rua da Consolação", "Av. Brasil", "Rua Oscar Freire", 
-               "Av. Rebouças", "Rua Haddock Lobo", "Av. Ibirapuera", "Rua Pamplona"]
+    result = await db.execute(select(Client))
+    existing_clients = result.scalars().all()
     
-    new_clients = []
-    
-    for i in range(10):
-        name = f"{random.choice(company_names)} {random.choice(company_suffixes)}"
-        client_number = f"{i+1:02d}"
+    if len(existing_clients) > 0:
+        print(f"✅ Encontrados {len(existing_clients)} clientes no banco. Ignorando criação de fictícios.")
+        return existing_clients
         
-        cnpj_base = f"{random.randint(10, 99)}.{random.randint(100, 999)}.{random.randint(100, 999)}/0001"
-        cnpj = f"{cnpj_base}-{random.randint(10, 99)}"
-        
-        contact_person = f"{random.choice(['Carlos', 'Ana', 'Roberto', 'Fernanda', 'Paulo', 'Juliana'])} {random.choice(['Silva', 'Santos', 'Oliveira'])}"
-        email = f"contato@{name.lower().split()[0]}.com.br"
-        phone = f"(11) 3{random.randint(100, 999)}-{random.randint(1000, 9999)}"
-        address = f"{random.choice(streets)}, {random.randint(100, 2000)} - São Paulo, SP"
-        
-        client = Client(
-            client_number=client_number,
-            name=name,
-            cnpj=cnpj,
-            contact_person=contact_person,
-            email=email,
-            phone=phone,
-            address=address
-        )
-        db.add(client)
-        new_clients.append(client)
-    
-    await db.flush()
-    print(f"✅ {len(new_clients)} clientes criados.")
-    return new_clients
+    print("⚠️ Nenhum cliente encontrado. Por favor, execute o script seed_clients.py com a planilha Excel primeiro.")
+    return []
 
 async def seed_insurances(db):
     """Cria 3 seguros fictícios"""

@@ -2,6 +2,10 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
+from dotenv import load_dotenv
+
+# Carrega variáveis de ambiente do .env para scripts rodados direto no terminal (ex: py seed_clients.py)
+load_dotenv()
 
 # Check for Railway's Postgres URL and fix it for asyncpg
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite+aiosqlite:///./centauro.db")

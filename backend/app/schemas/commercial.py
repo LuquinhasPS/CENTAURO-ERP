@@ -30,8 +30,6 @@ class ClientBase(BaseModel):
     client_number: Optional[str] = None
     cnpj: Optional[str] = None
     contact_person: Optional[str] = None  # Legacy field
-    email: Optional[str] = None
-    phone: Optional[str] = None
     address: Optional[str] = None
 
 class ClientCreate(ClientBase):
@@ -39,6 +37,7 @@ class ClientCreate(ClientBase):
 
 class ClientResponse(ClientBase):
     id: int
+    total_faturado: Optional[Decimal] = 0.0
     contacts: List[ClientContactResponse] = []
     
     class Config:
