@@ -228,7 +228,7 @@ const ApprovalTimeline = ({ request, onUpdate }) => {
 
       {/* Reject Modal */}
       {showRejectModal && (
-        <div className="reject-modal-overlay" onClick={() => setShowRejectModal(false)}>
+        <div className="reject-modal-overlay">
           <div className="reject-modal" onClick={(e) => e.stopPropagation()}>
             <h4>Rejeitar Solicitação</h4>
             <p>Informe o motivo da rejeição:</p>

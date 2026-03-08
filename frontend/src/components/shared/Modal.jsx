@@ -32,7 +32,7 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="std-modal-overlay" onClick={onClose}>
+    <div className="std-modal-overlay">
       <div
         className="std-modal-content"
         onClick={(e) => e.stopPropagation()}

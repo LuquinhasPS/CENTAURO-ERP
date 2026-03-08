@@ -137,7 +137,7 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
   );
 
   return (
-    <div className="project-modal-overlay" onClick={onClose}>
+    <div className="project-modal-overlay">
       <div className="project-modal" onClick={e => e.stopPropagation()}>
 
         {/* Header */}

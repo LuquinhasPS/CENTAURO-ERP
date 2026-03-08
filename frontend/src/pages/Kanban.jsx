@@ -33,7 +33,7 @@ const DroppableArea = ({ id, children }) => {
   );
 };
 
-const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName, canEdit, isOverlay }) => {
+const TaskCard = ({ task, onEdit, getProjectName, getCollaboratorName, canEdit, isOverlay }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
 
   // If overlay, we might want to skip some Sortable logic or just render raw
@@ -41,17 +41,13 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    cursor: canEdit ? 'pointer' : 'grab'
   };
 
   // If it's an overlay, we don't need sortable wrappers, just the visual
   if (isOverlay) {
     return (
       <div className="task-card overlay">
-        <div className="task-header">
-          <div className="task-drag">
-            <GripVertical size={16} color="#94a3b8" />
-          </div>
-        </div>
         <div className="task-content">
           <h4 className="task-title">{task.title}</h4>
         </div>
@@ -66,24 +62,16 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="task-card" {...attributes} {...listeners}>
-      <div className="task-header">
-        <div className="task-drag">
-          <GripVertical size={16} color="#94a3b8" />
-        </div>
-        <div className="task-actions" onPointerDown={e => e.stopPropagation()}>
-          {canEdit && (
-            <>
-              <button className="btn-icon-small" onClick={() => onEdit(task)}>
-                <Edit size={14} />
-              </button>
-              <button className="btn-icon-small danger" onClick={() => onDelete(task.id)}>
-                <Trash2 size={14} />
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="task-card"
+      {...attributes}
+      {...listeners}
+      onClick={() => {
+        if (canEdit) onEdit(task);
+      }}
+    >
       <div className="task-content">
         <h4 className="task-title">{task.title}</h4>
         {task.description && <p className="task-description">{task.description}</p>}
@@ -116,7 +104,7 @@ const TaskCard = ({ task, onEdit, onDelete, getProjectName, getCollaboratorName,
   );
 };
 
-const Column = ({ column, tasks, onAddTask, onEditTask, onDeleteTask, getProjectName, getCollaboratorName, canEdit }) => {
+const Column = ({ column, tasks, onAddTask, onEditTask, getProjectName, getCollaboratorName, canEdit }) => {
   return (
     <div className="kanban-column">
       <div className="column-header">
@@ -131,7 +119,6 @@ const Column = ({ column, tasks, onAddTask, onEditTask, onDeleteTask, getProject
                 key={task.id}
                 task={task}
                 onEdit={onEditTask}
-                onDelete={onDeleteTask}
                 getProjectName={getProjectName}
                 getCollaboratorName={getCollaboratorName}
                 canEdit={canEdit}
@@ -495,7 +482,6 @@ const Kanban = () => {
               tasks={getTasksByStatus(column.id)}
               onAddTask={handleAddTask}
               onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
               getProjectName={getProjectName}
               getCollaboratorName={getCollaboratorName}
               canEdit={canEdit}
