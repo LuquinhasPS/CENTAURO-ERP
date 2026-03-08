@@ -1,0 +1,930 @@
+­ƒî▒ Iniciando seed de dados (REFAZENDO TUDO)...
+2026-03-07 20:53:28,220 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 20:53:28,220 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("clients")
+2026-03-07 20:53:28,220 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,222 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("contracts")
+2026-03-07 20:53:28,222 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,223 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("projects")
+2026-03-07 20:53:28,223 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,224 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_feedbacks")
+2026-03-07 20:53:28,224 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,225 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_billings")
+2026-03-07 20:53:28,225 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,226 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("client_contacts")
+2026-03-07 20:53:28,226 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,227 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("insurances")
+2026-03-07 20:53:28,227 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,228 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("fleet")
+2026-03-07 20:53:28,228 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,229 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tools")
+2026-03-07 20:53:28,229 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,230 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_maintenances")
+2026-03-07 20:53:28,230 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,231 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_fuel_costs")
+2026-03-07 20:53:28,231 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,232 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_toll_costs")
+2026-03-07 20:53:28,232 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,233 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_teams")
+2026-03-07 20:53:28,233 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,234 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("teams")
+2026-03-07 20:53:28,235 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,236 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborators")
+2026-03-07 20:53:28,236 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,237 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("allocations")
+2026-03-07 20:53:28,237 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,238 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("certifications")
+2026-03-07 20:53:28,238 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,239 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_education")
+2026-03-07 20:53:28,240 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,241 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_reviews")
+2026-03-07 20:53:28,241 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,241 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tickets")
+2026-03-07 20:53:28,241 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,242 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("roles")
+2026-03-07 20:53:28,242 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,243 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tasks")
+2026-03-07 20:53:28,243 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,243 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_collaborators")
+2026-03-07 20:53:28,243 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,244 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_tools")
+2026-03-07 20:53:28,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,244 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_vehicles")
+2026-03-07 20:53:28,244 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,245 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_requests")
+2026-03-07 20:53:28,245 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,245 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_items")
+2026-03-07 20:53:28,245 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,246 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("commercial_proposals")
+2026-03-07 20:53:28,246 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,246 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("proposal_tasks")
+2026-03-07 20:53:28,246 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,247 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("users")
+2026-03-07 20:53:28,247 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,247 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("monthly_labor_costs")
+2026-03-07 20:53:28,247 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,248 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_labor_costs")
+2026-03-07 20:53:28,248 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 20:53:28,249 INFO sqlalchemy.engine.Engine COMMIT
+­ƒº╣ Limpando dados existentes...
+2026-03-07 20:53:28,249 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 20:53:28,250 INFO sqlalchemy.engine.Engine DELETE FROM project_labor_costs
+2026-03-07 20:53:28,251 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 20:53:28,252 INFO sqlalchemy.engine.Engine DELETE FROM monthly_labor_costs
+2026-03-07 20:53:28,252 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 20:53:28,252 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_maintenances
+2026-03-07 20:53:28,253 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,253 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_fuel_costs
+2026-03-07 20:53:28,253 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 20:53:28,254 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_toll_costs
+2026-03-07 20:53:28,254 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 20:53:28,255 INFO sqlalchemy.engine.Engine DELETE FROM proposal_tasks
+2026-03-07 20:53:28,255 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 20:53:28,256 INFO sqlalchemy.engine.Engine DELETE FROM commercial_proposals
+2026-03-07 20:53:28,256 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,256 INFO sqlalchemy.engine.Engine DELETE FROM purchase_items
+2026-03-07 20:53:28,256 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,257 INFO sqlalchemy.engine.Engine DELETE FROM purchase_requests
+2026-03-07 20:53:28,257 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,258 INFO sqlalchemy.engine.Engine DELETE FROM tickets
+2026-03-07 20:53:28,258 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,258 INFO sqlalchemy.engine.Engine DELETE FROM allocations
+2026-03-07 20:53:28,258 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,259 INFO sqlalchemy.engine.Engine DELETE FROM project_billings
+2026-03-07 20:53:28,259 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,259 INFO sqlalchemy.engine.Engine DELETE FROM project_feedbacks
+2026-03-07 20:53:28,259 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,260 INFO sqlalchemy.engine.Engine DELETE FROM project_collaborators
+2026-03-07 20:53:28,260 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,261 INFO sqlalchemy.engine.Engine DELETE FROM project_vehicles
+2026-03-07 20:53:28,261 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,261 INFO sqlalchemy.engine.Engine DELETE FROM project_tools
+2026-03-07 20:53:28,261 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,262 INFO sqlalchemy.engine.Engine DELETE FROM projects
+2026-03-07 20:53:28,262 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ()
+2026-03-07 20:53:28,263 INFO sqlalchemy.engine.Engine DELETE FROM contracts
+2026-03-07 20:53:28,263 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,263 INFO sqlalchemy.engine.Engine DELETE FROM certifications
+2026-03-07 20:53:28,263 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,264 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_education
+2026-03-07 20:53:28,264 INFO sqlalchemy.engine.Engine [generated in 0.00007s] ()
+2026-03-07 20:53:28,264 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_reviews
+2026-03-07 20:53:28,264 INFO sqlalchemy.engine.Engine [generated in 0.00007s] ()
+2026-03-07 20:53:28,265 INFO sqlalchemy.engine.Engine DELETE FROM tools
+2026-03-07 20:53:28,265 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,266 INFO sqlalchemy.engine.Engine DELETE FROM users
+2026-03-07 20:53:28,266 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,268 INFO sqlalchemy.engine.Engine UPDATE teams SET leader_id=?
+2026-03-07 20:53:28,268 INFO sqlalchemy.engine.Engine [generated in 0.00023s] (None,)
+2026-03-07 20:53:28,270 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_teams
+2026-03-07 20:53:28,270 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 20:53:28,271 INFO sqlalchemy.engine.Engine DELETE FROM collaborators
+2026-03-07 20:53:28,271 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 20:53:28,271 INFO sqlalchemy.engine.Engine DELETE FROM teams
+2026-03-07 20:53:28,271 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,272 INFO sqlalchemy.engine.Engine DELETE FROM client_contacts
+2026-03-07 20:53:28,272 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 20:53:28,273 INFO sqlalchemy.engine.Engine DELETE FROM fleet
+2026-03-07 20:53:28,273 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,273 INFO sqlalchemy.engine.Engine DELETE FROM insurances
+2026-03-07 20:53:28,273 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,274 INFO sqlalchemy.engine.Engine DELETE FROM roles
+2026-03-07 20:53:28,274 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 20:53:28,275 INFO sqlalchemy.engine.Engine COMMIT
+Ô£¿ Dados limpos! (Mantendo a tabela Clientes)
+­ƒöì Criando cargos...
+2026-03-07 20:53:28,332 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 20:53:28,335 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,335 INFO sqlalchemy.engine.Engine [generated in 0.00019s] ('Coordenador', 'Coordenador de projetos', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"]}')
+2026-03-07 20:53:28,337 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,337 INFO sqlalchemy.engine.Engine [cached since 0.002351s ago] ('Analista', 'Analista t├®cnico', '{"projects": ["read", "write"], "contracts": ["read"], "fleet": ["read"]}')
+2026-03-07 20:53:28,338 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,338 INFO sqlalchemy.engine.Engine [cached since 0.003258s ago] ('T├®cnico', 'T├®cnico de campo', '{"projects": ["read"], "tickets": ["read", "write"]}')
+2026-03-07 20:53:28,339 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,339 INFO sqlalchemy.engine.Engine [cached since 0.004251s ago] ('Auxiliar', 'Auxiliar t├®cnico', '{}')
+2026-03-07 20:53:28,339 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,340 INFO sqlalchemy.engine.Engine [cached since 0.004843s ago] ('Assistente', 'Assistente administrativo', '{"finance": ["read"], "collaborators": ["read"]}')
+2026-03-07 20:53:28,340 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,340 INFO sqlalchemy.engine.Engine [cached since 0.00549s ago] ('Supervisor', 'Supervisor de equipe', '{"projects": ["read"], "collaborators": ["read", "write"]}')
+2026-03-07 20:53:28,341 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 20:53:28,341 INFO sqlalchemy.engine.Engine [cached since 0.006166s ago] ('ADM', 'Administrador Geral', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"], "tickets": ["read", "write"], "users": ["read", "write"], "roles": ["read", "write"]}')
+Ô£à 7 cargos criados.
+­ƒöì Obtendo clientes...
+2026-03-07 20:53:28,343 INFO sqlalchemy.engine.Engine SELECT clients.id, clients.client_number, clients.name, clients.cnpj, clients.contact_person, clients.email, clients.phone, clients.address 
+FROM clients
+2026-03-07 20:53:28,343 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+ÔÜá´©Å Nenhum cliente encontrado. Por favor, execute o script seed_clients.py com a planilha Excel primeiro.
+­ƒöì Criando seguros...
+2026-03-07 20:53:28,346 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,346 INFO sqlalchemy.engine.Engine [generated in 0.00009s (insertmanyvalues) 1/3 (ordered; batch not supported)] ('Porto Seguro', '123456789', '2027-03-07', 'Ligar para 0800-727-0800. Ap├│lice no porta-luvas.')
+2026-03-07 20:53:28,347 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,347 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/3 (ordered; batch not supported)] ('Azul Seguros', '987654321', '2026-09-03', 'Acionar via app da Azul ou ligar 4004-3700.')
+2026-03-07 20:53:28,348 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,348 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/3 (ordered; batch not supported)] ('Tokio Marine', '456123789', '2026-06-05', 'Contato corretor: Jo├úo (11) 99999-8888.')
+Ô£à 3 seguros criados.
+­ƒöì Criando frota...
+2026-03-07 20:53:28,350 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,350 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ('LLV7582', 'STRADA WORKING', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,351 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,351 INFO sqlalchemy.engine.Engine [cached since 0.001361s ago] ('LQS5041', 'UNO MILLE', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,352 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,352 INFO sqlalchemy.engine.Engine [cached since 0.002265s ago] ('KQW4792', 'PALIO', 'FIAT', 2015, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,353 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,353 INFO sqlalchemy.engine.Engine [cached since 0.003179s ago] ('KOE4256', 'UNO', 'FIAT', 2007, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,354 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,354 INFO sqlalchemy.engine.Engine [cached since 0.004126s ago] ('PUC3186', 'UNO', 'FIAT', 2014, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,355 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,355 INFO sqlalchemy.engine.Engine [cached since 0.004735s ago] ('GCK9D18', 'WEEKEND', 'FIAT', 2016, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,356 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,356 INFO sqlalchemy.engine.Engine [cached since 0.005596s ago] ('LUC4F47', 'FASTBACK/TURBO', 'FIAT', 2023, '61.198.164/0001-60', 1, 'Preto', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,356 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,356 INFO sqlalchemy.engine.Engine [cached since 0.006319s ago] ('RTG4I96', 'STRADA', 'FIAT', 2022, '61.198.164/0001-60', 1, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,357 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,357 INFO sqlalchemy.engine.Engine [cached since 0.007304s ago] ('TOJ0A44', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,358 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,358 INFO sqlalchemy.engine.Engine [cached since 0.008271s ago] ('TOJ0A40', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,359 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,359 INFO sqlalchemy.engine.Engine [cached since 0.009054s ago] ('TOJ0A45', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Azul', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,360 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,360 INFO sqlalchemy.engine.Engine [cached since 0.00972s ago] ('TOL4D70', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,360 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,360 INFO sqlalchemy.engine.Engine [cached since 0.01028s ago] ('TOL4D72', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,361 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,361 INFO sqlalchemy.engine.Engine [cached since 0.01106s ago] ('RQR3J33', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,362 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,362 INFO sqlalchemy.engine.Engine [cached since 0.012s ago] ('RQR3J79', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,363 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,363 INFO sqlalchemy.engine.Engine [cached since 0.01276s ago] ('QXL0J20', 'KWID', 'RENAULT', 2021, '33.448.150/0001-11', 2, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,363 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,364 INFO sqlalchemy.engine.Engine [cached since 0.01337s ago] ('NAX6H44', 'KWID', 'RENAULT', 2023, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,364 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,364 INFO sqlalchemy.engine.Engine [cached since 0.01415s ago] ('KWW2751', 'CROSSFOX', 'VW', 2010, '33.164.021/0001-00', 3, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,365 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,365 INFO sqlalchemy.engine.Engine [cached since 0.0149s ago] ('KZP9I09', 'S10', 'CHEVROLET', 2019, '61.074.175/0001-38', 1, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,366 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,366 INFO sqlalchemy.engine.Engine [cached since 0.01551s ago] ('RMR6D75', 'L200', 'MITSUBISHI', 2022, '61.074.175/0001-38', 1, 'Prata', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 20:53:28,366 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,366 INFO sqlalchemy.engine.Engine [cached since 0.01631s ago] ('RMS4F05', 'HILUX', 'TOYOTA', 2021, '61.573.796/0001-66', 2, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+Ô£à 21 ve├¡culos criados.
+­ƒöì Criando times solicitados...
+2026-03-07 20:53:28,369 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,369 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('%Hugo Aquino%',)
+2026-03-07 20:53:28,370 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,370 INFO sqlalchemy.engine.Engine [cached since 0.001243s ago] ('%Fabiano Machado%',)
+2026-03-07 20:53:28,371 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,371 INFO sqlalchemy.engine.Engine [cached since 0.001927s ago] ('%Rui%',)
+2026-03-07 20:53:28,371 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,371 INFO sqlalchemy.engine.Engine [cached since 0.002742s ago] ('%Rui%',)
+2026-03-07 20:53:28,372 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,372 INFO sqlalchemy.engine.Engine [cached since 0.003672s ago] ('%Rui%',)
+2026-03-07 20:53:28,373 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,373 INFO sqlalchemy.engine.Engine [cached since 0.004438s ago] ('%Robson Ferreira%',)
+2026-03-07 20:53:28,374 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,374 INFO sqlalchemy.engine.Engine [cached since 0.005327s ago] ('%Lucas Pereira%',)
+2026-03-07 20:53:28,375 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,375 INFO sqlalchemy.engine.Engine [cached since 0.006112s ago] ('%Lucas Pereira%',)
+2026-03-07 20:53:28,375 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,376 INFO sqlalchemy.engine.Engine [cached since 0.006851s ago] ('%Mayara%',)
+2026-03-07 20:53:28,376 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,376 INFO sqlalchemy.engine.Engine [cached since 0.007633s ago] ('%Lucas Pereira%',)
+2026-03-07 20:53:28,377 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,377 INFO sqlalchemy.engine.Engine [cached since 0.00833s ago] ('%Yan Lopes%',)
+2026-03-07 20:53:28,378 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,378 INFO sqlalchemy.engine.Engine [cached since 0.009207s ago] ('%Raphael Santoro%',)
+2026-03-07 20:53:28,379 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 20:53:28,379 INFO sqlalchemy.engine.Engine [cached since 0.009875s ago] ('%Carlos Eduardo Silva%',)
+2026-03-07 20:53:28,380 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,380 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/13 (ordered; batch not supported)] ('Hugo', 'Equipe Hugo', None)
+2026-03-07 20:53:28,380 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,381 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/13 (ordered; batch not supported)] ('Fabiano', 'Equipe Fabiano', None)
+2026-03-07 20:53:28,381 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,381 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/13 (ordered; batch not supported)] ('Vale ES', 'Equipe Vale ES', None)
+2026-03-07 20:53:28,382 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,382 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/13 (ordered; batch not supported)] ('Vale RJ', 'Equipe Vale RJ', None)
+2026-03-07 20:53:28,382 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,382 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/13 (ordered; batch not supported)] ('Vale MA', 'Equipe Vale MA', None)
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/13 (ordered; batch not supported)] ('Globo', 'Equipe Globo', None)
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/13 (ordered; batch not supported)] ('Projetos', 'Projetos', None)
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,383 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/13 (ordered; batch not supported)] ('TI', 'Tecnologia da Informa├º├úo', None)
+2026-03-07 20:53:28,384 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,384 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/13 (ordered; batch not supported)] ('DP & RH', 'Departamento Pessoal e RH', None)
+2026-03-07 20:53:28,384 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,384 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/13 (ordered; batch not supported)] ('Financeiro', 'Financeiro', None)
+2026-03-07 20:53:28,385 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,385 INFO sqlalchemy.engine.Engine [insertmanyvalues 11/13 (ordered; batch not supported)] ('Comercial', 'Comercial', None)
+2026-03-07 20:53:28,385 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,385 INFO sqlalchemy.engine.Engine [insertmanyvalues 12/13 (ordered; batch not supported)] ('Manuten├º├úo', 'Manuten├º├úo', None)
+2026-03-07 20:53:28,385 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 20:53:28,386 INFO sqlalchemy.engine.Engine [insertmanyvalues 13/13 (ordered; batch not supported)] ('MP RJ', 'MP RJ', None)
+Ô£à 13 times criados.
+­ƒöì Criando 30 colaboradores...
+   Gerando dados para 30 pessoas...
+2026-03-07 20:53:28,387 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,387 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('20240000', 'Lucas Silva', '876.679.706-52', '76.251.463-2', 'lucas.silva@centauro.com.br', '(11) 93313-6946', '6.012,30', 7, 'ADM', '271263478', 'C', '2027-01-07', None, None, None)
+2026-03-07 20:53:28,389 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,389 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (1, 12)
+2026-03-07 20:53:28,390 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,390 INFO sqlalchemy.engine.Engine [cached since 0.002925s ago] ('20240001', 'Ana Santos', '261.480.149-67', '83.748.806-4', 'ana.santos@centauro.com.br', '(11) 92384-7042', '5.276,98', 6, 'Supervisor', '761769442', 'A', '2026-10-17', None, None, None)
+2026-03-07 20:53:28,391 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,391 INFO sqlalchemy.engine.Engine [cached since 0.002161s ago] (2, 12)
+2026-03-07 20:53:28,392 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,392 INFO sqlalchemy.engine.Engine [cached since 0.004514s ago] ('20240002', 'Pedro Oliveira', '746.445.381-74', '79.156.378-4', 'pedro.oliveira@centauro.com.br', '(11) 97879-6035', '3.862,26', 5, 'Assistente', '667353811', 'AB', '2027-09-07', None, None, None)
+2026-03-07 20:53:28,393 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,393 INFO sqlalchemy.engine.Engine [cached since 0.003818s ago] (3, 4)
+2026-03-07 20:53:28,394 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,394 INFO sqlalchemy.engine.Engine [cached since 0.006619s ago] ('20240003', 'Maria Souza', '451.378.873-28', '24.127.637-6', 'maria.souza@centauro.com.br', '(11) 96156-6818', '8.150,94', 5, 'Assistente', '961754137', 'E', '2026-08-18', None, None, None)
+2026-03-07 20:53:28,395 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,396 INFO sqlalchemy.engine.Engine [cached since 0.006791s ago] (4, 1)
+2026-03-07 20:53:28,396 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,396 INFO sqlalchemy.engine.Engine [cached since 0.009062s ago] ('20240004', 'Jo├úo Rodrigues', '106.487.464-36', '55.912.776-7', 'joao.rodrigues@centauro.com.br', '(11) 96701-9424', '4.211,19', 4, 'Auxiliar', '973370650', 'A', '2028-09-12', None, None, None)
+2026-03-07 20:53:28,397 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,397 INFO sqlalchemy.engine.Engine [cached since 0.008267s ago] (5, 2)
+2026-03-07 20:53:28,398 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,398 INFO sqlalchemy.engine.Engine [cached since 0.01064s ago] ('20240005', 'Julia Ferreira', '543.491.672-83', '37.492.947-9', 'julia.ferreira@centauro.com.br', '(11) 96168-6168', '6.412,51', 5, 'Assistente', '766193668', 'C', '2028-03-12', None, None, None)
+2026-03-07 20:53:28,399 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,399 INFO sqlalchemy.engine.Engine [cached since 0.009878s ago] (6, 8)
+2026-03-07 20:53:28,399 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,399 INFO sqlalchemy.engine.Engine [cached since 0.01217s ago] ('20240006', 'Carlos Alves', '463.468.660-38', '87.849.299-1', 'carlos.alves@centauro.com.br', '(11) 99175-1248', '6.653,46', 4, 'Auxiliar', '946814478', 'A', '2028-03-30', None, None, None)
+2026-03-07 20:53:28,400 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,400 INFO sqlalchemy.engine.Engine [cached since 0.01133s ago] (7, 4)
+2026-03-07 20:53:28,401 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,401 INFO sqlalchemy.engine.Engine [cached since 0.01364s ago] ('20240007', 'Fernanda Pereira', '223.395.133-89', '58.231.899-9', 'fernanda.pereira@centauro.com.br', '(11) 95538-4624', '4.803,88', 3, 'T├®cnico', '872211481', 'D', '2026-06-23', None, None, None)
+2026-03-07 20:53:28,401 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,401 INFO sqlalchemy.engine.Engine [cached since 0.01269s ago] (8, 2)
+2026-03-07 20:53:28,402 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,402 INFO sqlalchemy.engine.Engine [cached since 0.01483s ago] ('20240008', 'Rafael Lima', '601.753.916-16', '75.542.503-6', 'rafael.lima@centauro.com.br', '(11) 96365-3836', '8.925,83', 4, 'Auxiliar', '865197070', 'D', '2027-03-12', None, None, None)
+2026-03-07 20:53:28,403 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,403 INFO sqlalchemy.engine.Engine [cached since 0.014s ago] (9, 4)
+2026-03-07 20:53:28,404 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,404 INFO sqlalchemy.engine.Engine [cached since 0.01638s ago] ('20240009', 'Bruna Gomes', '119.277.988-10', '42.780.791-4', 'bruna.gomes@centauro.com.br', '(11) 95115-9963', '10.710,50', 5, 'Assistente', '393391354', 'D', '2027-03-08', None, None, None)
+2026-03-07 20:53:28,404 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,404 INFO sqlalchemy.engine.Engine [cached since 0.01551s ago] (10, 6)
+2026-03-07 20:53:28,405 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,405 INFO sqlalchemy.engine.Engine [cached since 0.01772s ago] ('20240010', 'Gabriel Costa', '340.751.599-45', '54.986.271-8', 'gabriel.costa@centauro.com.br', '(11) 92634-7827', '4.053,18', 5, 'Assistente', '709316484', 'C', '2027-08-04', None, None, None)
+2026-03-07 20:53:28,406 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,406 INFO sqlalchemy.engine.Engine [cached since 0.01688s ago] (11, 9)
+2026-03-07 20:53:28,407 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,407 INFO sqlalchemy.engine.Engine [cached since 0.01947s ago] ('20240011', 'Larissa Ribeiro', '712.208.461-53', '51.392.416-1', 'larissa.ribeiro@centauro.com.br', '(11) 91446-6697', '4.055,90', 3, 'T├®cnico', '397231989', 'D', '2027-09-04', None, None, None)
+2026-03-07 20:53:28,407 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,407 INFO sqlalchemy.engine.Engine [cached since 0.01869s ago] (12, 3)
+2026-03-07 20:53:28,408 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,408 INFO sqlalchemy.engine.Engine [cached since 0.02099s ago] ('20240012', 'Mateus Martins', '575.346.825-33', '54.173.636-8', 'mateus.martins@centauro.com.br', '(11) 93169-5067', '4.052,99', 4, 'Auxiliar', '279302448', 'B', '2028-05-26', None, None, None)
+2026-03-07 20:53:28,409 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,409 INFO sqlalchemy.engine.Engine [cached since 0.02015s ago] (13, 13)
+2026-03-07 20:53:28,410 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,410 INFO sqlalchemy.engine.Engine [cached since 0.02242s ago] ('20240013', 'Camila Carvalho', '803.931.564-77', '12.933.280-9', 'camila.carvalho@centauro.com.br', '(11) 91152-6028', '3.704,40', 6, 'Supervisor', '747919282', 'B', '2028-07-14', None, None, None)
+2026-03-07 20:53:28,410 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,410 INFO sqlalchemy.engine.Engine [cached since 0.02146s ago] (14, 13)
+2026-03-07 20:53:28,411 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,411 INFO sqlalchemy.engine.Engine [cached since 0.02374s ago] ('20240014', 'Gustavo Almeida', '460.565.872-84', '67.134.580-8', 'gustavo.almeida@centauro.com.br', '(11) 96742-8464', '3.983,99', 5, 'Assistente', '100876358', 'A', '2027-09-19', None, None, None)
+2026-03-07 20:53:28,412 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,412 INFO sqlalchemy.engine.Engine [cached since 0.02283s ago] (15, 2)
+2026-03-07 20:53:28,412 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,412 INFO sqlalchemy.engine.Engine [cached since 0.02497s ago] ('20240015', 'Amanda Lopes', '287.240.684-77', '95.395.227-6', 'amanda.lopes@centauro.com.br', '(11) 92735-5509', '5.260,44', 3, 'T├®cnico', '469596915', 'C', '2028-06-16', None, None, None)
+2026-03-07 20:53:28,413 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,413 INFO sqlalchemy.engine.Engine [cached since 0.02404s ago] (16, 2)
+2026-03-07 20:53:28,413 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,413 INFO sqlalchemy.engine.Engine [cached since 0.02623s ago] ('20240016', 'Felipe Soares', '910.282.805-32', '54.256.949-4', 'felipe.soares@centauro.com.br', '(11) 91247-7818', '6.368,66', 2, 'Analista', '179281801', 'B', '2028-08-06', None, None, None)
+2026-03-07 20:53:28,414 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,414 INFO sqlalchemy.engine.Engine [cached since 0.02535s ago] (17, 11)
+2026-03-07 20:53:28,415 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,415 INFO sqlalchemy.engine.Engine [cached since 0.02768s ago] ('20240017', 'Renata Fernandes', '570.197.399-65', '45.664.870-2', 'renata.fernandes@centauro.com.br', '(11) 95579-2928', '9.989,16', 4, 'Auxiliar', '630174130', 'D', '2028-09-15', None, None, None)
+2026-03-07 20:53:28,416 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,416 INFO sqlalchemy.engine.Engine [cached since 0.02679s ago] (18, 1)
+2026-03-07 20:53:28,416 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,416 INFO sqlalchemy.engine.Engine [cached since 0.02893s ago] ('20240018', 'Bruno Vieira', '295.879.743-38', '92.378.958-9', 'bruno.vieira@centauro.com.br', '(11) 94023-5715', '11.282,48', 5, 'Assistente', '401086094', 'B', '2026-12-31', None, None, None)
+2026-03-07 20:53:28,417 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,417 INFO sqlalchemy.engine.Engine [cached since 0.02804s ago] (19, 10)
+2026-03-07 20:53:28,417 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,418 INFO sqlalchemy.engine.Engine [cached since 0.03027s ago] ('20240019', 'Patricia Barbosa', '211.417.147-37', '43.583.571-8', 'patricia.barbosa@centauro.com.br', '(11) 98630-8123', '6.098,05', 4, 'Auxiliar', '460520857', 'E', '2027-04-23', None, None, None)
+2026-03-07 20:53:28,418 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,418 INFO sqlalchemy.engine.Engine [cached since 0.02928s ago] (20, 4)
+2026-03-07 20:53:28,419 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,419 INFO sqlalchemy.engine.Engine [cached since 0.03159s ago] ('20240020', 'Thiago Rocha', '270.235.254-95', '31.514.502-7', 'thiago.rocha@centauro.com.br', '(11) 92450-8794', '6.333,06', 3, 'T├®cnico', '550029465', 'E', '2028-08-11', None, None, None)
+2026-03-07 20:53:28,419 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,419 INFO sqlalchemy.engine.Engine [cached since 0.03067s ago] (21, 2)
+2026-03-07 20:53:28,420 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,420 INFO sqlalchemy.engine.Engine [cached since 0.03294s ago] ('20240021', 'Vanessa Dias', '948.297.742-44', '55.592.122-6', 'vanessa.dias@centauro.com.br', '(11) 91180-3018', '4.968,02', 6, 'Supervisor', '969354983', 'B', '2026-06-18', None, None, None)
+2026-03-07 20:53:28,421 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,421 INFO sqlalchemy.engine.Engine [cached since 0.03201s ago] (22, 6)
+2026-03-07 20:53:28,421 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,421 INFO sqlalchemy.engine.Engine [cached since 0.03423s ago] ('20240022', 'Rodrigo Moreira', '681.900.743-73', '69.735.111-3', 'rodrigo.moreira@centauro.com.br', '(11) 94290-4107', '8.820,88', 3, 'T├®cnico', '570805841', 'C', '2027-05-24', None, None, None)
+2026-03-07 20:53:28,422 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,422 INFO sqlalchemy.engine.Engine [cached since 0.03343s ago] (23, 13)
+2026-03-07 20:53:28,423 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,423 INFO sqlalchemy.engine.Engine [cached since 0.03561s ago] ('20240023', 'Let├¡cia Nascimento', '900.574.214-41', '16.392.283-2', 'leticia.nascimento@centauro.com.br', '(11) 96596-3231', '9.033,28', 3, 'T├®cnico', '778934815', 'D', '2028-08-05', None, None, None)
+2026-03-07 20:53:28,424 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,424 INFO sqlalchemy.engine.Engine [cached since 0.03482s ago] (24, 3)
+2026-03-07 20:53:28,424 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,425 INFO sqlalchemy.engine.Engine [cached since 0.03728s ago] ('20240024', 'Diego Cardoso', '447.664.441-47', '84.535.511-3', 'diego.cardoso@centauro.com.br', '(11) 92712-3663', '5.641,89', 6, 'Supervisor', '862068694', 'C', '2027-06-11', None, None, None)
+2026-03-07 20:53:28,425 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,425 INFO sqlalchemy.engine.Engine [cached since 0.03648s ago] (25, 3)
+2026-03-07 20:53:28,426 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,426 INFO sqlalchemy.engine.Engine [cached since 0.03893s ago] ('20240025', 'Bianca Moura', '954.124.336-52', '68.344.922-8', 'bianca.moura@centauro.com.br', '(11) 97547-8072', '9.045,59', 2, 'Analista', '768620689', 'B', '2027-03-03', None, None, None)
+2026-03-07 20:53:28,427 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,427 INFO sqlalchemy.engine.Engine [cached since 0.03814s ago] (26, 10)
+2026-03-07 20:53:28,428 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,428 INFO sqlalchemy.engine.Engine [cached since 0.04035s ago] ('20240026', 'Leandro Teixeira', '978.987.167-20', '45.835.441-4', 'leandro.teixeira52@centauro.com.br', '(11) 99501-2998', '8.874,65', 5, 'Assistente', '928012365', 'C', '2027-10-02', None, None, None)
+2026-03-07 20:53:28,428 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,428 INFO sqlalchemy.engine.Engine [cached since 0.03956s ago] (27, 4)
+2026-03-07 20:53:28,429 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,429 INFO sqlalchemy.engine.Engine [cached since 0.04179s ago] ('20240027', 'Monica Mendes', '687.727.621-16', '12.211.588-0', 'monica.mendes60@centauro.com.br', '(11) 92469-8148', '7.158,35', 3, 'T├®cnico', '551923010', 'B', '2026-11-01', None, None, None)
+2026-03-07 20:53:28,430 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,430 INFO sqlalchemy.engine.Engine [cached since 0.0411s ago] (28, 12)
+2026-03-07 20:53:28,431 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,431 INFO sqlalchemy.engine.Engine [cached since 0.04365s ago] ('20240028', 'Ricardo Araujo', '504.158.756-81', '65.625.247-1', 'ricardo.araujo70@centauro.com.br', '(11) 99487-3422', '7.162,56', 6, 'Supervisor', '363059150', 'AB', '2027-02-08', None, None, None)
+2026-03-07 20:53:28,432 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,432 INFO sqlalchemy.engine.Engine [cached since 0.04323s ago] (29, 3)
+2026-03-07 20:53:28,433 INFO sqlalchemy.engine.Engine INSERT INTO collaborators (registration_number, name, cpf, rg, email, phone, salary, role_id, role, cnh_number, cnh_category, cnh_validity, admission_date, birth_date, termination_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 20:53:28,433 INFO sqlalchemy.engine.Engine [cached since 0.04565s ago] ('20240029', 'Tatiane Ramos', '318.816.723-37', '21.528.966-2', 'tatiane.ramos42@centauro.com.br', '(11) 92537-2872', '2.964,83', 7, 'ADM', '845838448', 'B', '2028-05-22', None, None, None)
+2026-03-07 20:53:28,434 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,434 INFO sqlalchemy.engine.Engine [cached since 0.04496s ago] (30, 9)
+­ƒô£ Adicionando certifica├º├Áes...
+Ô£à 30 Colaboradores e certifica├º├Áes criados.
+­ƒææ L├¡deres de equipe j├í foram definidos na cria├º├úo dos times.
+­ƒöì Criando 5 ferramentas...
+2026-03-07 20:53:28,436 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,436 INFO sqlalchemy.engine.Engine [generated in 0.00010s (insertmanyvalues) 1/6 (ordered; batch not supported)] ('Furadeira de Impacto Bosch', 'FUR-001', 'AVAILABLE', 'Almoxarifado', 'Almoxarifado', 'POWER_TOOL', 'GOOD', None, None)
+2026-03-07 20:53:28,437 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,437 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/6 (ordered; batch not supported)] ('M├íquina de Fus├úo Fujikura', 'FUS-88S', 'IN_USE', 'Jo├úo Silva', 'Projeto Vinculado 1', 'INSTRUMENT', 'GOOD', '2026-03-22', None)
+2026-03-07 20:53:28,437 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,437 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/6 (ordered; batch not supported)] ('OTDR Exfo MaxTester', 'OTDR-730', 'IN_USE', 'Maria Santos', 'Projeto Vinculado 2', 'INSTRUMENT', 'NEW', '2026-07-05', None)
+2026-03-07 20:53:28,438 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,438 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/6 (ordered; batch not supported)] ('Alicate Amper├¡metro Fluke', 'ALI-376', 'MAINTENANCE', 'Almoxarifado', 'Almoxarifado', 'INSTRUMENT', 'FAIR', '2026-03-02', None)
+2026-03-07 20:53:28,438 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,438 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/6 (ordered; batch not supported)] ('Kit Ferramentas B├ísico', 'KIT-005', 'AVAILABLE', 'Almoxarifado', 'Escrit├│rio', 'KIT', 'GOOD', None, None)
+2026-03-07 20:53:28,439 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,439 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/6 (ordered; batch not supported)] ('Escada Extensiva 7M', 'ESC-010', 'IN_USE', 'Pedro Souza', 'Viatura 01', 'ACCESS', 'GOOD', None, None)
+2026-03-07 20:53:28,441 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,441 INFO sqlalchemy.engine.Engine [generated in 0.00030s (insertmanyvalues) 1/59 (ordered; batch not supported)] ('NR-35', 'NR', '2026-10-14', 1)
+2026-03-07 20:53:28,442 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,442 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2026-02-17', 2)
+2026-03-07 20:53:28,443 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,443 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/59 (ordered; batch not supported)] ('NR-35', 'NR', '2027-01-06', 3)
+2026-03-07 20:53:28,443 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,443 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2026-12-26', 3)
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/59 (ordered; batch not supported)] ('NR-35', 'NR', '2026-05-28', 3)
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2028-01-02', 4)
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,444 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/59 (ordered; batch not supported)] ('Primeiros Socorros', 'TRAINING', '2027-10-24', 5)
+2026-03-07 20:53:28,445 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,445 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/59 (ordered; batch not supported)] ('Eletricidade B├ísica', 'TRAINING', '2026-09-08', 6)
+2026-03-07 20:53:28,445 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,445 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/59 (ordered; batch not supported)] ('NR-10', 'NR', '2027-04-27', 7)
+2026-03-07 20:53:28,446 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,446 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2027-12-06', 7)
+2026-03-07 20:53:28,446 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,446 INFO sqlalchemy.engine.Engine [insertmanyvalues 11/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2028-01-11', 7)
+2026-03-07 20:53:28,447 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,447 INFO sqlalchemy.engine.Engine [insertmanyvalues 12/59 (ordered; batch not supported)] ('NR-12', 'NR', '2026-08-08', 8)
+2026-03-07 20:53:28,447 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,447 INFO sqlalchemy.engine.Engine [insertmanyvalues 13/59 (ordered; batch not supported)] ('NR-06', 'NR', '2027-03-19', 8)
+2026-03-07 20:53:28,448 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,448 INFO sqlalchemy.engine.Engine [insertmanyvalues 14/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2026-07-24', 9)
+2026-03-07 20:53:28,448 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,448 INFO sqlalchemy.engine.Engine [insertmanyvalues 15/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2027-08-23', 9)
+2026-03-07 20:53:28,449 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,449 INFO sqlalchemy.engine.Engine [insertmanyvalues 16/59 (ordered; batch not supported)] ('NR-06', 'NR', '2027-07-11', 10)
+2026-03-07 20:53:28,449 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,449 INFO sqlalchemy.engine.Engine [insertmanyvalues 17/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2027-08-17', 10)
+2026-03-07 20:53:28,450 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,450 INFO sqlalchemy.engine.Engine [insertmanyvalues 18/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2028-01-20', 11)
+2026-03-07 20:53:28,450 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,450 INFO sqlalchemy.engine.Engine [insertmanyvalues 19/59 (ordered; batch not supported)] ('NR-06', 'NR', '2027-12-07', 11)
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine [insertmanyvalues 20/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2027-12-23', 12)
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine [insertmanyvalues 21/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2026-06-04', 12)
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,451 INFO sqlalchemy.engine.Engine [insertmanyvalues 22/59 (ordered; batch not supported)] ('Trabalho em Altura', 'TRAINING', '2027-01-07', 13)
+2026-03-07 20:53:28,452 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,452 INFO sqlalchemy.engine.Engine [insertmanyvalues 23/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2026-07-06', 14)
+2026-03-07 20:53:28,452 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,452 INFO sqlalchemy.engine.Engine [insertmanyvalues 24/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2026-12-28', 14)
+2026-03-07 20:53:28,453 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,453 INFO sqlalchemy.engine.Engine [insertmanyvalues 25/59 (ordered; batch not supported)] ('Trabalho em Altura', 'TRAINING', '2026-09-23', 15)
+2026-03-07 20:53:28,453 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,453 INFO sqlalchemy.engine.Engine [insertmanyvalues 26/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2027-11-18', 15)
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine [insertmanyvalues 27/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2027-09-07', 15)
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine [insertmanyvalues 28/59 (ordered; batch not supported)] ('NR-06', 'NR', '2027-01-06', 16)
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,454 INFO sqlalchemy.engine.Engine [insertmanyvalues 29/59 (ordered; batch not supported)] ('NR-35', 'NR', '2026-02-23', 17)
+2026-03-07 20:53:28,455 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,455 INFO sqlalchemy.engine.Engine [insertmanyvalues 30/59 (ordered; batch not supported)] ('Eletricidade B├ísica', 'TRAINING', '2027-11-18', 17)
+2026-03-07 20:53:28,455 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,456 INFO sqlalchemy.engine.Engine [insertmanyvalues 31/59 (ordered; batch not supported)] ('Eletricidade B├ísica', 'TRAINING', '2027-08-28', 18)
+2026-03-07 20:53:28,456 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,456 INFO sqlalchemy.engine.Engine [insertmanyvalues 32/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2026-08-27', 18)
+2026-03-07 20:53:28,457 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,457 INFO sqlalchemy.engine.Engine [insertmanyvalues 33/59 (ordered; batch not supported)] ('NR-35', 'NR', '2027-10-21', 19)
+2026-03-07 20:53:28,457 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,457 INFO sqlalchemy.engine.Engine [insertmanyvalues 34/59 (ordered; batch not supported)] ('Primeiros Socorros', 'TRAINING', '2027-08-27', 19)
+2026-03-07 20:53:28,458 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,458 INFO sqlalchemy.engine.Engine [insertmanyvalues 35/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2026-08-14', 19)
+2026-03-07 20:53:28,458 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,458 INFO sqlalchemy.engine.Engine [insertmanyvalues 36/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2026-11-23', 20)
+2026-03-07 20:53:28,459 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,459 INFO sqlalchemy.engine.Engine [insertmanyvalues 37/59 (ordered; batch not supported)] ('Eletricidade B├ísica', 'TRAINING', '2026-02-15', 21)
+2026-03-07 20:53:28,459 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,459 INFO sqlalchemy.engine.Engine [insertmanyvalues 38/59 (ordered; batch not supported)] ('NR-10', 'NR', '2027-06-03', 21)
+2026-03-07 20:53:28,460 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,460 INFO sqlalchemy.engine.Engine [insertmanyvalues 39/59 (ordered; batch not supported)] ('Trabalho em Altura', 'TRAINING', '2028-01-26', 22)
+2026-03-07 20:53:28,460 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,460 INFO sqlalchemy.engine.Engine [insertmanyvalues 40/59 (ordered; batch not supported)] ('NR-35', 'NR', '2026-10-10', 22)
+2026-03-07 20:53:28,460 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,461 INFO sqlalchemy.engine.Engine [insertmanyvalues 41/59 (ordered; batch not supported)] ('Trabalho em Altura', 'TRAINING', '2026-05-16', 22)
+2026-03-07 20:53:28,461 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,461 INFO sqlalchemy.engine.Engine [insertmanyvalues 42/59 (ordered; batch not supported)] ('Trabalho em Altura', 'TRAINING', '2026-08-24', 23)
+2026-03-07 20:53:28,461 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,462 INFO sqlalchemy.engine.Engine [insertmanyvalues 43/59 (ordered; batch not supported)] ('NR-10', 'NR', '2027-11-21', 24)
+2026-03-07 20:53:28,462 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,462 INFO sqlalchemy.engine.Engine [insertmanyvalues 44/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2027-05-23', 25)
+2026-03-07 20:53:28,462 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,462 INFO sqlalchemy.engine.Engine [insertmanyvalues 45/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2027-06-22', 25)
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine [insertmanyvalues 46/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2026-03-27', 26)
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine [insertmanyvalues 47/59 (ordered; batch not supported)] ('NR-06', 'NR', '2026-03-19', 26)
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,463 INFO sqlalchemy.engine.Engine [insertmanyvalues 48/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2027-08-14', 26)
+2026-03-07 20:53:28,464 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,464 INFO sqlalchemy.engine.Engine [insertmanyvalues 49/59 (ordered; batch not supported)] ('NR-12', 'NR', '2026-08-01', 27)
+2026-03-07 20:53:28,464 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,464 INFO sqlalchemy.engine.Engine [insertmanyvalues 50/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2026-06-02', 27)
+2026-03-07 20:53:28,465 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,465 INFO sqlalchemy.engine.Engine [insertmanyvalues 51/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2027-10-30', 27)
+2026-03-07 20:53:28,465 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,465 INFO sqlalchemy.engine.Engine [insertmanyvalues 52/59 (ordered; batch not supported)] ('Primeiros Socorros', 'TRAINING', '2027-04-12', 28)
+2026-03-07 20:53:28,466 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,466 INFO sqlalchemy.engine.Engine [insertmanyvalues 53/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2027-07-29', 28)
+2026-03-07 20:53:28,466 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,466 INFO sqlalchemy.engine.Engine [insertmanyvalues 54/59 (ordered; batch not supported)] ('Dire├º├úo Defensiva', 'TRAINING', '2027-07-21', 28)
+2026-03-07 20:53:28,466 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,467 INFO sqlalchemy.engine.Engine [insertmanyvalues 55/59 (ordered; batch not supported)] ('Eletricidade B├ísica', 'TRAINING', '2026-12-13', 29)
+2026-03-07 20:53:28,467 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,467 INFO sqlalchemy.engine.Engine [insertmanyvalues 56/59 (ordered; batch not supported)] ('ASO Admissional', 'ASO', '2028-01-05', 29)
+2026-03-07 20:53:28,467 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,467 INFO sqlalchemy.engine.Engine [insertmanyvalues 57/59 (ordered; batch not supported)] ('ASO Mudan├ºa de Fun├º├úo', 'ASO', '2026-05-18', 29)
+2026-03-07 20:53:28,468 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,468 INFO sqlalchemy.engine.Engine [insertmanyvalues 58/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2027-01-09', 30)
+2026-03-07 20:53:28,468 INFO sqlalchemy.engine.Engine INSERT INTO certifications (name, type, validity, collaborator_id) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,468 INFO sqlalchemy.engine.Engine [insertmanyvalues 59/59 (ordered; batch not supported)] ('ASO Peri├│dico', 'ASO', '2027-05-04', 30)
+Ô£à Ferramentas criadas.
+­ƒÄô Adicionando hist├│rico escolar/acad├¬mico...
+2026-03-07 20:53:28,471 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,471 INFO sqlalchemy.engine.Engine [generated in 0.00018s (insertmanyvalues) 1/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2020-10-23', None, 1)
+2026-03-07 20:53:28,472 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,472 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2022-01-14', None, 1)
+2026-03-07 20:53:28,472 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,472 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2024-02-14', None, 2)
+2026-03-07 20:53:28,473 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,473 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2024-07-15', None, 3)
+2026-03-07 20:53:28,473 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,473 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2024-03-12', None, 4)
+2026-03-07 20:53:28,474 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,474 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2025-08-07', None, 4)
+2026-03-07 20:53:28,474 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,474 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2020-11-25', None, 5)
+2026-03-07 20:53:28,475 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,475 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2025-08-12', None, 6)
+2026-03-07 20:53:28,475 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,475 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2024-10-14', None, 7)
+2026-03-07 20:53:28,476 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,476 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/44 (ordered; batch not supported)] ('CERTIFICATION', 'FGV', 'Gest├úo de Projetos', '2021-07-18', None, 7)
+2026-03-07 20:53:28,476 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,476 INFO sqlalchemy.engine.Engine [insertmanyvalues 11/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2025-08-29', None, 8)
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine [insertmanyvalues 12/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2023-05-05', None, 8)
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine [insertmanyvalues 13/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2022-06-13', None, 9)
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,477 INFO sqlalchemy.engine.Engine [insertmanyvalues 14/44 (ordered; batch not supported)] ('CERTIFICATION', 'FGV', 'Gest├úo de Projetos', '2022-01-26', None, 9)
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine [insertmanyvalues 15/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2024-01-03', None, 10)
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine [insertmanyvalues 16/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2024-09-11', None, 10)
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,478 INFO sqlalchemy.engine.Engine [insertmanyvalues 17/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2022-11-08', None, 11)
+2026-03-07 20:53:28,479 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,479 INFO sqlalchemy.engine.Engine [insertmanyvalues 18/44 (ordered; batch not supported)] ('CERTIFICATION', 'FGV', 'Gest├úo de Projetos', '2024-09-17', None, 11)
+2026-03-07 20:53:28,479 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,479 INFO sqlalchemy.engine.Engine [insertmanyvalues 19/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2021-04-07', None, 12)
+2026-03-07 20:53:28,480 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,480 INFO sqlalchemy.engine.Engine [insertmanyvalues 20/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2021-11-11', None, 12)
+2026-03-07 20:53:28,480 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,480 INFO sqlalchemy.engine.Engine [insertmanyvalues 21/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2022-12-05', None, 13)
+2026-03-07 20:53:28,480 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,481 INFO sqlalchemy.engine.Engine [insertmanyvalues 22/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2025-04-09', None, 13)
+2026-03-07 20:53:28,481 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,481 INFO sqlalchemy.engine.Engine [insertmanyvalues 23/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2025-05-18', None, 14)
+2026-03-07 20:53:28,481 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,481 INFO sqlalchemy.engine.Engine [insertmanyvalues 24/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2021-12-02', None, 15)
+2026-03-07 20:53:28,482 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,482 INFO sqlalchemy.engine.Engine [insertmanyvalues 25/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2022-09-13', None, 16)
+2026-03-07 20:53:28,482 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,482 INFO sqlalchemy.engine.Engine [insertmanyvalues 26/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2021-04-10', None, 17)
+2026-03-07 20:53:28,483 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,483 INFO sqlalchemy.engine.Engine [insertmanyvalues 27/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2023-09-09', None, 18)
+2026-03-07 20:53:28,483 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,483 INFO sqlalchemy.engine.Engine [insertmanyvalues 28/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2020-12-22', None, 18)
+2026-03-07 20:53:28,484 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,484 INFO sqlalchemy.engine.Engine [insertmanyvalues 29/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2021-03-22', None, 19)
+2026-03-07 20:53:28,484 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,484 INFO sqlalchemy.engine.Engine [insertmanyvalues 30/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2021-11-02', None, 19)
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine [insertmanyvalues 31/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2024-10-06', None, 20)
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine [insertmanyvalues 32/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2021-01-29', None, 21)
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,485 INFO sqlalchemy.engine.Engine [insertmanyvalues 33/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2024-06-12', None, 22)
+2026-03-07 20:53:28,486 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,486 INFO sqlalchemy.engine.Engine [insertmanyvalues 34/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2025-05-05', None, 23)
+2026-03-07 20:53:28,486 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,486 INFO sqlalchemy.engine.Engine [insertmanyvalues 35/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2024-03-15', None, 23)
+2026-03-07 20:53:28,487 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,487 INFO sqlalchemy.engine.Engine [insertmanyvalues 36/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2022-03-14', None, 24)
+2026-03-07 20:53:28,487 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,487 INFO sqlalchemy.engine.Engine [insertmanyvalues 37/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2021-11-14', None, 25)
+2026-03-07 20:53:28,488 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,488 INFO sqlalchemy.engine.Engine [insertmanyvalues 38/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2022-01-20', None, 26)
+2026-03-07 20:53:28,488 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,488 INFO sqlalchemy.engine.Engine [insertmanyvalues 39/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2024-06-14', None, 26)
+2026-03-07 20:53:28,489 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,489 INFO sqlalchemy.engine.Engine [insertmanyvalues 40/44 (ordered; batch not supported)] ('CERTIFICATION', 'FGV', 'Gest├úo de Projetos', '2022-02-06', None, 27)
+2026-03-07 20:53:28,489 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,489 INFO sqlalchemy.engine.Engine [insertmanyvalues 41/44 (ordered; batch not supported)] ('ACADEMIC', 'USP', 'Engenharia El├®trica', '2023-02-13', None, 28)
+2026-03-07 20:53:28,490 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,490 INFO sqlalchemy.engine.Engine [insertmanyvalues 42/44 (ordered; batch not supported)] ('TECHNICAL', 'SENAI', 'Eletrot├®cnica', '2022-06-27', None, 29)
+2026-03-07 20:53:28,490 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,490 INFO sqlalchemy.engine.Engine [insertmanyvalues 43/44 (ordered; batch not supported)] ('TECHNICAL', 'ETEC', 'T├®cnico em Eletr├┤nica', '2021-06-12', None, 29)
+2026-03-07 20:53:28,491 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_education (type, institution, course_name, conclusion_date, attachment_url, collaborator_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,491 INFO sqlalchemy.engine.Engine [insertmanyvalues 44/44 (ordered; batch not supported)] ('ACADEMIC', 'Unicamp', 'Engenharia Civil', '2023-03-13', None, 30)
+Ô£à 44 registros de educa├º├úo criados.
+­ƒöì Seeding Users...
+2026-03-07 20:53:28,492 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,492 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ('admin@centauro.com',)
+2026-03-07 20:53:28,539 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?)
+2026-03-07 20:53:28,539 INFO sqlalchemy.engine.Engine [generated in 0.00024s] ('admin@centauro.com', '$argon2id$v=19$m=65536,t=3,p=4$3FurlZKy9v7///9fa601Zg$hc2vQmaYiwtfAtm10eOa6dqtbQVUB5c9RyJOASRPpRQ', 'ADMIN', 1, None)
+Ô£à Admin user created: admin@centauro.com / senha123
+2026-03-07 20:53:28,541 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,541 INFO sqlalchemy.engine.Engine [cached since 0.04873s ago] ('lucas.silva@centauro.com.br',)
+2026-03-07 20:53:28,542 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE collaborators.name = ?
+2026-03-07 20:53:28,542 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ('Lucas Silva',)
+2026-03-07 20:53:28,591 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?)
+2026-03-07 20:53:28,591 INFO sqlalchemy.engine.Engine [cached since 0.05184s ago] ('lucas.silva@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$g9Ca8x6DEIKwFkLo3TsHAA$tj40NOIfpCDTViqz+f4JkbmVt2e0yxhGJg3YhGbwz3Q', 'ADMIN', 0, 1)
+Ô£à User created for Lucas Silva: lucas.silva@centauro.com.br / senha123
+­ƒöä Adicionando lucas.silva@centauro.com.br a todos os times...
+2026-03-07 20:53:28,592 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE collaborators.name = ?
+2026-03-07 20:53:28,592 INFO sqlalchemy.engine.Engine [cached since 0.04998s ago] ('Lucas Silva',)
+2026-03-07 20:53:28,593 INFO sqlalchemy.engine.Engine SELECT teams.id, teams.name, teams.description, teams.leader_id 
+FROM teams
+2026-03-07 20:53:28,593 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 20:53:28,595 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,595 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (1, 1)
+2026-03-07 20:53:28,596 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,596 INFO sqlalchemy.engine.Engine [cached since 0.2072s ago] (1, 1)
+2026-03-07 20:53:28,597 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,597 INFO sqlalchemy.engine.Engine [cached since 0.001937s ago] (1, 2)
+2026-03-07 20:53:28,597 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,597 INFO sqlalchemy.engine.Engine [cached since 0.2087s ago] (1, 2)
+2026-03-07 20:53:28,598 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,598 INFO sqlalchemy.engine.Engine [cached since 0.003313s ago] (1, 3)
+2026-03-07 20:53:28,599 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,599 INFO sqlalchemy.engine.Engine [cached since 0.21s ago] (1, 3)
+2026-03-07 20:53:28,599 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,599 INFO sqlalchemy.engine.Engine [cached since 0.00455s ago] (1, 4)
+2026-03-07 20:53:28,600 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,600 INFO sqlalchemy.engine.Engine [cached since 0.2111s ago] (1, 4)
+2026-03-07 20:53:28,600 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,600 INFO sqlalchemy.engine.Engine [cached since 0.005608s ago] (1, 5)
+2026-03-07 20:53:28,601 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,601 INFO sqlalchemy.engine.Engine [cached since 0.2122s ago] (1, 5)
+2026-03-07 20:53:28,601 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,601 INFO sqlalchemy.engine.Engine [cached since 0.006687s ago] (1, 6)
+2026-03-07 20:53:28,602 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,602 INFO sqlalchemy.engine.Engine [cached since 0.2135s ago] (1, 6)
+2026-03-07 20:53:28,603 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,603 INFO sqlalchemy.engine.Engine [cached since 0.007969s ago] (1, 7)
+2026-03-07 20:53:28,603 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,603 INFO sqlalchemy.engine.Engine [cached since 0.2146s ago] (1, 7)
+2026-03-07 20:53:28,604 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,604 INFO sqlalchemy.engine.Engine [cached since 0.009097s ago] (1, 8)
+2026-03-07 20:53:28,604 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,604 INFO sqlalchemy.engine.Engine [cached since 0.2157s ago] (1, 8)
+2026-03-07 20:53:28,605 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,605 INFO sqlalchemy.engine.Engine [cached since 0.01019s ago] (1, 9)
+2026-03-07 20:53:28,606 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,606 INFO sqlalchemy.engine.Engine [cached since 0.2169s ago] (1, 9)
+2026-03-07 20:53:28,606 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,606 INFO sqlalchemy.engine.Engine [cached since 0.01157s ago] (1, 10)
+2026-03-07 20:53:28,607 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,607 INFO sqlalchemy.engine.Engine [cached since 0.2183s ago] (1, 10)
+2026-03-07 20:53:28,608 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,608 INFO sqlalchemy.engine.Engine [cached since 0.01279s ago] (1, 11)
+2026-03-07 20:53:28,608 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,608 INFO sqlalchemy.engine.Engine [cached since 0.2195s ago] (1, 11)
+2026-03-07 20:53:28,609 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,609 INFO sqlalchemy.engine.Engine [cached since 0.01417s ago] (1, 12)
+2026-03-07 20:53:28,610 INFO sqlalchemy.engine.Engine SELECT collaborator_teams.collaborator_id, collaborator_teams.team_id 
+FROM collaborator_teams 
+WHERE collaborator_teams.collaborator_id = ? AND collaborator_teams.team_id = ?
+2026-03-07 20:53:28,610 INFO sqlalchemy.engine.Engine [cached since 0.01489s ago] (1, 13)
+2026-03-07 20:53:28,610 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_teams (collaborator_id, team_id) VALUES (?, ?)
+2026-03-07 20:53:28,610 INFO sqlalchemy.engine.Engine [cached since 0.2217s ago] (1, 13)
+Ô£à Lucas Silva adicionado a 12 novos times (Total: 13).
+2026-03-07 20:53:28,655 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,655 INFO sqlalchemy.engine.Engine [cached since 0.1633s ago] ('lucas@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: lucas@centauro.com.br / senha123
+2026-03-07 20:53:28,657 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,657 INFO sqlalchemy.engine.Engine [cached since 0.1648s ago] ('fernando@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: fernando@centauro.com.br / senha123
+2026-03-07 20:53:28,658 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,658 INFO sqlalchemy.engine.Engine [cached since 0.1657s ago] ('yan@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: yan@centauro.com.br / senha123
+2026-03-07 20:53:28,658 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,659 INFO sqlalchemy.engine.Engine [cached since 0.1665s ago] ('diego@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: diego@centauro.com.br / senha123
+2026-03-07 20:53:28,659 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,659 INFO sqlalchemy.engine.Engine [cached since 0.1671s ago] ('fabiano@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: fabiano@centauro.com.br / senha123
+2026-03-07 20:53:28,660 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,660 INFO sqlalchemy.engine.Engine [cached since 0.1677s ago] ('hugo@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: hugo@centauro.com.br / senha123
+2026-03-07 20:53:28,660 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,660 INFO sqlalchemy.engine.Engine [cached since 0.1684s ago] ('cerdeira@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: cerdeira@centauro.com.br / senha123
+2026-03-07 20:53:28,661 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 20:53:28,661 INFO sqlalchemy.engine.Engine [cached since 0.1689s ago] ('ivan@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: ivan@centauro.com.br / senha123
+2026-03-07 20:53:28,662 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,662 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/8 (ordered; batch not supported)] ('lucas@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/8 (ordered; batch not supported)] ('fernando@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/8 (ordered; batch not supported)] ('yan@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,663 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/8 (ordered; batch not supported)] ('diego@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,664 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,664 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/8 (ordered; batch not supported)] ('fabiano@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,664 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,664 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/8 (ordered; batch not supported)] ('hugo@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,665 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,665 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/8 (ordered; batch not supported)] ('cerdeira@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,665 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,665 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/8 (ordered; batch not supported)] ('ivan@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$I+S8V0qp1VqrNYaQEkIIoQ$wSjIEV52qohKQshUfI6rQetic525lxXIubJpHfgHqw0', 'ADMIN', 0, None)
+2026-03-07 20:53:28,666 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users
+2026-03-07 20:53:28,666 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+Ô¡É Criando avalia├º├Áes de desempenho...
+2026-03-07 20:53:28,670 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,670 INFO sqlalchemy.engine.Engine [generated in 0.00022s (insertmanyvalues) 1/58 (ordered; batch not supported)] (1, 7, '2025-11-10', 3, 5, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,670 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,670 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/58 (ordered; batch not supported)] (1, 4, '2025-05-06', 3, 5, 5, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,671 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,671 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/58 (ordered; batch not supported)] (2, 2, '2025-05-18', 5, 4, 5, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,671 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,671 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/58 (ordered; batch not supported)] (2, 6, '2025-10-11', 5, 4, 4, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,672 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,672 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/58 (ordered; batch not supported)] (2, 9, '2026-02-23', 4, 5, 5, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,672 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,672 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/58 (ordered; batch not supported)] (3, 7, '2025-08-23', 5, 4, 4, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,673 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,673 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/58 (ordered; batch not supported)] (4, 2, '2025-04-02', 4, 5, 2, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,674 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,674 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/58 (ordered; batch not supported)] (5, 9, '2025-08-18', 4, 5, 4, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,674 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,674 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/58 (ordered; batch not supported)] (6, 5, '2025-09-07', 3, 5, 3, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,674 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,675 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/58 (ordered; batch not supported)] (6, 6, '2025-08-07', 4, 5, 5, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,675 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,675 INFO sqlalchemy.engine.Engine [insertmanyvalues 11/58 (ordered; batch not supported)] (6, 2, '2026-01-27', 4, 4, 5, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,675 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,676 INFO sqlalchemy.engine.Engine [insertmanyvalues 12/58 (ordered; batch not supported)] (7, 9, '2025-05-23', 4, 4, 2, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,676 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,676 INFO sqlalchemy.engine.Engine [insertmanyvalues 13/58 (ordered; batch not supported)] (7, 1, '2025-10-08', 5, 5, 3, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,676 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,676 INFO sqlalchemy.engine.Engine [insertmanyvalues 14/58 (ordered; batch not supported)] (7, 2, '2025-11-27', 4, 4, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,677 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,677 INFO sqlalchemy.engine.Engine [insertmanyvalues 15/58 (ordered; batch not supported)] (8, 8, '2025-05-14', 5, 4, 5, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,677 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,677 INFO sqlalchemy.engine.Engine [insertmanyvalues 16/58 (ordered; batch not supported)] (8, 6, '2025-09-20', 4, 4, 4, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,678 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,678 INFO sqlalchemy.engine.Engine [insertmanyvalues 17/58 (ordered; batch not supported)] (8, 4, '2025-05-22', 3, 5, 5, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,678 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,678 INFO sqlalchemy.engine.Engine [insertmanyvalues 18/58 (ordered; batch not supported)] (9, 1, '2025-10-12', 4, 5, 5, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine [insertmanyvalues 19/58 (ordered; batch not supported)] (10, 5, '2025-09-22', 4, 5, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine [insertmanyvalues 20/58 (ordered; batch not supported)] (11, 7, '2025-06-04', 5, 5, 3, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,679 INFO sqlalchemy.engine.Engine [insertmanyvalues 21/58 (ordered; batch not supported)] (11, 6, '2025-04-19', 3, 5, 2, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,680 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,680 INFO sqlalchemy.engine.Engine [insertmanyvalues 22/58 (ordered; batch not supported)] (12, 3, '2025-06-05', 5, 5, 3, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,680 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,680 INFO sqlalchemy.engine.Engine [insertmanyvalues 23/58 (ordered; batch not supported)] (12, 9, '2025-11-11', 4, 4, 3, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,681 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,681 INFO sqlalchemy.engine.Engine [insertmanyvalues 24/58 (ordered; batch not supported)] (12, 10, '2025-03-09', 4, 5, 2, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,681 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,681 INFO sqlalchemy.engine.Engine [insertmanyvalues 25/58 (ordered; batch not supported)] (13, 6, '2025-07-20', 4, 5, 5, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,682 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,682 INFO sqlalchemy.engine.Engine [insertmanyvalues 26/58 (ordered; batch not supported)] (13, 2, '2025-09-28', 4, 4, 3, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,682 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,682 INFO sqlalchemy.engine.Engine [insertmanyvalues 27/58 (ordered; batch not supported)] (13, 9, '2026-02-01', 5, 4, 2, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,683 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,683 INFO sqlalchemy.engine.Engine [insertmanyvalues 28/58 (ordered; batch not supported)] (14, 6, '2025-11-11', 5, 4, 5, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,683 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,683 INFO sqlalchemy.engine.Engine [insertmanyvalues 29/58 (ordered; batch not supported)] (14, 9, '2026-02-16', 5, 5, 2, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,684 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,684 INFO sqlalchemy.engine.Engine [insertmanyvalues 30/58 (ordered; batch not supported)] (14, 7, '2025-04-23', 4, 4, 3, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,684 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,684 INFO sqlalchemy.engine.Engine [insertmanyvalues 31/58 (ordered; batch not supported)] (15, 10, '2025-05-09', 3, 4, 2, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,684 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,685 INFO sqlalchemy.engine.Engine [insertmanyvalues 32/58 (ordered; batch not supported)] (15, 6, '2025-12-16', 4, 5, 2, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,685 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,685 INFO sqlalchemy.engine.Engine [insertmanyvalues 33/58 (ordered; batch not supported)] (16, 5, '2025-12-15', 5, 4, 2, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,686 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,686 INFO sqlalchemy.engine.Engine [insertmanyvalues 34/58 (ordered; batch not supported)] (16, 8, '2026-01-07', 4, 4, 5, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,686 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,686 INFO sqlalchemy.engine.Engine [insertmanyvalues 35/58 (ordered; batch not supported)] (17, 4, '2025-06-16', 3, 5, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,687 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,687 INFO sqlalchemy.engine.Engine [insertmanyvalues 36/58 (ordered; batch not supported)] (18, 2, '2025-12-06', 4, 5, 3, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,687 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,687 INFO sqlalchemy.engine.Engine [insertmanyvalues 37/58 (ordered; batch not supported)] (18, 4, '2025-05-28', 4, 5, 4, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,688 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,688 INFO sqlalchemy.engine.Engine [insertmanyvalues 38/58 (ordered; batch not supported)] (19, 6, '2025-03-16', 3, 4, 4, 'Entrega resultados consistentes.')
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine [insertmanyvalues 39/58 (ordered; batch not supported)] (20, 9, '2025-07-07', 3, 4, 4, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine [insertmanyvalues 40/58 (ordered; batch not supported)] (21, 3, '2025-07-13', 4, 5, 4, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,689 INFO sqlalchemy.engine.Engine [insertmanyvalues 41/58 (ordered; batch not supported)] (21, 10, '2025-11-06', 4, 5, 5, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,690 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,690 INFO sqlalchemy.engine.Engine [insertmanyvalues 42/58 (ordered; batch not supported)] (22, 4, '2025-08-05', 4, 4, 3, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,691 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,691 INFO sqlalchemy.engine.Engine [insertmanyvalues 43/58 (ordered; batch not supported)] (22, 1, '2025-06-25', 3, 4, 3, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,692 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,692 INFO sqlalchemy.engine.Engine [insertmanyvalues 44/58 (ordered; batch not supported)] (22, 7, '2025-03-13', 5, 4, 4, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,692 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,692 INFO sqlalchemy.engine.Engine [insertmanyvalues 45/58 (ordered; batch not supported)] (23, 2, '2025-06-01', 5, 4, 2, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,693 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,693 INFO sqlalchemy.engine.Engine [insertmanyvalues 46/58 (ordered; batch not supported)] (23, 9, '2025-09-09', 3, 5, 3, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,693 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,693 INFO sqlalchemy.engine.Engine [insertmanyvalues 47/58 (ordered; batch not supported)] (23, 5, '2025-10-09', 5, 5, 3, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,694 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,694 INFO sqlalchemy.engine.Engine [insertmanyvalues 48/58 (ordered; batch not supported)] (24, 8, '2025-06-12', 5, 5, 3, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,694 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,694 INFO sqlalchemy.engine.Engine [insertmanyvalues 49/58 (ordered; batch not supported)] (25, 9, '2025-08-29', 5, 4, 5, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,695 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,695 INFO sqlalchemy.engine.Engine [insertmanyvalues 50/58 (ordered; batch not supported)] (26, 7, '2026-02-16', 3, 5, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,695 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,695 INFO sqlalchemy.engine.Engine [insertmanyvalues 51/58 (ordered; batch not supported)] (27, 5, '2025-05-24', 3, 4, 2, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,695 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,696 INFO sqlalchemy.engine.Engine [insertmanyvalues 52/58 (ordered; batch not supported)] (27, 4, '2025-05-29', 5, 5, 4, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,696 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,696 INFO sqlalchemy.engine.Engine [insertmanyvalues 53/58 (ordered; batch not supported)] (28, 2, '2025-04-26', 5, 5, 3, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,696 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,696 INFO sqlalchemy.engine.Engine [insertmanyvalues 54/58 (ordered; batch not supported)] (28, 3, '2026-02-25', 4, 4, 2, 'Excelente desempenho t├®cnico.')
+2026-03-07 20:53:28,697 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,697 INFO sqlalchemy.engine.Engine [insertmanyvalues 55/58 (ordered; batch not supported)] (29, 4, '2025-10-11', 5, 4, 4, 'Precisa melhorar pontualidade.')
+2026-03-07 20:53:28,698 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,698 INFO sqlalchemy.engine.Engine [insertmanyvalues 56/58 (ordered; batch not supported)] (29, 2, '2025-12-17', 5, 5, 5, 'Segue rigorosamente as normas de seguran├ºa.')
+2026-03-07 20:53:28,698 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,698 INFO sqlalchemy.engine.Engine [insertmanyvalues 57/58 (ordered; batch not supported)] (29, 10, '2026-01-10', 5, 5, 5, 'L├¡der nato, muito proativo.')
+2026-03-07 20:53:28,699 INFO sqlalchemy.engine.Engine INSERT INTO collaborator_reviews (collaborator_id, reviewer_id, date, score_technical, score_safety, score_punctuality, comments) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 20:53:28,699 INFO sqlalchemy.engine.Engine [insertmanyvalues 58/58 (ordered; batch not supported)] (30, 5, '2025-03-25', 3, 5, 3, 'Precisa melhorar pontualidade.')
+Ô£à 58 avalia├º├Áes criadas.
+­ƒöì Criando 5 contratos...
+Ô£à Contratos criados.
+­ƒöì Criando 10 projetos...
+   Creating 2 Standalone Projects...
+   Creating 8 Linked Projects...
+2026-03-07 20:53:28,700 INFO sqlalchemy.engine.Engine ROLLBACK
+Traceback (most recent call last):
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 1344, in main
+    projects = await seed_projects(db, clients, contracts)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 700, in seed_projects
+    contract = contracts[i]
+               ~~~~~~~~~^^^
+IndexError: list index out of range
+ÔØî Erro ao popular banco de dados: list index out of range

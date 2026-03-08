@@ -67,11 +67,15 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: As
         user = result.scalars().first()
         return user
 
-    # If no token provided, just return admin
     if not token:
         user = await get_admin_user()
         if user:
             return user
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated - Missing token and no admin fallback available",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

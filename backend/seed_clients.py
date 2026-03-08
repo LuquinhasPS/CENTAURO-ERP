@@ -1,3 +1,4 @@
+import os
 import traceback
 import asyncio
 import pandas as pd
@@ -86,5 +87,5 @@ async def seed_clients_from_excel(file_path: str):
             traceback.print_exc()
 
 if __name__ == "__main__":
-    arquivo_excel = r"C:\Users\Centauro\Downloads\Clientes.xlsm"
+    arquivo_excel = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Clientes.xlsm")
     asyncio.run(seed_clients_from_excel(arquivo_excel))

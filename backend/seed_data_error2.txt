@@ -1,0 +1,424 @@
+­ƒî▒ Iniciando seed de dados (REFAZENDO TUDO)...
+2026-03-07 19:54:56,047 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:54:56,047 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("clients")
+2026-03-07 19:54:56,047 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,049 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("contracts")
+2026-03-07 19:54:56,050 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,050 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("projects")
+2026-03-07 19:54:56,050 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,051 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_feedbacks")
+2026-03-07 19:54:56,051 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,052 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_billings")
+2026-03-07 19:54:56,052 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,052 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("client_contacts")
+2026-03-07 19:54:56,052 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,053 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("insurances")
+2026-03-07 19:54:56,053 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,054 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("fleet")
+2026-03-07 19:54:56,054 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,054 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tools")
+2026-03-07 19:54:56,054 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,055 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_maintenances")
+2026-03-07 19:54:56,055 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,057 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_fuel_costs")
+2026-03-07 19:54:56,057 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,057 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_toll_costs")
+2026-03-07 19:54:56,057 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,058 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_teams")
+2026-03-07 19:54:56,058 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,059 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("teams")
+2026-03-07 19:54:56,059 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,060 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborators")
+2026-03-07 19:54:56,060 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,061 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("allocations")
+2026-03-07 19:54:56,061 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,062 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("certifications")
+2026-03-07 19:54:56,062 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,063 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_education")
+2026-03-07 19:54:56,063 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,064 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_reviews")
+2026-03-07 19:54:56,064 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,065 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tickets")
+2026-03-07 19:54:56,065 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,066 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("roles")
+2026-03-07 19:54:56,066 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,067 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tasks")
+2026-03-07 19:54:56,067 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,069 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_collaborators")
+2026-03-07 19:54:56,069 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,070 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_tools")
+2026-03-07 19:54:56,070 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,070 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_vehicles")
+2026-03-07 19:54:56,070 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,071 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_requests")
+2026-03-07 19:54:56,071 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,072 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_items")
+2026-03-07 19:54:56,072 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,073 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("commercial_proposals")
+2026-03-07 19:54:56,073 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,074 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("proposal_tasks")
+2026-03-07 19:54:56,074 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,075 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("users")
+2026-03-07 19:54:56,075 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,075 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("monthly_labor_costs")
+2026-03-07 19:54:56,075 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,076 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_labor_costs")
+2026-03-07 19:54:56,076 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:54:56,077 INFO sqlalchemy.engine.Engine COMMIT
+­ƒº╣ Limpando dados existentes...
+2026-03-07 19:54:56,078 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:54:56,079 INFO sqlalchemy.engine.Engine DELETE FROM project_labor_costs
+2026-03-07 19:54:56,079 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,081 INFO sqlalchemy.engine.Engine DELETE FROM monthly_labor_costs
+2026-03-07 19:54:56,081 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+2026-03-07 19:54:56,082 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_maintenances
+2026-03-07 19:54:56,082 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,082 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_fuel_costs
+2026-03-07 19:54:56,083 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,083 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_toll_costs
+2026-03-07 19:54:56,083 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:54:56,084 INFO sqlalchemy.engine.Engine DELETE FROM proposal_tasks
+2026-03-07 19:54:56,084 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,085 INFO sqlalchemy.engine.Engine DELETE FROM commercial_proposals
+2026-03-07 19:54:56,085 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,085 INFO sqlalchemy.engine.Engine DELETE FROM purchase_items
+2026-03-07 19:54:56,086 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:54:56,087 INFO sqlalchemy.engine.Engine DELETE FROM purchase_requests
+2026-03-07 19:54:56,087 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,088 INFO sqlalchemy.engine.Engine DELETE FROM tickets
+2026-03-07 19:54:56,088 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,089 INFO sqlalchemy.engine.Engine DELETE FROM allocations
+2026-03-07 19:54:56,089 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,090 INFO sqlalchemy.engine.Engine DELETE FROM project_billings
+2026-03-07 19:54:56,090 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ()
+2026-03-07 19:54:56,090 INFO sqlalchemy.engine.Engine DELETE FROM project_feedbacks
+2026-03-07 19:54:56,090 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,091 INFO sqlalchemy.engine.Engine DELETE FROM project_collaborators
+2026-03-07 19:54:56,092 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ()
+2026-03-07 19:54:56,093 INFO sqlalchemy.engine.Engine DELETE FROM project_vehicles
+2026-03-07 19:54:56,093 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ()
+2026-03-07 19:54:56,094 INFO sqlalchemy.engine.Engine DELETE FROM project_tools
+2026-03-07 19:54:56,094 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,095 INFO sqlalchemy.engine.Engine DELETE FROM projects
+2026-03-07 19:54:56,095 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,095 INFO sqlalchemy.engine.Engine DELETE FROM contracts
+2026-03-07 19:54:56,096 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,096 INFO sqlalchemy.engine.Engine DELETE FROM certifications
+2026-03-07 19:54:56,096 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:54:56,097 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_education
+2026-03-07 19:54:56,097 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,098 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_reviews
+2026-03-07 19:54:56,098 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,098 INFO sqlalchemy.engine.Engine DELETE FROM tools
+2026-03-07 19:54:56,098 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:54:56,099 INFO sqlalchemy.engine.Engine DELETE FROM users
+2026-03-07 19:54:56,099 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:54:56,102 INFO sqlalchemy.engine.Engine UPDATE teams SET leader_id=?
+2026-03-07 19:54:56,102 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (None,)
+2026-03-07 19:54:56,103 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_teams
+2026-03-07 19:54:56,103 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,104 INFO sqlalchemy.engine.Engine DELETE FROM teams
+2026-03-07 19:54:56,104 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:54:56,105 INFO sqlalchemy.engine.Engine DELETE FROM client_contacts
+2026-03-07 19:54:56,105 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,106 INFO sqlalchemy.engine.Engine DELETE FROM fleet
+2026-03-07 19:54:56,106 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:54:56,107 INFO sqlalchemy.engine.Engine DELETE FROM insurances
+2026-03-07 19:54:56,107 INFO sqlalchemy.engine.Engine [generated in 0.00034s] ()
+2026-03-07 19:54:56,108 INFO sqlalchemy.engine.Engine DELETE FROM roles
+2026-03-07 19:54:56,108 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:54:56,109 INFO sqlalchemy.engine.Engine COMMIT
+Ô£¿ Dados limpos! (Mantendo a tabela Clientes)
+­ƒöì Criando cargos...
+2026-03-07 19:54:56,167 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:54:56,168 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,168 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ('Coordenador', 'Coordenador de projetos', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"]}')
+2026-03-07 19:54:56,170 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,170 INFO sqlalchemy.engine.Engine [cached since 0.002219s ago] ('Analista', 'Analista t├®cnico', '{"projects": ["read", "write"], "contracts": ["read"], "fleet": ["read"]}')
+2026-03-07 19:54:56,171 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,171 INFO sqlalchemy.engine.Engine [cached since 0.002907s ago] ('T├®cnico', 'T├®cnico de campo', '{"projects": ["read"], "tickets": ["read", "write"]}')
+2026-03-07 19:54:56,172 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,172 INFO sqlalchemy.engine.Engine [cached since 0.00366s ago] ('Auxiliar', 'Auxiliar t├®cnico', '{}')
+2026-03-07 19:54:56,173 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,173 INFO sqlalchemy.engine.Engine [cached since 0.004648s ago] ('Assistente', 'Assistente administrativo', '{"finance": ["read"], "collaborators": ["read"]}')
+2026-03-07 19:54:56,174 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,174 INFO sqlalchemy.engine.Engine [cached since 0.005504s ago] ('Supervisor', 'Supervisor de equipe', '{"projects": ["read"], "collaborators": ["read", "write"]}')
+2026-03-07 19:54:56,174 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:54:56,174 INFO sqlalchemy.engine.Engine [cached since 0.006146s ago] ('ADM', 'Administrador Geral', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"], "tickets": ["read", "write"], "users": ["read", "write"], "roles": ["read", "write"]}')
+Ô£à 7 cargos criados.
+­ƒöì Obtendo clientes...
+2026-03-07 19:54:56,176 INFO sqlalchemy.engine.Engine SELECT clients.id, clients.client_number, clients.name, clients.cnpj, clients.contact_person, clients.email, clients.phone, clients.address 
+FROM clients
+2026-03-07 19:54:56,176 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ()
+Ô£à Encontrados 790 clientes no banco. Ignorando cria├º├úo de fict├¡cios.
+­ƒöì Criando seguros...
+2026-03-07 19:54:56,183 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:54:56,183 INFO sqlalchemy.engine.Engine [generated in 0.00010s (insertmanyvalues) 1/3 (ordered; batch not supported)] ('Porto Seguro', '123456789', '2027-03-07', 'Ligar para 0800-727-0800. Ap├│lice no porta-luvas.')
+2026-03-07 19:54:56,184 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:54:56,184 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/3 (ordered; batch not supported)] ('Azul Seguros', '987654321', '2026-09-03', 'Acionar via app da Azul ou ligar 4004-3700.')
+2026-03-07 19:54:56,184 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:54:56,184 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/3 (ordered; batch not supported)] ('Tokio Marine', '456123789', '2026-06-05', 'Contato corretor: Jo├úo (11) 99999-8888.')
+Ô£à 3 seguros criados.
+­ƒöì Criando frota...
+2026-03-07 19:54:56,186 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,186 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('LLV7582', 'STRADA WORKING', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,187 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,187 INFO sqlalchemy.engine.Engine [cached since 0.001258s ago] ('LQS5041', 'UNO MILLE', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,187 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,187 INFO sqlalchemy.engine.Engine [cached since 0.002003s ago] ('KQW4792', 'PALIO', 'FIAT', 2015, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,188 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,188 INFO sqlalchemy.engine.Engine [cached since 0.002709s ago] ('KOE4256', 'UNO', 'FIAT', 2007, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,189 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,189 INFO sqlalchemy.engine.Engine [cached since 0.003535s ago] ('PUC3186', 'UNO', 'FIAT', 2014, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,190 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,190 INFO sqlalchemy.engine.Engine [cached since 0.004436s ago] ('GCK9D18', 'WEEKEND', 'FIAT', 2016, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,191 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,191 INFO sqlalchemy.engine.Engine [cached since 0.00518s ago] ('LUC4F47', 'FASTBACK/TURBO', 'FIAT', 2023, '61.198.164/0001-60', 1, 'Preto', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,191 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,191 INFO sqlalchemy.engine.Engine [cached since 0.005857s ago] ('RTG4I96', 'STRADA', 'FIAT', 2022, '61.198.164/0001-60', 1, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,192 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,192 INFO sqlalchemy.engine.Engine [cached since 0.006427s ago] ('TOJ0A44', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,193 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,193 INFO sqlalchemy.engine.Engine [cached since 0.007181s ago] ('TOJ0A40', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,193 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,193 INFO sqlalchemy.engine.Engine [cached since 0.007796s ago] ('TOJ0A45', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Azul', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,194 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,194 INFO sqlalchemy.engine.Engine [cached since 0.008648s ago] ('TOL4D70', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,195 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,195 INFO sqlalchemy.engine.Engine [cached since 0.009446s ago] ('TOL4D72', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,196 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,196 INFO sqlalchemy.engine.Engine [cached since 0.01035s ago] ('RQR3J33', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,196 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,197 INFO sqlalchemy.engine.Engine [cached since 0.01109s ago] ('RQR3J79', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,198 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,198 INFO sqlalchemy.engine.Engine [cached since 0.01234s ago] ('QXL0J20', 'KWID', 'RENAULT', 2021, '33.448.150/0001-11', 2, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,199 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,199 INFO sqlalchemy.engine.Engine [cached since 0.01335s ago] ('NAX6H44', 'KWID', 'RENAULT', 2023, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,200 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,200 INFO sqlalchemy.engine.Engine [cached since 0.01419s ago] ('KWW2751', 'CROSSFOX', 'VW', 2010, '33.164.021/0001-00', 3, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,200 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,200 INFO sqlalchemy.engine.Engine [cached since 0.01499s ago] ('KZP9I09', 'S10', 'CHEVROLET', 2019, '61.074.175/0001-38', 1, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,201 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,201 INFO sqlalchemy.engine.Engine [cached since 0.0158s ago] ('RMR6D75', 'L200', 'MITSUBISHI', 2022, '61.074.175/0001-38', 1, 'Prata', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 19:54:56,202 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:54:56,202 INFO sqlalchemy.engine.Engine [cached since 0.01664s ago] ('RMS4F05', 'HILUX', 'TOYOTA', 2021, '61.573.796/0001-66', 2, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+Ô£à 21 ve├¡culos criados.
+­ƒöì Criando times...
+2026-03-07 19:54:56,203 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,203 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/6 (ordered; batch not supported)] ('Engenharia', 'Departamento de Engenharia e Projetos', None)
+2026-03-07 19:54:56,204 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,204 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/6 (ordered; batch not supported)] ('Opera├º├Áes', 'Equipe de campo e instala├º├Áes', None)
+2026-03-07 19:54:56,205 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,205 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/6 (ordered; batch not supported)] ('Manuten├º├úo', 'Manuten├º├úo preventiva e corretiva', None)
+2026-03-07 19:54:56,206 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,206 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/6 (ordered; batch not supported)] ('Administrativo', 'Suporte administrativo e financeiro', None)
+2026-03-07 19:54:56,206 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,206 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/6 (ordered; batch not supported)] ('Vendas', 'Equipe comercial e novos neg├│cios', None)
+2026-03-07 19:54:56,207 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:54:56,207 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/6 (ordered; batch not supported)] ('TI', 'Tecnologia da Informa├º├úo', None)
+Ô£à 6 times criados.
+­ƒöì Atualizando colaboradores reais e criando certifica├º├Áes...
+2026-03-07 19:54:56,209 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators
+2026-03-07 19:54:56,209 INFO sqlalchemy.engine.Engine [generated in 0.00014s] ()
+ÔÜá´©Å Nenhum colaborador encontrado. Voc├¬ deve rodar o seed_equipe.py primeiro.
+­ƒææ Definindo l├¡deres de equipe...
+2026-03-07 19:54:56,211 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,211 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (1,)
+2026-03-07 19:54:56,212 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,212 INFO sqlalchemy.engine.Engine [cached since 0.001229s ago] (2,)
+2026-03-07 19:54:56,213 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,213 INFO sqlalchemy.engine.Engine [cached since 0.001914s ago] (3,)
+2026-03-07 19:54:56,214 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,214 INFO sqlalchemy.engine.Engine [cached since 0.003092s ago] (4,)
+2026-03-07 19:54:56,215 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,215 INFO sqlalchemy.engine.Engine [cached since 0.004162s ago] (5,)
+2026-03-07 19:54:56,216 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:54:56,216 INFO sqlalchemy.engine.Engine [cached since 0.0049s ago] (6,)
+Ô£à L├¡deres definidos.
+­ƒöì Criando 5 ferramentas...
+2026-03-07 19:54:56,218 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:54:56,218 INFO sqlalchemy.engine.Engine [generated in 0.00011s (insertmanyvalues) 1/6 (ordered; batch not supported)] ('Furadeira de Impacto Bosch', 'FUR-001', 'AVAILABLE', 'Almoxarifado', 'Almoxarifado', 'POWER_TOOL', 'GOOD', None, None)
+2026-03-07 19:54:56,218 INFO sqlalchemy.engine.Engine ROLLBACK
+Traceback (most recent call last):
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 2118, in _exec_insertmany_context
+    dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~^
+        cursor,
+        ^^^^^^^
+    ...<2 lines>...
+        context,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 180, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 340, in _handle_exception
+    raise error
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 162, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+sqlite3.OperationalError: table tools has no column named category
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 1303, in main
+    tools = await seed_tools(db)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 513, in seed_tools
+    await db.flush()
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 787, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1143, in _emit_insert_statements
+    result = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 2126, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e,
+        ^^
+    ...<4 lines>...
+        is_sub_exec=True,
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\base.py", line 2118, in _exec_insertmany_context
+    dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~^
+        cursor,
+        ^^^^^^^
+    ...<2 lines>...
+        context,
+        ^^^^^^^^
+    )
+    ^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 180, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 340, in _handle_exception
+    raise error
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 162, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\LUCAS\AppData\Local\Python\pythoncore-3.13-64\Lib\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table tools has no column named category
+[SQL: INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id]
+[parameters: ('Furadeira de Impacto Bosch', 'FUR-001', 'AVAILABLE', 'Almoxarifado', 'Almoxarifado', 'POWER_TOOL', 'GOOD', None, None)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ÔØî Erro ao popular banco de dados: (sqlite3.OperationalError) table tools has no column named category
+[SQL: INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id]
+[parameters: ('Furadeira de Impacto Bosch', 'FUR-001', 'AVAILABLE', 'Almoxarifado', 'Almoxarifado', 'POWER_TOOL', 'GOOD', None, None)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

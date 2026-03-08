@@ -1,0 +1,504 @@
+­ƒî▒ Iniciando seed de dados (REFAZENDO TUDO)...
+2026-03-07 19:56:01,147 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:56:01,147 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("clients")
+2026-03-07 19:56:01,147 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,150 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("contracts")
+2026-03-07 19:56:01,150 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,151 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("projects")
+2026-03-07 19:56:01,151 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,152 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_feedbacks")
+2026-03-07 19:56:01,152 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,153 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_billings")
+2026-03-07 19:56:01,153 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,154 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("client_contacts")
+2026-03-07 19:56:01,155 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,156 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("insurances")
+2026-03-07 19:56:01,156 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,157 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("fleet")
+2026-03-07 19:56:01,157 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,158 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tools")
+2026-03-07 19:56:01,158 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,159 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_maintenances")
+2026-03-07 19:56:01,159 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,160 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_fuel_costs")
+2026-03-07 19:56:01,160 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,162 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("vehicle_toll_costs")
+2026-03-07 19:56:01,162 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,163 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_teams")
+2026-03-07 19:56:01,163 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,164 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("teams")
+2026-03-07 19:56:01,164 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,164 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborators")
+2026-03-07 19:56:01,164 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,165 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("allocations")
+2026-03-07 19:56:01,165 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,166 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("certifications")
+2026-03-07 19:56:01,166 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,166 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_education")
+2026-03-07 19:56:01,166 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,167 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("collaborator_reviews")
+2026-03-07 19:56:01,167 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,168 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tickets")
+2026-03-07 19:56:01,168 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,168 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("roles")
+2026-03-07 19:56:01,168 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,170 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("tasks")
+2026-03-07 19:56:01,170 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,171 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_collaborators")
+2026-03-07 19:56:01,171 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,172 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_tools")
+2026-03-07 19:56:01,172 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,173 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_vehicles")
+2026-03-07 19:56:01,173 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,174 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_requests")
+2026-03-07 19:56:01,174 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,174 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("purchase_items")
+2026-03-07 19:56:01,174 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,175 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("commercial_proposals")
+2026-03-07 19:56:01,175 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,176 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("proposal_tasks")
+2026-03-07 19:56:01,176 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,176 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("users")
+2026-03-07 19:56:01,177 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,177 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("monthly_labor_costs")
+2026-03-07 19:56:01,177 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,179 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("project_labor_costs")
+2026-03-07 19:56:01,179 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-07 19:56:01,180 INFO sqlalchemy.engine.Engine COMMIT
+­ƒº╣ Limpando dados existentes...
+2026-03-07 19:56:01,182 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:56:01,183 INFO sqlalchemy.engine.Engine DELETE FROM project_labor_costs
+2026-03-07 19:56:01,183 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ()
+2026-03-07 19:56:01,185 INFO sqlalchemy.engine.Engine DELETE FROM monthly_labor_costs
+2026-03-07 19:56:01,185 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+2026-03-07 19:56:01,186 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_maintenances
+2026-03-07 19:56:01,186 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:56:01,187 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_fuel_costs
+2026-03-07 19:56:01,187 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:56:01,188 INFO sqlalchemy.engine.Engine DELETE FROM vehicle_toll_costs
+2026-03-07 19:56:01,188 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:56:01,189 INFO sqlalchemy.engine.Engine DELETE FROM proposal_tasks
+2026-03-07 19:56:01,189 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+2026-03-07 19:56:01,190 INFO sqlalchemy.engine.Engine DELETE FROM commercial_proposals
+2026-03-07 19:56:01,190 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,190 INFO sqlalchemy.engine.Engine DELETE FROM purchase_items
+2026-03-07 19:56:01,190 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,191 INFO sqlalchemy.engine.Engine DELETE FROM purchase_requests
+2026-03-07 19:56:01,191 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,191 INFO sqlalchemy.engine.Engine DELETE FROM tickets
+2026-03-07 19:56:01,192 INFO sqlalchemy.engine.Engine [generated in 0.00007s] ()
+2026-03-07 19:56:01,192 INFO sqlalchemy.engine.Engine DELETE FROM allocations
+2026-03-07 19:56:01,192 INFO sqlalchemy.engine.Engine [generated in 0.00007s] ()
+2026-03-07 19:56:01,193 INFO sqlalchemy.engine.Engine DELETE FROM project_billings
+2026-03-07 19:56:01,193 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,193 INFO sqlalchemy.engine.Engine DELETE FROM project_feedbacks
+2026-03-07 19:56:01,193 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,194 INFO sqlalchemy.engine.Engine DELETE FROM project_collaborators
+2026-03-07 19:56:01,194 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,195 INFO sqlalchemy.engine.Engine DELETE FROM project_vehicles
+2026-03-07 19:56:01,195 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,196 INFO sqlalchemy.engine.Engine DELETE FROM project_tools
+2026-03-07 19:56:01,196 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,196 INFO sqlalchemy.engine.Engine DELETE FROM projects
+2026-03-07 19:56:01,197 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,197 INFO sqlalchemy.engine.Engine DELETE FROM contracts
+2026-03-07 19:56:01,197 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,198 INFO sqlalchemy.engine.Engine DELETE FROM certifications
+2026-03-07 19:56:01,198 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,199 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_education
+2026-03-07 19:56:01,199 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,199 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_reviews
+2026-03-07 19:56:01,199 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,200 INFO sqlalchemy.engine.Engine DELETE FROM tools
+2026-03-07 19:56:01,200 INFO sqlalchemy.engine.Engine [generated in 0.00008s] ()
+2026-03-07 19:56:01,201 INFO sqlalchemy.engine.Engine DELETE FROM users
+2026-03-07 19:56:01,201 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,203 INFO sqlalchemy.engine.Engine UPDATE teams SET leader_id=?
+2026-03-07 19:56:01,203 INFO sqlalchemy.engine.Engine [generated in 0.00021s] (None,)
+2026-03-07 19:56:01,205 INFO sqlalchemy.engine.Engine DELETE FROM collaborator_teams
+2026-03-07 19:56:01,205 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ()
+2026-03-07 19:56:01,206 INFO sqlalchemy.engine.Engine DELETE FROM teams
+2026-03-07 19:56:01,206 INFO sqlalchemy.engine.Engine [generated in 0.00009s] ()
+2026-03-07 19:56:01,207 INFO sqlalchemy.engine.Engine DELETE FROM client_contacts
+2026-03-07 19:56:01,207 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:56:01,208 INFO sqlalchemy.engine.Engine DELETE FROM fleet
+2026-03-07 19:56:01,208 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+2026-03-07 19:56:01,209 INFO sqlalchemy.engine.Engine DELETE FROM insurances
+2026-03-07 19:56:01,209 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+2026-03-07 19:56:01,210 INFO sqlalchemy.engine.Engine DELETE FROM roles
+2026-03-07 19:56:01,210 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ()
+2026-03-07 19:56:01,211 INFO sqlalchemy.engine.Engine COMMIT
+Ô£¿ Dados limpos! (Mantendo a tabela Clientes)
+­ƒöì Criando cargos...
+2026-03-07 19:56:01,267 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-07 19:56:01,268 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,268 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ('Coordenador', 'Coordenador de projetos', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"]}')
+2026-03-07 19:56:01,271 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,271 INFO sqlalchemy.engine.Engine [cached since 0.002798s ago] ('Analista', 'Analista t├®cnico', '{"projects": ["read", "write"], "contracts": ["read"], "fleet": ["read"]}')
+2026-03-07 19:56:01,272 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,272 INFO sqlalchemy.engine.Engine [cached since 0.003751s ago] ('T├®cnico', 'T├®cnico de campo', '{"projects": ["read"], "tickets": ["read", "write"]}')
+2026-03-07 19:56:01,273 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,273 INFO sqlalchemy.engine.Engine [cached since 0.004515s ago] ('Auxiliar', 'Auxiliar t├®cnico', '{}')
+2026-03-07 19:56:01,273 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,273 INFO sqlalchemy.engine.Engine [cached since 0.005106s ago] ('Assistente', 'Assistente administrativo', '{"finance": ["read"], "collaborators": ["read"]}')
+2026-03-07 19:56:01,274 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,274 INFO sqlalchemy.engine.Engine [cached since 0.005706s ago] ('Supervisor', 'Supervisor de equipe', '{"projects": ["read"], "collaborators": ["read", "write"]}')
+2026-03-07 19:56:01,274 INFO sqlalchemy.engine.Engine INSERT INTO roles (name, description, permissions) VALUES (?, ?, ?)
+2026-03-07 19:56:01,274 INFO sqlalchemy.engine.Engine [cached since 0.006316s ago] ('ADM', 'Administrador Geral', '{"projects": ["read", "write"], "contracts": ["read", "write"], "finance": ["read", "write"], "collaborators": ["read", "write"], "fleet": ["read", "write"], "tickets": ["read", "write"], "users": ["read", "write"], "roles": ["read", "write"]}')
+Ô£à 7 cargos criados.
+­ƒöì Obtendo clientes...
+2026-03-07 19:56:01,277 INFO sqlalchemy.engine.Engine SELECT clients.id, clients.client_number, clients.name, clients.cnpj, clients.contact_person, clients.email, clients.phone, clients.address 
+FROM clients
+2026-03-07 19:56:01,277 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ()
+Ô£à Encontrados 790 clientes no banco. Ignorando cria├º├úo de fict├¡cios.
+­ƒöì Criando seguros...
+2026-03-07 19:56:01,283 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,283 INFO sqlalchemy.engine.Engine [generated in 0.00010s (insertmanyvalues) 1/3 (ordered; batch not supported)] ('Porto Seguro', '123456789', '2027-03-07', 'Ligar para 0800-727-0800. Ap├│lice no porta-luvas.')
+2026-03-07 19:56:01,284 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,284 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/3 (ordered; batch not supported)] ('Azul Seguros', '987654321', '2026-09-03', 'Acionar via app da Azul ou ligar 4004-3700.')
+2026-03-07 19:56:01,285 INFO sqlalchemy.engine.Engine INSERT INTO insurances (insurance_company, policy_number, validity, claims_info) VALUES (?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,285 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/3 (ordered; batch not supported)] ('Tokio Marine', '456123789', '2026-06-05', 'Contato corretor: Jo├úo (11) 99999-8888.')
+Ô£à 3 seguros criados.
+­ƒöì Criando frota...
+2026-03-07 19:56:01,286 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,286 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('LLV7582', 'STRADA WORKING', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,288 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,288 INFO sqlalchemy.engine.Engine [cached since 0.001639s ago] ('LQS5041', 'UNO MILLE', 'FIAT', 2013, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,288 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,288 INFO sqlalchemy.engine.Engine [cached since 0.002472s ago] ('KQW4792', 'PALIO', 'FIAT', 2015, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,289 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,289 INFO sqlalchemy.engine.Engine [cached since 0.003084s ago] ('KOE4256', 'UNO', 'FIAT', 2007, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,290 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,290 INFO sqlalchemy.engine.Engine [cached since 0.00382s ago] ('PUC3186', 'UNO', 'FIAT', 2014, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,290 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,290 INFO sqlalchemy.engine.Engine [cached since 0.004441s ago] ('GCK9D18', 'WEEKEND', 'FIAT', 2016, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,291 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,291 INFO sqlalchemy.engine.Engine [cached since 0.005123s ago] ('LUC4F47', 'FASTBACK/TURBO', 'FIAT', 2023, '61.198.164/0001-60', 1, 'Preto', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,292 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,292 INFO sqlalchemy.engine.Engine [cached since 0.005803s ago] ('RTG4I96', 'STRADA', 'FIAT', 2022, '61.198.164/0001-60', 1, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,292 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,292 INFO sqlalchemy.engine.Engine [cached since 0.00648s ago] ('TOJ0A44', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,293 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,293 INFO sqlalchemy.engine.Engine [cached since 0.007092s ago] ('TOJ0A40', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,294 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,294 INFO sqlalchemy.engine.Engine [cached since 0.007861s ago] ('TOJ0A45', 'ARGO', 'FIAT', 2025, '61.198.164/0001-60', 1, 'Azul', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,294 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,294 INFO sqlalchemy.engine.Engine [cached since 0.008444s ago] ('TOL4D70', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,295 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,295 INFO sqlalchemy.engine.Engine [cached since 0.009413s ago] ('TOL4D72', 'STRADA', 'FIAT', 2026, '61.198.164/0001-60', 1, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,296 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,296 INFO sqlalchemy.engine.Engine [cached since 0.01047s ago] ('RQR3J33', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,297 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,297 INFO sqlalchemy.engine.Engine [cached since 0.01126s ago] ('RQR3J79', 'OROCH/EXP', 'RENAULT', 2022, '33.448.150/0001-11', 2, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,298 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,298 INFO sqlalchemy.engine.Engine [cached since 0.01187s ago] ('QXL0J20', 'KWID', 'RENAULT', 2021, '33.448.150/0001-11', 2, 'Vermelho', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,298 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,299 INFO sqlalchemy.engine.Engine [cached since 0.01253s ago] ('NAX6H44', 'KWID', 'RENAULT', 2023, '33.448.150/0001-11', 2, 'Branco', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,299 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,299 INFO sqlalchemy.engine.Engine [cached since 0.01311s ago] ('KWW2751', 'CROSSFOX', 'VW', 2010, '33.164.021/0001-00', 3, 'Prata', 'GASOLINA', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,300 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,300 INFO sqlalchemy.engine.Engine [cached since 0.01368s ago] ('KZP9I09', 'S10', 'CHEVROLET', 2019, '61.074.175/0001-38', 1, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,300 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,301 INFO sqlalchemy.engine.Engine [cached since 0.01453s ago] ('RMR6D75', 'L200', 'MITSUBISHI', 2022, '61.074.175/0001-38', 1, 'Prata', 'DIESEL', 'ACTIVE', 0, None)
+2026-03-07 19:56:01,301 INFO sqlalchemy.engine.Engine INSERT INTO fleet (license_plate, model, brand, year, cnpj, insurance_id, color, fuel_type, status, odometer, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-07 19:56:01,301 INFO sqlalchemy.engine.Engine [cached since 0.01516s ago] ('RMS4F05', 'HILUX', 'TOYOTA', 2021, '61.573.796/0001-66', 2, 'Branco', 'DIESEL', 'ACTIVE', 0, None)
+Ô£à 21 ve├¡culos criados.
+­ƒöì Criando times...
+2026-03-07 19:56:01,302 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,302 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/6 (ordered; batch not supported)] ('Engenharia', 'Departamento de Engenharia e Projetos', None)
+2026-03-07 19:56:01,303 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,303 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/6 (ordered; batch not supported)] ('Opera├º├Áes', 'Equipe de campo e instala├º├Áes', None)
+2026-03-07 19:56:01,304 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,304 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/6 (ordered; batch not supported)] ('Manuten├º├úo', 'Manuten├º├úo preventiva e corretiva', None)
+2026-03-07 19:56:01,304 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,305 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/6 (ordered; batch not supported)] ('Administrativo', 'Suporte administrativo e financeiro', None)
+2026-03-07 19:56:01,305 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,305 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/6 (ordered; batch not supported)] ('Vendas', 'Equipe comercial e novos neg├│cios', None)
+2026-03-07 19:56:01,305 INFO sqlalchemy.engine.Engine INSERT INTO teams (name, description, leader_id) VALUES (?, ?, ?) RETURNING id
+2026-03-07 19:56:01,305 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/6 (ordered; batch not supported)] ('TI', 'Tecnologia da Informa├º├úo', None)
+Ô£à 6 times criados.
+­ƒöì Atualizando colaboradores reais e criando certifica├º├Áes...
+2026-03-07 19:56:01,307 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators
+2026-03-07 19:56:01,307 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ()
+ÔÜá´©Å Nenhum colaborador encontrado. Voc├¬ deve rodar o seed_equipe.py primeiro.
+­ƒææ Definindo l├¡deres de equipe...
+2026-03-07 19:56:01,310 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,310 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (1,)
+2026-03-07 19:56:01,311 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,311 INFO sqlalchemy.engine.Engine [cached since 0.001384s ago] (2,)
+2026-03-07 19:56:01,312 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,312 INFO sqlalchemy.engine.Engine [cached since 0.002417s ago] (3,)
+2026-03-07 19:56:01,313 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,313 INFO sqlalchemy.engine.Engine [cached since 0.003654s ago] (4,)
+2026-03-07 19:56:01,314 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,314 INFO sqlalchemy.engine.Engine [cached since 0.004492s ago] (5,)
+2026-03-07 19:56:01,315 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators JOIN collaborator_teams ON collaborators.id = collaborator_teams.collaborator_id 
+WHERE collaborator_teams.team_id = ?
+2026-03-07 19:56:01,315 INFO sqlalchemy.engine.Engine [cached since 0.005317s ago] (6,)
+Ô£à L├¡deres definidos.
+­ƒöì Criando 5 ferramentas...
+2026-03-07 19:56:01,317 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,317 INFO sqlalchemy.engine.Engine [generated in 0.00012s (insertmanyvalues) 1/6 (ordered; batch not supported)] ('Furadeira de Impacto Bosch', 'FUR-001', 'AVAILABLE', 'Almoxarifado', 'Almoxarifado', 'POWER_TOOL', 'GOOD', None, None)
+2026-03-07 19:56:01,317 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,317 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/6 (ordered; batch not supported)] ('M├íquina de Fus├úo Fujikura', 'FUS-88S', 'IN_USE', 'Jo├úo Silva', 'Projeto Vinculado 1', 'INSTRUMENT', 'GOOD', '2026-03-22', None)
+2026-03-07 19:56:01,318 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,318 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/6 (ordered; batch not supported)] ('OTDR Exfo MaxTester', 'OTDR-730', 'IN_USE', 'Maria Santos', 'Projeto Vinculado 2', 'INSTRUMENT', 'NEW', '2026-07-05', None)
+2026-03-07 19:56:01,318 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,318 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/6 (ordered; batch not supported)] ('Alicate Amper├¡metro Fluke', 'ALI-376', 'MAINTENANCE', 'Almoxarifado', 'Almoxarifado', 'INSTRUMENT', 'FAIR', '2026-03-02', None)
+2026-03-07 19:56:01,319 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,319 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/6 (ordered; batch not supported)] ('Kit Ferramentas B├ísico', 'KIT-005', 'AVAILABLE', 'Almoxarifado', 'Escrit├│rio', 'KIT', 'GOOD', None, None)
+2026-03-07 19:56:01,320 INFO sqlalchemy.engine.Engine INSERT INTO tools (name, serial_number, status, current_holder, current_location, category, condition, next_maintenance, deactivation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,320 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/6 (ordered; batch not supported)] ('Escada Extensiva 7M', 'ESC-010', 'IN_USE', 'Pedro Souza', 'Viatura 01', 'ACCESS', 'GOOD', None, None)
+Ô£à Ferramentas criadas.
+­ƒÄô Adicionando hist├│rico escolar/acad├¬mico...
+Ô£à 0 registros de educa├º├úo criados.
+­ƒöì Seeding Users...
+2026-03-07 19:56:01,322 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,322 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('admin@centauro.com',)
+2026-03-07 19:56:01,379 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?)
+2026-03-07 19:56:01,379 INFO sqlalchemy.engine.Engine [generated in 0.00042s] ('admin@centauro.com', '$argon2id$v=19$m=65536,t=3,p=4$TalVyrlXyhkDAIDw3rt3bg$N1oshd+zeJa6Mvb3XyS0AFoaYWs/1ZILWiknrf+9sng', 'ADMIN', 1, None)
+Ô£à Admin user created: admin@centauro.com / senha123
+2026-03-07 19:56:01,381 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,381 INFO sqlalchemy.engine.Engine [cached since 0.05868s ago] ('lucas.silva@centauro.com.br',)
+2026-03-07 19:56:01,382 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 19:56:01,383 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ('%Lucas%',)
+2026-03-07 19:56:01,383 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators
+2026-03-07 19:56:01,383 INFO sqlalchemy.engine.Engine [cached since 0.07618s ago] ()
+ÔÜá´©Å Author Lucas Silva not found (unexpected).
+­ƒöä Adicionando lucas.silva@centauro.com.br a todos os times...
+2026-03-07 19:56:01,385 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-07 19:56:01,385 INFO sqlalchemy.engine.Engine [cached since 0.002235s ago] ('%Lucas%',)
+2026-03-07 19:56:01,385 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators
+2026-03-07 19:56:01,385 INFO sqlalchemy.engine.Engine [cached since 0.07806s ago] ()
+ÔÜá´©Å Colaborador Lucas Silva n├úo encontrado para associa├º├úo aos times.
+2026-03-07 19:56:01,436 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,436 INFO sqlalchemy.engine.Engine [cached since 0.1142s ago] ('lucas@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: lucas@centauro.com.br / senha123
+2026-03-07 19:56:01,438 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,438 INFO sqlalchemy.engine.Engine [cached since 0.116s ago] ('fernando@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: fernando@centauro.com.br / senha123
+2026-03-07 19:56:01,439 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,439 INFO sqlalchemy.engine.Engine [cached since 0.117s ago] ('yan@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: yan@centauro.com.br / senha123
+2026-03-07 19:56:01,440 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,440 INFO sqlalchemy.engine.Engine [cached since 0.1178s ago] ('diego@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: diego@centauro.com.br / senha123
+2026-03-07 19:56:01,441 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,441 INFO sqlalchemy.engine.Engine [cached since 0.1186s ago] ('fabiano@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: fabiano@centauro.com.br / senha123
+2026-03-07 19:56:01,441 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,441 INFO sqlalchemy.engine.Engine [cached since 0.1192s ago] ('hugo@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: hugo@centauro.com.br / senha123
+2026-03-07 19:56:01,442 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,442 INFO sqlalchemy.engine.Engine [cached since 0.1198s ago] ('cerdeira@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: cerdeira@centauro.com.br / senha123
+2026-03-07 19:56:01,443 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE users.email = ?
+2026-03-07 19:56:01,443 INFO sqlalchemy.engine.Engine [cached since 0.1205s ago] ('ivan@centauro.com.br',)
+Ô£à Adicionado usu├írio extra: ivan@centauro.com.br / senha123
+2026-03-07 19:56:01,444 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,444 INFO sqlalchemy.engine.Engine [generated in 0.00007s (insertmanyvalues) 1/8 (ordered; batch not supported)] ('lucas@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,444 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,445 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/8 (ordered; batch not supported)] ('fernando@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,446 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,446 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/8 (ordered; batch not supported)] ('yan@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,446 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,446 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/8 (ordered; batch not supported)] ('diego@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/8 (ordered; batch not supported)] ('fabiano@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/8 (ordered; batch not supported)] ('hugo@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,447 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/8 (ordered; batch not supported)] ('cerdeira@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,448 INFO sqlalchemy.engine.Engine INSERT INTO users (email, password_hash, role, is_superuser, collaborator_id) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,448 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/8 (ordered; batch not supported)] ('ivan@centauro.com.br', '$argon2id$v=19$m=65536,t=3,p=4$aO2dk7K29p7zHgPgvFdKCQ$cfmTbJR2wGqrwGxUyfLZFneF2m6Od8hSX64TG9ui1wM', 'ADMIN', 0, None)
+2026-03-07 19:56:01,449 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users
+2026-03-07 19:56:01,449 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ()
+Ô¡É Criando avalia├º├Áes de desempenho...
+Ô£à 0 avalia├º├Áes criadas.
+­ƒöì Criando 5 contratos...
+2026-03-07 19:56:01,452 INFO sqlalchemy.engine.Engine INSERT INTO contracts (client_id, description, contract_number, signature_date, end_date, value, contract_type, monthly_value, due_day, readjustment_index, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,452 INFO sqlalchemy.engine.Engine [generated in 0.00013s (insertmanyvalues) 1/5 (ordered; batch not supported)] (1, 'Manuten├º├úo El├®trica Industrial', 'CEL1_2603_01_01', '2025-12-23', '2027-07-23', 167773.0, 'LPU', None, None, None, 1)
+2026-03-07 19:56:01,453 INFO sqlalchemy.engine.Engine INSERT INTO contracts (client_id, description, contract_number, signature_date, end_date, value, contract_type, monthly_value, due_day, readjustment_index, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,453 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/5 (ordered; batch not supported)] (2, 'Consultoria de Efici├¬ncia Energ├®tica', 'CEC1_2603_02_01', '2026-02-02', '2026-11-22', None, 'RECORRENTE', 5274.0, 8, 'IPCA', 1)
+2026-03-07 19:56:01,454 INFO sqlalchemy.engine.Engine INSERT INTO contracts (client_id, description, contract_number, signature_date, end_date, value, contract_type, monthly_value, due_day, readjustment_index, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,454 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/5 (ordered; batch not supported)] (3, 'Instala├º├úo de Pain├®is Solares', 'CEL1_2603_03_02', '2025-01-31', '2026-02-05', 462500.0, 'LPU', None, None, None, 1)
+2026-03-07 19:56:01,454 INFO sqlalchemy.engine.Engine INSERT INTO contracts (client_id, description, contract_number, signature_date, end_date, value, contract_type, monthly_value, due_day, readjustment_index, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,454 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/5 (ordered; batch not supported)] (4, 'Adequa├º├úo NR-10', 'CEC1_2603_04_02', '2025-01-31', '2026-02-05', None, 'RECORRENTE', 8914.0, 2, 'IPCA', 1)
+2026-03-07 19:56:01,455 INFO sqlalchemy.engine.Engine INSERT INTO contracts (client_id, description, contract_number, signature_date, end_date, value, contract_type, monthly_value, due_day, readjustment_index, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,455 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/5 (ordered; batch not supported)] (5, 'Projeto de Automa├º├úo Predial', 'CEL1_2603_05_03', '2026-02-15', '2027-09-05', 343445.0, 'LPU', None, None, None, 1)
+Ô£à Contratos criados.
+­ƒöì Criando 10 projetos...
+   Creating 2 Standalone Projects...
+   Creating 8 Linked Projects...
+2026-03-07 19:56:01,458 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,458 INFO sqlalchemy.engine.Engine [generated in 0.00018s (insertmanyvalues) 1/10 (ordered; batch not supported)] (None, 1, 'CEP1_2603_01_01', 1, 'Projeto Avulso 1', 'Escopo do projeto avulso...', 'Coordenador Geral', None, 'Em Andamento', 25323.0, 1110.0, 20231.0, '2026-03-07', '2026-09-03', None, None, 1, 79, 36)
+2026-03-07 19:56:01,458 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,458 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/10 (ordered; batch not supported)] (None, 2, 'CEP1_2603_02_02', 2, 'Projeto Avulso 2', 'Escopo do projeto avulso...', 'Coordenador Geral', None, 'Em Andamento', 32268.0, 3952.0, 23245.0, '2025-08-19', '2026-02-25', None, None, 1, 47, 12)
+2026-03-07 19:56:01,459 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,459 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/10 (ordered; batch not supported)] (1, 1, 'CEL1_2603_01_01_P01', 1, 'Projeto Vinculado 1', 'Escopo do projeto vinculado ao contrato CEL1_2603_01_01...', 'Coordenador de Contrato', None, 'Em Andamento', 19245.0, 3378.0, 52462.0, '2026-03-07', '2026-07-05', None, None, 1, 38, 36)
+2026-03-07 19:56:01,459 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,459 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/10 (ordered; batch not supported)] (1, 1, 'CEL1_2603_01_01_P02', 2, 'Projeto Vinculado 2', 'Escopo do projeto vinculado ao contrato CEL1_2603_01_01...', 'Coordenador de Contrato', None, 'Em Andamento', 34292.0, 3748.0, 36198.0, '2026-03-07', '2026-07-05', None, None, 1, 84, 36)
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/10 (ordered; batch not supported)] (2, 2, 'CEC1_2603_02_01_P01', 3, 'Projeto Vinculado 3', 'Escopo do projeto vinculado ao contrato CEC1_2603_02_01...', 'Coordenador de Contrato', None, 'Em Andamento', 24584.0, 3274.0, 29848.0, '2026-03-07', '2026-07-05', None, None, 1, 53, 12)
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/10 (ordered; batch not supported)] (2, 2, 'CEC1_2603_02_01_P02', 4, 'Projeto Vinculado 4', 'Escopo do projeto vinculado ao contrato CEC1_2603_02_01...', 'Coordenador de Contrato', None, 'Em Andamento', 42303.0, 2959.0, 31326.0, '2026-03-07', '2026-07-05', None, None, 1, 44, 12)
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,460 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/10 (ordered; batch not supported)] (3, 3, 'CEL1_2603_03_02_P01', 5, 'Projeto Vinculado 5', 'Escopo do projeto vinculado ao contrato CEL1_2603_03_02...', 'Coordenador de Contrato', None, 'Em Andamento', 43186.0, 2447.0, 32000.0, '2025-02-10', '2026-01-31', None, None, 1, 88, 24)
+2026-03-07 19:56:01,461 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,461 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/10 (ordered; batch not supported)] (3, 3, 'CEL1_2603_03_02_P02', 6, 'Projeto Vinculado 6', 'Escopo do projeto vinculado ao contrato CEL1_2603_03_02...', 'Coordenador de Contrato', None, 'Em Andamento', 11549.0, 1393.0, 39616.0, '2025-02-10', '2026-01-31', None, None, 1, 114, 12)
+2026-03-07 19:56:01,462 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,462 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/10 (ordered; batch not supported)] (4, 4, 'CEC1_2603_04_02_P01', 7, 'Projeto Vinculado 7', 'Escopo do projeto vinculado ao contrato CEC1_2603_04_02...', 'Coordenador de Contrato', None, 'Em Andamento', 41938.0, 3429.0, 55277.0, '2025-02-10', '2026-01-31', None, None, 1, 71, 24)
+2026-03-07 19:56:01,463 INFO sqlalchemy.engine.Engine INSERT INTO projects (contract_id, client_id, tag, project_number, name, scope, coordinator, team_size, status, service_value, material_value, budget, start_date, end_date, estimated_start_date, estimated_end_date, company_id, estimated_days, warranty_months) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,463 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/10 (ordered; batch not supported)] (5, 5, 'CEL1_2603_05_03_P01', 8, 'Projeto Vinculado 8', 'Escopo do projeto vinculado ao contrato CEL1_2603_05_03...', 'Coordenador de Contrato', None, 'Em Andamento', 44183.0, 4529.0, 24519.0, '2026-03-07', '2026-07-05', None, None, 1, 79, 36)
+Ô£à Projetos criados.
+­ƒôØ Criando di├írio de projetos (feedbacks)...
+2026-03-07 19:56:01,466 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,466 INFO sqlalchemy.engine.Engine [generated in 0.00025s (insertmanyvalues) 1/50 (ordered; batch not supported)] (1, 7, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 17:08:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,467 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,467 INFO sqlalchemy.engine.Engine [insertmanyvalues 2/50 (ordered; batch not supported)] (1, 3, 'Registro di├írio: Visita do cliente.', '2026-03-07 10:59:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,467 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,467 INFO sqlalchemy.engine.Engine [insertmanyvalues 3/50 (ordered; batch not supported)] (1, 6, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 13:05:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,468 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,468 INFO sqlalchemy.engine.Engine [insertmanyvalues 4/50 (ordered; batch not supported)] (1, 5, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 18:45:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,468 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,468 INFO sqlalchemy.engine.Engine [insertmanyvalues 5/50 (ordered; batch not supported)] (2, 2, 'Registro di├írio: Visita do cliente.', '2025-09-05 10:20:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,469 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,469 INFO sqlalchemy.engine.Engine [insertmanyvalues 6/50 (ordered; batch not supported)] (2, 6, 'Registro di├írio: Equipe mobilizada.', '2025-09-10 14:58:00.000000', 'INFO')
+2026-03-07 19:56:01,469 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,469 INFO sqlalchemy.engine.Engine [insertmanyvalues 7/50 (ordered; batch not supported)] (2, 8, 'Registro di├írio: Equipe mobilizada.', '2025-08-25 16:20:00.000000', 'INFO')
+2026-03-07 19:56:01,470 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,470 INFO sqlalchemy.engine.Engine [insertmanyvalues 8/50 (ordered; batch not supported)] (2, 2, 'Registro di├írio: Chuva intensa paralisou atividades.', '2025-08-31 11:11:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,470 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,471 INFO sqlalchemy.engine.Engine [insertmanyvalues 9/50 (ordered; batch not supported)] (2, 5, 'Registro di├írio: Visita do cliente.', '2025-08-21 11:15:00.000000', 'INFO')
+2026-03-07 19:56:01,471 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,471 INFO sqlalchemy.engine.Engine [insertmanyvalues 10/50 (ordered; batch not supported)] (2, 1, 'Registro di├írio: Chuva intensa paralisou atividades.', '2025-09-09 08:40:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,472 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,472 INFO sqlalchemy.engine.Engine [insertmanyvalues 11/50 (ordered; batch not supported)] (3, 7, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 08:02:00.000000', 'INFO')
+2026-03-07 19:56:01,472 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,472 INFO sqlalchemy.engine.Engine [insertmanyvalues 12/50 (ordered; batch not supported)] (3, 8, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 13:48:00.000000', 'INFO')
+2026-03-07 19:56:01,473 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,473 INFO sqlalchemy.engine.Engine [insertmanyvalues 13/50 (ordered; batch not supported)] (3, 9, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 15:37:00.000000', 'INFO')
+2026-03-07 19:56:01,473 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,473 INFO sqlalchemy.engine.Engine [insertmanyvalues 14/50 (ordered; batch not supported)] (3, 2, 'Registro di├írio: Visita do cliente.', '2026-03-07 13:13:00.000000', 'ALERTA')
+2026-03-07 19:56:01,474 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,474 INFO sqlalchemy.engine.Engine [insertmanyvalues 15/50 (ordered; batch not supported)] (3, 7, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 09:43:00.000000', 'ALERTA')
+2026-03-07 19:56:01,474 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,474 INFO sqlalchemy.engine.Engine [insertmanyvalues 16/50 (ordered; batch not supported)] (3, 3, 'Registro di├írio: Visita do cliente.', '2026-03-07 11:24:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,475 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,475 INFO sqlalchemy.engine.Engine [insertmanyvalues 17/50 (ordered; batch not supported)] (3, 6, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 17:07:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,475 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,475 INFO sqlalchemy.engine.Engine [insertmanyvalues 18/50 (ordered; batch not supported)] (3, 1, 'Registro di├írio: Visita do cliente.', '2026-03-07 10:32:00.000000', 'INFO')
+2026-03-07 19:56:01,476 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,476 INFO sqlalchemy.engine.Engine [insertmanyvalues 19/50 (ordered; batch not supported)] (4, 4, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 12:07:00.000000', 'ALERTA')
+2026-03-07 19:56:01,476 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,476 INFO sqlalchemy.engine.Engine [insertmanyvalues 20/50 (ordered; batch not supported)] (4, 4, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 16:23:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,477 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,477 INFO sqlalchemy.engine.Engine [insertmanyvalues 21/50 (ordered; batch not supported)] (4, 7, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 13:27:00.000000', 'INFO')
+2026-03-07 19:56:01,477 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,477 INFO sqlalchemy.engine.Engine [insertmanyvalues 22/50 (ordered; batch not supported)] (4, 5, 'Registro di├írio: Visita do cliente.', '2026-03-07 16:16:00.000000', 'ALERTA')
+2026-03-07 19:56:01,478 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,478 INFO sqlalchemy.engine.Engine [insertmanyvalues 23/50 (ordered; batch not supported)] (5, 8, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 16:08:00.000000', 'INFO')
+2026-03-07 19:56:01,479 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,479 INFO sqlalchemy.engine.Engine [insertmanyvalues 24/50 (ordered; batch not supported)] (5, 1, 'Registro di├írio: Entrega de materiais realizada.', '2026-03-07 18:09:00.000000', 'INFO')
+2026-03-07 19:56:01,480 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,480 INFO sqlalchemy.engine.Engine [insertmanyvalues 25/50 (ordered; batch not supported)] (5, 4, 'Registro di├írio: Entrega de materiais realizada.', '2026-03-07 08:21:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,480 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,480 INFO sqlalchemy.engine.Engine [insertmanyvalues 26/50 (ordered; batch not supported)] (5, 7, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 16:02:00.000000', 'INFO')
+2026-03-07 19:56:01,481 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,481 INFO sqlalchemy.engine.Engine [insertmanyvalues 27/50 (ordered; batch not supported)] (5, 5, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2026-03-07 13:29:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,482 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,482 INFO sqlalchemy.engine.Engine [insertmanyvalues 28/50 (ordered; batch not supported)] (5, 2, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 08:38:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,482 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,482 INFO sqlalchemy.engine.Engine [insertmanyvalues 29/50 (ordered; batch not supported)] (5, 8, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 16:27:00.000000', 'INFO')
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine [insertmanyvalues 30/50 (ordered; batch not supported)] (6, 8, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 09:31:00.000000', 'INFO')
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine [insertmanyvalues 31/50 (ordered; batch not supported)] (6, 2, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 11:11:00.000000', 'INFO')
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,483 INFO sqlalchemy.engine.Engine [insertmanyvalues 32/50 (ordered; batch not supported)] (6, 6, 'Registro di├írio: Entrega de materiais realizada.', '2026-03-07 10:45:00.000000', 'ALERTA')
+2026-03-07 19:56:01,484 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,484 INFO sqlalchemy.engine.Engine [insertmanyvalues 33/50 (ordered; batch not supported)] (6, 9, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 11:28:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,484 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,484 INFO sqlalchemy.engine.Engine [insertmanyvalues 34/50 (ordered; batch not supported)] (7, 5, 'Registro di├írio: Visita do cliente.', '2025-02-10 17:44:00.000000', 'ALERTA')
+2026-03-07 19:56:01,485 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,485 INFO sqlalchemy.engine.Engine [insertmanyvalues 35/50 (ordered; batch not supported)] (7, 4, 'Registro di├írio: Visita do cliente.', '2025-03-12 09:53:00.000000', 'ALERTA')
+2026-03-07 19:56:01,485 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,485 INFO sqlalchemy.engine.Engine [insertmanyvalues 36/50 (ordered; batch not supported)] (7, 8, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2025-03-03 13:51:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,486 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,486 INFO sqlalchemy.engine.Engine [insertmanyvalues 37/50 (ordered; batch not supported)] (8, 2, 'Registro di├írio: Equipe mobilizada.', '2025-02-23 16:20:00.000000', 'INFO')
+2026-03-07 19:56:01,486 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,486 INFO sqlalchemy.engine.Engine [insertmanyvalues 38/50 (ordered; batch not supported)] (8, 6, 'Registro di├írio: Chuva intensa paralisou atividades.', '2025-02-19 08:31:00.000000', 'INFO')
+2026-03-07 19:56:01,487 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,487 INFO sqlalchemy.engine.Engine [insertmanyvalues 39/50 (ordered; batch not supported)] (8, 2, 'Registro di├írio: Equipe mobilizada.', '2025-02-27 12:30:00.000000', 'ALERTA')
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine [insertmanyvalues 40/50 (ordered; batch not supported)] (8, 9, 'Registro di├írio: Entrega de materiais realizada.', '2025-02-17 11:55:00.000000', 'INFO')
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine [insertmanyvalues 41/50 (ordered; batch not supported)] (8, 4, 'Registro di├írio: Entrega de materiais realizada.', '2025-02-12 16:58:00.000000', 'ALERTA')
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,488 INFO sqlalchemy.engine.Engine [insertmanyvalues 42/50 (ordered; batch not supported)] (8, 8, 'Registro di├írio: Chuva intensa paralisou atividades.', '2025-02-16 17:00:00.000000', 'INFO')
+2026-03-07 19:56:01,489 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,489 INFO sqlalchemy.engine.Engine [insertmanyvalues 43/50 (ordered; batch not supported)] (9, 4, 'Registro di├írio: Visita do cliente.', '2025-02-21 13:30:00.000000', 'BLOQUEIO')
+2026-03-07 19:56:01,489 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,489 INFO sqlalchemy.engine.Engine [insertmanyvalues 44/50 (ordered; batch not supported)] (9, 2, 'Registro di├írio: Visita do cliente.', '2025-02-15 11:13:00.000000', 'INFO')
+2026-03-07 19:56:01,490 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,490 INFO sqlalchemy.engine.Engine [insertmanyvalues 45/50 (ordered; batch not supported)] (9, 2, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2025-02-14 13:41:00.000000', 'INFO')
+2026-03-07 19:56:01,490 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,490 INFO sqlalchemy.engine.Engine [insertmanyvalues 46/50 (ordered; batch not supported)] (9, 3, 'Registro di├írio: Finalizada etapa de infraestrutura.', '2025-03-03 13:25:00.000000', 'ALERTA')
+2026-03-07 19:56:01,491 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,491 INFO sqlalchemy.engine.Engine [insertmanyvalues 47/50 (ordered; batch not supported)] (10, 4, 'Registro di├írio: Visita do cliente.', '2026-03-07 18:44:00.000000', 'ALERTA')
+2026-03-07 19:56:01,491 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,491 INFO sqlalchemy.engine.Engine [insertmanyvalues 48/50 (ordered; batch not supported)] (10, 7, 'Registro di├írio: Chuva intensa paralisou atividades.', '2026-03-07 16:06:00.000000', 'INFO')
+2026-03-07 19:56:01,492 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,492 INFO sqlalchemy.engine.Engine [insertmanyvalues 49/50 (ordered; batch not supported)] (10, 7, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 16:45:00.000000', 'INFO')
+2026-03-07 19:56:01,492 INFO sqlalchemy.engine.Engine INSERT INTO project_feedbacks (project_id, author_id, message, created_at, type) VALUES (?, ?, ?, ?, ?) RETURNING id
+2026-03-07 19:56:01,492 INFO sqlalchemy.engine.Engine [insertmanyvalues 50/50 (ordered; batch not supported)] (10, 9, 'Registro di├írio: Equipe mobilizada.', '2026-03-07 17:38:00.000000', 'INFO')
+Ô£à 50 feedbacks de projeto criados.
+­ƒöì Criando 4 tickets...
+2026-03-07 19:56:01,494 INFO sqlalchemy.engine.Engine ROLLBACK
+Traceback (most recent call last):
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 1317, in main
+    await seed_tickets(db, contracts, collaborators)
+  File "C:\Users\LUCAS\Meu Canto\MEUS PROJETOS\CENTAURO ERP\backend\seed_data.py", line 716, in seed_tickets
+    responsible_id=collaborators[i % len(collaborators)].id
+                                 ~~^~~~~~~~~~~~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+ÔØî Erro ao popular banco de dados: integer modulo by zero

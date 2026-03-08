@@ -73,7 +73,7 @@ async def clear_data(db):
     except Exception:
         pass
 
-    await db.execute(delete(Collaborator))
+    # await db.execute(delete(Collaborator)) # Preservado para manter os dados vindos do Excel
     await db.execute(delete(Team))
     await db.execute(delete(ClientContact)) # Delete client contacts
     await db.execute(delete(Fleet))
@@ -283,21 +283,38 @@ async def seed_fleet(db, insurances):
     return created_fleet
 
 async def seed_teams(db):
-    """Cria times fictícios"""
-    print("🔍 Criando times...")
+    """Cria times específicos solicitados com seus devidos líderes"""
+    print("🔍 Criando times solicitados...")
     
-    teams_data = [
-        {"name": "Engenharia", "description": "Departamento de Engenharia e Projetos"},
-        {"name": "Operações", "description": "Equipe de campo e instalações"},
-        {"name": "Manutenção", "description": "Manutenção preventiva e corretiva"},
-        {"name": "Administrativo", "description": "Suporte administrativo e financeiro"},
-        {"name": "Vendas", "description": "Equipe comercial e novos negócios"},
-        {"name": "TI", "description": "Tecnologia da Informação"},
+    teams_def = [
+        {"name": "Hugo", "leader_name": "Hugo Aquino", "desc": "Equipe Hugo"},
+        {"name": "Fabiano", "leader_name": "Fabiano Machado", "desc": "Equipe Fabiano"},
+        {"name": "Vale ES", "leader_name": "Rui", "desc": "Equipe Vale ES"},
+        {"name": "Vale RJ", "leader_name": "Rui", "desc": "Equipe Vale RJ"},
+        {"name": "Vale MA", "leader_name": "Rui", "desc": "Equipe Vale MA"},
+        {"name": "Globo", "leader_name": "Robson Ferreira", "desc": "Equipe Globo"},
+        {"name": "Projetos", "leader_name": "Lucas Pereira", "desc": "Projetos"},
+        {"name": "TI", "leader_name": "Lucas Pereira", "desc": "Tecnologia da Informação"},
+        {"name": "DP & RH", "leader_name": "Mayara", "desc": "Departamento Pessoal e RH"},
+        {"name": "Financeiro", "leader_name": "Lucas Pereira", "desc": "Financeiro"},
+        {"name": "Comercial", "leader_name": "Yan Lopes", "desc": "Comercial"},
+        {"name": "Manutenção", "leader_name": "Raphael Santoro", "desc": "Manutenção"},
+        {"name": "MP RJ", "leader_name": "Carlos Eduardo Silva", "desc": "MP RJ"}
     ]
     
     created_teams = []
-    for t_data in teams_data:
-        team = Team(**t_data)
+    
+    for t_def in teams_def:
+        # Procurar o líder no banco
+        stmt = select(Collaborator).filter(Collaborator.name.ilike(f"%{t_def['leader_name']}%"))
+        res = await db.execute(stmt)
+        leader = res.scalars().first()
+        
+        team = Team(
+            name=t_def['name'],
+            description=t_def['desc'],
+            leader_id=leader.id if leader else None
+        )
         db.add(team)
         created_teams.append(team)
             
@@ -306,89 +323,46 @@ async def seed_teams(db):
     return created_teams
 
 async def seed_collaborators(db, roles_map, teams):
-    """Cria 30 colaboradores com certificações e times"""
-    print("🔍 Criando 30 colaboradores...")
+    """Atualiza colaboradores com times/roles e cria certificações fictícias"""
+    print("🔍 Atualizando colaboradores reais e criando certificações...")
     
-    first_names = ["Lucas", "Ana", "Pedro", "Maria", "João", "Julia", "Carlos", "Fernanda", "Rafael", "Bruna",
-                   "Gabriel", "Larissa", "Mateus", "Camila", "Gustavo", "Amanda", "Felipe", "Renata", "Bruno", "Patricia",
-                   "Thiago", "Vanessa", "Rodrigo", "Letícia", "Diego", "Bianca", "Leandro", "Monica", "Ricardo", "Tatiane"]
-    last_names = ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima", "Gomes",
-                  "Costa", "Ribeiro", "Martins", "Carvalho", "Almeida", "Lopes", "Soares", "Fernandes", "Vieira", "Barbosa",
-                  "Rocha", "Dias", "Moreira", "Nascimento", "Cardoso", "Moura", "Teixeira", "Mendes", "Araujo", "Ramos"]
+    result = await db.execute(select(Collaborator))
+    existing_collabs = result.scalars().all()
     
+    if len(existing_collabs) == 0:
+        print("⚠️ Nenhum colaborador encontrado. Você deve rodar o seed_equipe.py primeiro.")
+        return []
+        
     roles_list = list(roles_map.keys())
-    new_collabs = []
     
-    print(f"   Gerando dados para {len(first_names)} pessoas...")
-
-    for i in range(30):
-        # Pick random name parts to ensure variety even if list is short
-        fname = random.choice(first_names)
-        lname = random.choice(last_names)
-        # Avoid duplicates by simple mutation if needed, but random choice of 30 from 30x30 combo is safe.
-        # Actually I provided 30 names in list. I'll just iterate or random.
-        # Let's use index if i < len, else random.
-        if i < len(first_names):
-             name = f"{first_names[i]} {last_names[i]}"
-        else:
-             name = f"{random.choice(first_names)} {random.choice(last_names)}"
+    for collab in existing_collabs:
+        matched_role_id = None
+        if collab.role:
+            for r_name, r_id in roles_map.items():
+                if r_name.lower() in collab.role.lower() or collab.role.lower() in r_name.lower():
+                    matched_role_id = r_id
+                    break
         
-        # Determine Role and Team
-        # Simple Logic:
-        # Technical roles -> Operações/Manutenção
-        # Office roles -> Presidência/Admin/Engenharia
+        if not matched_role_id:
+             matched_role_id = roles_map[random.choice(roles_list)]
+             
+        collab.role_id = matched_role_id
         
-        role_name = random.choice(roles_list)
-        
-        # Force Lucas Silva to be ADM
-        if name == "Lucas Silva":
-            role_name = "ADM"
-            
-        role_id = roles_map[role_name]
-        
-        team_choice = None
-        
-        if role_name in ["Técnico", "Auxiliar", "Supervisor"]:
-            team_choice = random.choice([t for t in teams if t.name in ["Operações", "Manutenção"]])
-        elif role_name in ["Analista", "Coordenador"]:
-            team_choice = random.choice([t for t in teams if t.name in ["Engenharia", "TI", "Vendas", "Administrativo"]])
+        role_str = (collab.role or "").lower()
+        if "técnico" in role_str or "manutenção" in role_str or "auxiliar" in role_str or "supervisor" in role_str:
+            ops_teams = [t for t in teams if t.name in ["Hugo", "Fabiano", "Vale ES", "Vale RJ", "Vale MA", "Globo", "Manutenção", "MP RJ"]]
+            team_choice = random.choice(ops_teams) if ops_teams else random.choice(teams)
+        elif "analista" in role_str or "coordenador" in role_str or "engenharia" in role_str or "projetos" in role_str:
+            office_teams = [t for t in teams if t.name in ["Projetos", "TI", "DP & RH", "Financeiro", "Comercial"]]
+            team_choice = random.choice(office_teams) if office_teams else random.choice(teams)
         else:
             team_choice = random.choice(teams)
             
-        cpf_base = f"{random.randint(100, 999)}.{random.randint(100, 999)}.{random.randint(100, 999)}"
-        cpf = f"{cpf_base}-{random.randint(10, 99)}"
-        rg = f"{random.randint(10, 99)}.{random.randint(100, 999)}.{random.randint(100, 999)}-{random.randint(0, 9)}"
-        
-        # Email unique check (simple suffix)
-        email = f"{name.lower().replace(' ', '.').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ã', 'a').replace('ç', 'c')}{random.randint(1,99) if i > 25 else ''}@centauro.com.br"
-        
-        phone = f"(11) 9{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
-        salary_base = random.randint(200000, 1200000)
-        salary = f"{salary_base / 100:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        
-        collab = Collaborator(
-            name=name,
-            role=role_name,
-            role_id=role_id,
-            cpf=cpf,
-            rg=rg,
-            email=email,
-            phone=phone,
-            salary=salary,
-            registration_number=f"{20240000 + i}",
-            cnh_number=f"{random.randint(100000000, 999999999)}",
-            cnh_category=random.choice(["A", "B", "AB", "C", "D", "E"]),
-            cnh_validity=date.today() + timedelta(days=random.randint(100, 1000))
-        )
-        db.add(collab)
-        await db.flush()  # Get ID before adding to teams
-        
-        # N:N relationship - insert directly into junction table
         await db.execute(
             collaborator_teams.insert().values(collaborator_id=collab.id, team_id=team_choice.id)
         )
-        new_collabs.append(collab)
-    
+        db.add(collab)
+        
     await db.flush()
     
     # Certifications (NR, ASO, Training)
@@ -400,13 +374,12 @@ async def seed_collaborators(db, roles_map, teams):
         CertificationType.TRAINING: ["Trabalho em Altura", "Primeiros Socorros", "Direção Defensiva", "Eletricidade Básica"]
     }
     
-    for collab in new_collabs:
-        # Add 1-3 certifications per collaborator
+    for collab in existing_collabs:
         num_certs = random.randint(1, 3)
         for _ in range(num_certs):
             c_type = random.choice(cert_types)
             c_name = random.choice(cert_names[c_type])
-            validity = date.today() + timedelta(days=random.randint(-30, 730)) # Some expired, some valid
+            validity = date.today() + timedelta(days=random.randint(-30, 730))
             
             cert = Certification(
                 name=c_name,
@@ -416,8 +389,8 @@ async def seed_collaborators(db, roles_map, teams):
             )
             db.add(cert)
             
-    print(f"✅ {len(new_collabs)} Colaboradores e certificações criados.")
-    return new_collabs
+    print(f"✅ {len(existing_collabs)} Colaboradores atualizados e certificações criadas.")
+    return existing_collabs
 
 async def seed_education(db, collaborators):
     """Cria dados de educação para os colaboradores"""
@@ -453,37 +426,9 @@ async def seed_education(db, collaborators):
     print(f"✅ {count} registros de educação criados.")
 
 async def seed_leaders(db, teams):
-    """Define líderes para os times"""
-    print("👑 Definindo líderes de equipe...")
-    
-    # Refresh teams to ensure we have access or queries work?
-    # Actually teams objects are attached to session.
-    
-    for team in teams:
-        # Find collaborators in this team (N:N relationship)
-        stmt = (
-            select(Collaborator)
-            .join(collaborator_teams, Collaborator.id == collaborator_teams.c.collaborator_id)
-            .where(collaborator_teams.c.team_id == team.id)
-        )
-        result = await db.execute(stmt)
-        members = result.scalars().all()
-        
-        if members:
-            # Pick a "Coordenador" or "Supervisor" if possible, else random
-            leaders = [m for m in members if m.role in ["Coordenador", "Supervisor"]]
-            if leaders:
-                leader = random.choice(leaders)
-            else:
-                leader = random.choice(members)
-            
-            # Update team
-            # We must use proper update or attribute set
-            team.leader_id = leader.id
-            db.add(team) # Mark as modified
-    
-    await db.flush()
-    print("✅ Líderes definidos.")
+    """(Obsoleto - Os líderes já foram associados na criação do time, essa função fará nada)"""
+    print("👑 Líderes de equipe já foram definidos na criação dos times.")
+    pass
 async def seed_tools(db):
     """Cria 5 ferramentas"""
     print("🔍 Criando 5 ferramentas...")
@@ -661,7 +606,8 @@ async def seed_projects(db, clients, contracts):
     # 1. Standalone Projects (2)
     print("   Creating 2 Standalone Projects...")
     for i in range(2):
-        client = clients[i] # Use first 2 clients
+        client = clients[i % len(clients)] if len(clients) > 0 else None
+        if not client: continue
         seq = f"{i+1:02d}"
         client_num = client.client_number
         
@@ -704,7 +650,8 @@ async def seed_projects(db, clients, contracts):
     
     proj_count = 0
     for i, count in enumerate(distribution):
-        contract = contracts[i]
+        contract = contracts[i % len(contracts)] if len(contracts) > 0 else None
+        if not contract: continue
         for j in range(count):
             proj_count += 1
             seq = f"{j+1:02d}"
@@ -757,10 +704,12 @@ async def seed_tickets(db, contracts, collaborators):
     ]
     
     for i, data in enumerate(tickets_data):
+        contract_id = contracts[i % len(contracts)].id if len(contracts) > 0 else None
+        responsible_id = collaborators[i % len(collaborators)].id if len(collaborators) > 0 else None
         ticket = Ticket(
             **data,
-            contract_id=contracts[i % len(contracts)].id,
-            responsible_id=collaborators[i % len(collaborators)].id
+            contract_id=contract_id,
+            responsible_id=responsible_id
         )
         db.add(ticket)
         
@@ -989,6 +938,10 @@ async def seed_allocations(db, collaborators, fleet, projects, tools):
     # 1. Allocate Collaborators
     # Allocate first 10 collaborators to different projects for a range of dates
     print("   Allocating 10 collaborators...")
+    if not projects:
+        print("⚠️ Sem projetos criados, ignorando alocacoes.")
+        return
+        
     for i, collab in enumerate(collaborators[:10]):
         proj = projects[i % len(projects)]
         
