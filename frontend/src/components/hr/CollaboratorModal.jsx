@@ -276,14 +276,14 @@ const CollaboratorModal = ({ collaborator, onClose, onSuccess, roles = [], teams
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <Input name="registration_number" label="Matrícula" value={formData.registration_number} onChange={handleChange} placeholder="000000" />
+            <Select name="role_id" label="Cargo *" value={formData.role_id} onChange={handleChange} required placeholder="Selecione...">
+              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </Select>
             <div style={{ gridColumn: 'span 2' }}>
               <Input name="name" label="Nome *" value={formData.name} onChange={handleChange} required />
             </div>
             <Input name="cpf" label="CPF" value={formData.cpf} onChange={handleChange} placeholder="000.000.000-00" maxLength={14} />
             <Input name="rg" label="RG" value={formData.rg} onChange={handleChange} placeholder="00.000.000-0" maxLength={12} />
-            <Select name="role_id" label="Cargo *" value={formData.role_id} onChange={handleChange} required placeholder="Selecione...">
-              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-            </Select>
             <div className="form-group full-width">
               <label className="label">Times</label>
               <div style={{ maxHeight: '100px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '0.5rem', padding: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
