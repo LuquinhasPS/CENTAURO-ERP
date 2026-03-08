@@ -131,7 +131,7 @@ const Contracts = () => {
       .map(p => p.id);
 
     return billings
-      .filter(b => contractProjectIds.includes(b.project_id) && ['PREVISTO', 'EMITIDA', 'VENCIDA'].includes(b.status))
+      .filter(b => contractProjectIds.includes(b.project_id) && ['PREVISTO', 'EMITIDA'].includes(b.status))
       .reduce((sum, b) => sum + parseFloat(b.gross_value || b.value || 0), 0);
   };
 

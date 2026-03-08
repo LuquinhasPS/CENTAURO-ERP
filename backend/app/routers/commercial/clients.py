@@ -34,11 +34,7 @@ async def get_clients(db: AsyncSession = Depends(get_db)):
     stmt = (
         select(Project.client_id, func.sum(ProjectBilling.gross_value).label("total"))
         .join(ProjectBilling, Project.id == ProjectBilling.project_id)
-        .where(ProjectBilling.status.in_([
-            BillingStatus.EMITIDA, 
-            BillingStatus.VENCIDA, 
-            BillingStatus.PAGO
-        ]))
+        .where(ProjectBilling.status == BillingStatus.PAGO)
         .group_by(Project.client_id)
     )
     billing_sums = await db.execute(stmt)

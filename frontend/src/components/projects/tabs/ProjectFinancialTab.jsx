@@ -16,7 +16,7 @@ const ProjectFinancialTab = ({ project, billings, projectDetails, canEdit, onUpd
 
   // Calculate Summary Stats
   const totalFaturadoPago = billings
-    .filter(b => ['PAGO', 'EMITIDA', 'PREVISTO'].includes(b.status)) // NOTE: Check original logic. Usually 'Faturado' implies 'EMITIDA' or 'PAGO'. 
+    .filter(b => ['PAGO'].includes(b.status)) // NOTE: Check original logic. Usually 'Faturado' implies 'EMITIDA' or 'PAGO'. 
     // Original code used `totalFaturadoPago` variable but didn't show calculation. 
     // Assuming 'Faturado (Bruto)' includes all issued notes.
     // Let's stick to a safe sum or check logic.
