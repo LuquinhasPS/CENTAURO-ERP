@@ -60,8 +60,8 @@ class ProposalResponse(ProposalBase):
     internal_id: Optional[str] = None
     converted_project_id: Optional[int] = None
     loss_reason: Optional[str] = None
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     decision_date: Optional[date] = None
 
     class Config:

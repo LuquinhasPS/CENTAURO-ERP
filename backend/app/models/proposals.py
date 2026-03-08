@@ -46,7 +46,7 @@ class CommercialProposal(Base):
     converted_project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     converted_contract_id = Column(Integer, ForeignKey("contracts.id"), nullable=True)
 
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(DateTime, default=datetime.utcnow, server_default=func.now())
     decision_date = Column(Date, nullable=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
