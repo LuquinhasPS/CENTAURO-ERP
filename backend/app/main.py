@@ -85,8 +85,35 @@ async def startup():
             ("projects", "warranty_months", "INTEGER"),
 
             # Commercial Proposals
-            ("commercial_proposals", "decision_date", "DATE"),
+            ("commercial_proposals", "internal_id", "VARCHAR"),
+            ("commercial_proposals", "title", "VARCHAR"),
+            ("commercial_proposals", "description", "TEXT"),
             ("commercial_proposals", "responsible", "VARCHAR"),
+            ("commercial_proposals", "client_name", "VARCHAR"),
+            ("commercial_proposals", "client_id", "INTEGER"),
+            ("commercial_proposals", "value", "NUMERIC(10, 2)"),
+            ("commercial_proposals", "labor_value", "NUMERIC(10, 2)"),
+            ("commercial_proposals", "material_value", "NUMERIC(10, 2)"),
+            ("commercial_proposals", "status", "VARCHAR"),
+            ("commercial_proposals", "proposal_type", "VARCHAR"),
+            ("commercial_proposals", "company_id", "INTEGER"),
+            ("commercial_proposals", "decision_date", "DATE"),
+            ("commercial_proposals", "loss_reason", "VARCHAR"),
+            ("commercial_proposals", "history", "TEXT"),
+            ("commercial_proposals", "converted_project_id", "INTEGER"),
+            ("commercial_proposals", "converted_contract_id", "INTEGER"),
+            ("commercial_proposals", "created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            ("commercial_proposals", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            
+            # Proposal Tasks
+            ("proposal_tasks", "proposal_id", "INTEGER NOT NULL"),
+            ("proposal_tasks", "title", "VARCHAR NOT NULL"),
+            ("proposal_tasks", "due_date", "TIMESTAMP NOT NULL"),
+            ("proposal_tasks", "recurrence_days", "INTEGER"),
+            ("proposal_tasks", "is_active", "BOOLEAN DEFAULT TRUE"),
+            ("proposal_tasks", "is_completed", "BOOLEAN DEFAULT FALSE"),
+            ("proposal_tasks", "created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
+            ("proposal_tasks", "completed_at", "TIMESTAMP"),
             
             # Project Billings Migrations
             ("project_billings", "substitution_reason", "VARCHAR"),

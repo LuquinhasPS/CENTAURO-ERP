@@ -7,10 +7,10 @@ import api from './core';
 // Commercial Proposals (CRM)
 export const getProposals = (queryParams) => {
   const queryString = queryParams ? queryParams.toString() : '';
-  return api.get(`/commercial/proposals${queryString ? '?' + queryString : ''}`);
+  return api.get(`/commercial/proposals/${queryString ? '?' + queryString : ''}`);
 };
 export const getProposal = (id) => api.get(`/commercial/proposals/${id}`);
-export const createProposal = (data) => api.post('/commercial/proposals', data);
+export const createProposal = (data) => api.post('/commercial/proposals/', data);
 export const updateProposal = (id, data) => api.put(`/commercial/proposals/${id}`, data);
 export const deleteProposal = (id) => api.delete(`/commercial/proposals/${id}`);
 export const convertProposalToProject = (id, data) => api.post(`/commercial/proposals/${id}/convert`, data);

@@ -1,0 +1,47 @@
+--- Searching for User ---
+2026-03-08 03:17:02,492 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-08 03:17:02,497 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.is_superuser, users.collaborator_id 
+FROM users 
+WHERE lower(users.email) LIKE lower(?)
+2026-03-08 03:17:02,497 INFO sqlalchemy.engine.Engine [generated in 0.00017s] ('lucas%',)
+2026-03-08 03:17:02,503 INFO sqlalchemy.engine.Engine SELECT collaborators.id AS collaborators_id, collaborators.registration_number AS collaborators_registration_number, collaborators.name AS collaborators_name, collaborators.cpf AS collaborators_cpf, collaborators.rg AS collaborators_rg, collaborators.email AS collaborators_email, collaborators.phone AS collaborators_phone, collaborators.salary AS collaborators_salary, collaborators.role_id AS collaborators_role_id, collaborators.role AS collaborators_role, collaborators.cnh_number AS collaborators_cnh_number, collaborators.cnh_category AS collaborators_cnh_category, collaborators.cnh_validity AS collaborators_cnh_validity, collaborators.admission_date AS collaborators_admission_date, collaborators.birth_date AS collaborators_birth_date, collaborators.termination_date AS collaborators_termination_date 
+FROM collaborators 
+WHERE collaborators.id IN (?)
+2026-03-08 03:17:02,503 INFO sqlalchemy.engine.Engine [generated in 0.00018s] (79,)
+2026-03-08 03:17:02,505 INFO sqlalchemy.engine.Engine SELECT roles.id AS roles_id, roles.name AS roles_name, roles.description AS roles_description, roles.permissions AS roles_permissions 
+FROM roles 
+WHERE roles.id IN (?)
+2026-03-08 03:17:02,505 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (7,)
+User: ID=2, Email=lucas@centauro.com.br, Role=UserRole.ADMIN, Superuser=False, CollabID=79
+  Linked Collaborator: Lucas Pereira da Silva
+    Role: ADM
+    Permissions: {'projects': ['read', 'write'], 'contracts': ['read', 'write'], 'finance': ['read', 'write'], 'collaborators': ['read', 'write'], 'fleet': ['read', 'write'], 'tickets': ['read', 'write'], 'users': ['read', 'write'], 'roles': ['read', 'write'], 'dashboard': ['write', 'read'], 'scheduler': ['write', 'read'], 'kanban': ['write', 'read'], 'clients': ['write', 'read'], 'purchases': ['write', 'read'], 'tools': ['write', 'read'], 'accounts_receivable': ['write', 'read'], 'approvals': {'approve_technical': True, 'approve_budget': True, 'approve_finance': True}}
+  Calculated Permissions: {'projects': ['read', 'write'], 'contracts': ['read', 'write'], 'finance': ['read', 'write'], 'collaborators': ['read', 'write'], 'fleet': ['read', 'write'], 'tickets': ['read', 'write'], 'users': ['read', 'write'], 'roles': ['read', 'write'], 'dashboard': ['write', 'read'], 'scheduler': ['write', 'read'], 'kanban': ['write', 'read'], 'clients': ['write', 'read'], 'purchases': ['write', 'read'], 'tools': ['write', 'read'], 'accounts_receivable': ['write', 'read'], 'approvals': {'approve_technical': True, 'approve_budget': True, 'approve_finance': True}}
+--------------------
+
+--- Searching for Collaborator 'lucas pereira da silva' ---
+2026-03-08 03:17:02,507 INFO sqlalchemy.engine.Engine SELECT collaborators.id, collaborators.registration_number, collaborators.name, collaborators.cpf, collaborators.rg, collaborators.email, collaborators.phone, collaborators.salary, collaborators.role_id, collaborators.role, collaborators.cnh_number, collaborators.cnh_category, collaborators.cnh_validity, collaborators.admission_date, collaborators.birth_date, collaborators.termination_date 
+FROM collaborators 
+WHERE lower(collaborators.name) LIKE lower(?)
+2026-03-08 03:17:02,507 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ('%lucas pereira%',)
+2026-03-08 03:17:02,509 INFO sqlalchemy.engine.Engine SELECT roles.id AS roles_id, roles.name AS roles_name, roles.description AS roles_description, roles.permissions AS roles_permissions 
+FROM roles 
+WHERE roles.id IN (?)
+2026-03-08 03:17:02,509 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (7,)
+Collab: ID=79, Name=Lucas Pereira da Silva, Email=lucas@centauro.com.br, RoleID=7
+  Role: ADM
+  Permissions: {'projects': ['read', 'write'], 'contracts': ['read', 'write'], 'finance': ['read', 'write'], 'collaborators': ['read', 'write'], 'fleet': ['read', 'write'], 'tickets': ['read', 'write'], 'users': ['read', 'write'], 'roles': ['read', 'write'], 'dashboard': ['write', 'read'], 'scheduler': ['write', 'read'], 'kanban': ['write', 'read'], 'clients': ['write', 'read'], 'purchases': ['write', 'read'], 'tools': ['write', 'read'], 'accounts_receivable': ['write', 'read'], 'approvals': {'approve_technical': True, 'approve_budget': True, 'approve_finance': True}}
+--------------------
+
+--- All Roles ---
+2026-03-08 03:17:02,510 INFO sqlalchemy.engine.Engine SELECT roles.id, roles.name, roles.description, roles.permissions 
+FROM roles
+2026-03-08 03:17:02,510 INFO sqlalchemy.engine.Engine [generated in 0.00010s] ()
+Role: ID=1, Name=Coordenador, Permissions={'projects': ['read', 'write'], 'contracts': ['read', 'write'], 'finance': ['read', 'write'], 'collaborators': ['read', 'write'], 'fleet': ['read', 'write']}
+Role: ID=2, Name=Analista, Permissions={'projects': ['read', 'write'], 'contracts': ['read'], 'fleet': ['read']}
+Role: ID=3, Name=TÚcnico, Permissions={'projects': ['read'], 'tickets': ['read', 'write']}
+Role: ID=4, Name=Auxiliar, Permissions={}
+Role: ID=5, Name=Assistente, Permissions={'finance': ['read'], 'collaborators': ['read']}
+Role: ID=6, Name=Supervisor, Permissions={'projects': ['read'], 'collaborators': ['read', 'write']}
+Role: ID=7, Name=ADM, Permissions={'projects': ['read', 'write'], 'contracts': ['read', 'write'], 'finance': ['read', 'write'], 'collaborators': ['read', 'write'], 'fleet': ['read', 'write'], 'tickets': ['read', 'write'], 'users': ['read', 'write'], 'roles': ['read', 'write'], 'dashboard': ['write', 'read'], 'scheduler': ['write', 'read'], 'kanban': ['write', 'read'], 'clients': ['write', 'read'], 'purchases': ['write', 'read'], 'tools': ['write', 'read'], 'accounts_receivable': ['write', 'read'], 'approvals': {'approve_technical': True, 'approve_budget': True, 'approve_finance': True}}
+2026-03-08 03:17:02,512 INFO sqlalchemy.engine.Engine ROLLBACK
