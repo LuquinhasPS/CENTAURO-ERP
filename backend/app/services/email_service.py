@@ -12,7 +12,7 @@ resend.api_key = settings.RESEND_API_KEY
 
 # Default sender and recipient
 DEFAULT_SENDER = settings.MAIL_FROM or "onboarding@resend.dev"
-DEFAULT_BRIEFING_EMAIL = "lucasdasilva@centaurotelecom.com.br"
+DEFAULT_BRIEFING_EMAIL = "comercial@centaurotelecom.com.br"
 
 
 class EmailService:
