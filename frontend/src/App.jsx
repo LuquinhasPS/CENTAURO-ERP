@@ -31,7 +31,7 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           <Route path="/" element={
-            <PrivateRoute>
+            <PrivateRoute requiredPermission="dashboard">
               <Layout>
                 <Dashboard />
               </Layout>
@@ -44,7 +44,7 @@ function App() {
 
           <Route path="/scheduler" element={<PrivateRoute requiredPermission="scheduler"><Layout><Scheduler /></Layout></PrivateRoute>} />
           <Route path="/kanban" element={<PrivateRoute requiredPermission="kanban"><Layout><Kanban /></Layout></PrivateRoute>} />
-          <Route path="/commercial" element={<PrivateRoute requiredPermission="projects"><Layout><Commercial /></Layout></PrivateRoute>} />
+          <Route path="/commercial" element={<PrivateRoute requiredPermission="commercial"><Layout><Commercial /></Layout></PrivateRoute>} />
           <Route path="/clients" element={<PrivateRoute requiredPermission="clients"><Layout><Clients /></Layout></PrivateRoute>} />
           <Route path="/contracts" element={<PrivateRoute requiredPermission="contracts"><Layout><Contracts /></Layout></PrivateRoute>} />
           <Route path="/collaborators" element={<PrivateRoute requiredPermission="collaborators"><Layout><Collaborators /></Layout></PrivateRoute>} />
@@ -56,7 +56,7 @@ function App() {
           <Route path="/tools" element={<PrivateRoute requiredPermission="tools"><Layout><Tools /></Layout></PrivateRoute>} />
           <Route path="/tickets" element={<PrivateRoute requiredPermission="tickets"><Layout><Tickets /></Layout></PrivateRoute>} />
           <Route path="/accounts-receivable" element={<PrivateRoute requiredPermission="accounts_receivable"><Layout><AccountsReceivable /></Layout></PrivateRoute>} />
-          <Route path="/payroll" element={<PrivateRoute requiredPermission="finance"><Layout><Payroll /></Layout></PrivateRoute>} />
+          <Route path="/payroll" element={<PrivateRoute requiredPermission="payroll"><Layout><Payroll /></Layout></PrivateRoute>} />
 
         </Routes>
       </AuthProvider>

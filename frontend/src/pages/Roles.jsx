@@ -183,20 +183,21 @@ const Roles = () => {
             <h4 style={{ margin: '1.5rem 0 1rem', fontSize: '1rem', color: '#1e293b', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>Permissões de Acesso</h4>
             <div className="permissions-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
               {[
-                { key: 'dashboard', label: 'Monitoramento' },
-                { key: 'projects', label: 'Projetos' },
+                { key: 'dashboard', label: 'Dashboard' },
                 { key: 'scheduler', label: 'Scheduler' },
                 { key: 'kanban', label: 'Kanban' },
+                { key: 'commercial', label: 'Comercial / CRM' },
                 { key: 'clients', label: 'Clientes' },
-                { key: 'contracts', label: 'Contratos' },
                 { key: 'collaborators', label: 'Colaboradores' },
-                { key: 'roles', label: 'Cargos' },
-                { key: 'finance', label: 'Financeiro' },
+                { key: 'contracts', label: 'Contratos' },
+                { key: 'projects', label: 'Projetos' },
                 { key: 'purchases', label: 'Compras' },
-                { key: 'accounts_receivable', label: 'Contas a Receber' },
                 { key: 'fleet', label: 'Frota' },
                 { key: 'tools', label: 'Ferramentas' },
+                { key: 'accounts_receivable', label: 'Contas a Receber' },
+                { key: 'payroll', label: 'Folha de Pag.' },
                 { key: 'tickets', label: 'Chamados' },
+                { key: 'roles', label: 'Cargos' },
               ].map((module) => (
                 <div key={module.key} className="permission-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem', background: '#f8fafc', borderRadius: '6px' }}>
                   <span className="module-label" style={{ fontWeight: '500', fontSize: '0.9rem' }}>{module.label}</span>

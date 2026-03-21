@@ -28,7 +28,7 @@ async def get_commercial_dashboard(
     """
     # Enforce detailed permission check manually or via dependency if simple
     # Here we simulate the dependency logic inside because we might want granular checks
-    if not check_permission(current_user, "contracts", "read"):
+    if not check_permission(current_user, "contracts", "read") and not check_permission(current_user, "commercial", "read"):
          raise HTTPException(status_code=403, detail="Not authorized to view commercial dashboard")
 
     today = date.today()
@@ -93,7 +93,7 @@ async def get_finance_dashboard(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db)
 ):
-    if not check_permission(current_user, "finance", "read") and not check_permission(current_user, "accounts_receivable", "read"):
+    if not check_permission(current_user, "payroll", "read") and not check_permission(current_user, "accounts_receivable", "read"):
          raise HTTPException(status_code=403, detail="Not authorized to view finance dashboard")
 
     today = date.today()

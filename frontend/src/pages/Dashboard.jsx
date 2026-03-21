@@ -180,10 +180,10 @@ const Dashboard = () => {
         const promises = [];
 
         // Parallel fetching based on permissions
-        if (hasPermission('contracts', 'read')) {
+        if (hasPermission('contracts', 'read') || hasPermission('commercial', 'read')) {
           promises.push(api.get('/dashboard/commercial').then(res => newData.commercial = res.data).catch(err => console.log('Commercial denied')));
         }
-        if (hasPermission('finance', 'read') || hasPermission('accounts_receivable', 'read')) {
+        if (hasPermission('payroll', 'read') || hasPermission('accounts_receivable', 'read')) {
           promises.push(api.get('/dashboard/finance').then(res => newData.finance = res.data).catch(err => console.log('Finance denied')));
         }
         if (hasPermission('projects', 'read') || hasPermission('scheduler', 'read')) {
@@ -216,17 +216,17 @@ const Dashboard = () => {
       </header>
 
       <div className="dashboard-grid">
-        {data.finance && <FinanceWidget data={data.finance} />}
-        {data.commercial && <CommercialWidget data={data.commercial} />}
+        {data.finance && (hasPermission('payroll', 'read') || hasPermission('accounts_receivable', 'read')) && <FinanceWidget data={data.finance} />}
+        {data.commercial && (hasPermission('contracts', 'read') || hasPermission('commercial', 'read')) && <CommercialWidget data={data.commercial} />}
 
-        {/* CRM Tasks Widget */}
-        <CrmTaskWidget onOpenProposal={handleOpenProposal} />
+        {/* CRM Tasks Widget - Linked to 'commercial' page permission */}
+        {hasPermission('commercial', 'read') && <CrmTaskWidget onOpenProposal={handleOpenProposal} />}
 
-        {data.operations && <OperationsWidget data={data.operations} />}
-        {data.hr && <HRWidget data={data.hr} />}
+        {data.operations && (hasPermission('projects', 'read') || hasPermission('scheduler', 'read')) && <OperationsWidget data={data.operations} />}
+        {data.hr && hasPermission('collaborators', 'read') && <HRWidget data={data.hr} />}
 
-        {/* Purchase Manager Widget - Always show */}
-        <PurchaseManagerWidget />
+        {/* Purchase Manager Widget - Linked to 'purchases' page permission */}
+        {hasPermission('purchases', 'read') && <PurchaseManagerWidget />}
 
         {!data.finance && !data.commercial && !data.operations && !data.hr && (
           <div className="empty-dashboard">

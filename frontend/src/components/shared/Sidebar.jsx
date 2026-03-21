@@ -24,10 +24,10 @@ const Sidebar = ({ onLogout }) => {
   const { hasPermission } = useAuth();
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/', permission: 'dashboard' },
     { name: 'Scheduler', icon: Calendar, path: '/scheduler', permission: 'scheduler' },
     { name: 'Kanban', icon: KanbanSquare, path: '/kanban', permission: 'kanban' },
-    { name: 'Comercial/CRM', icon: TrendingUp, path: '/commercial', permission: 'projects' },
+    { name: 'Comercial/CRM', icon: TrendingUp, path: '/commercial', permission: 'commercial' },
     { name: 'Clientes', icon: Users, path: '/clients', permission: 'clients' },
     { name: 'Colaboradores', icon: UserCircle, path: '/collaborators', permission: 'collaborators' },
     { name: 'Contratos', icon: FileText, path: '/contracts', permission: 'contracts' },
@@ -36,7 +36,7 @@ const Sidebar = ({ onLogout }) => {
     { name: 'Frota', icon: Car, path: '/fleet', permission: 'fleet' },
     { name: 'Ferramentas', icon: Wrench, path: '/tools', permission: 'tools' },
     { name: 'Contas a Receber', icon: DollarSign, path: '/accounts-receivable', permission: 'accounts_receivable' },
-    { name: 'Folha de Pag.', icon: DollarSign, path: '/payroll', permission: 'finance' },
+    { name: 'Folha de Pag.', icon: DollarSign, path: '/payroll', permission: 'payroll' },
     { name: 'Chamados', icon: Ticket, path: '/tickets', permission: 'tickets' },
     { name: 'Cargos', icon: Settings, path: '/roles', permission: 'roles' },
   ].filter(item => !item.permission || hasPermission(item.permission));
