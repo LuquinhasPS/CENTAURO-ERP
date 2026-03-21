@@ -76,7 +76,7 @@ class ProjectBase(BaseModel):
     name: str
     scope: Optional[str] = None
     coordinator: Optional[str] = None
-    status: Optional[str] = "Em Andamento"
+    status: Optional[str] = "Aprovado"
     contract_id: Optional[int] = None
     client_id: int
     team_size: Optional[int] = None

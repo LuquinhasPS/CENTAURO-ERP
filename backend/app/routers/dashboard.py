@@ -147,7 +147,9 @@ async def get_operations_dashboard(
          raise HTTPException(status_code=403, detail="Not authorized to view operations dashboard")
          
     # 1. Active Projects
-    query_active = select(func.count(Project.id)).where(Project.status == "Em Andamento")
+    query_active = select(func.count(Project.id)).where(
+        and_(Project.status != "Concluído", Project.status != "Cancelado")
+    )
     res_active = await db.execute(query_active)
     active_count = res_active.scalar() or 0
     

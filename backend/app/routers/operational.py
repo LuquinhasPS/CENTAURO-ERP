@@ -590,7 +590,7 @@ async def update_collaborator(collaborator_id: int, collaborator: schemas.Collab
             .join(Project, Project.id == ProjectCollaborator.project_id)
             .where(
                 ProjectCollaborator.collaborator_id == db_collaborator.id,
-                Project.status == "Em Andamento",
+                Project.status != "Concluído",
                 or_(
                     ProjectCollaborator.end_date >= collaborator.termination_date,
                     ProjectCollaborator.end_date.is_(None)

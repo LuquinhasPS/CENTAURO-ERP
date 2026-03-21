@@ -225,7 +225,7 @@ const Projects = () => {
       warranty_months: '',
       company_id: '',
       estimated_days: '',
-      status: PROJECT_STATUS.EM_ANDAMENTO,
+      status: PROJECT_STATUS.APROVADO,
     });
   };
 
@@ -269,11 +269,14 @@ const Projects = () => {
     const matchesCoordinator = !filterCoordinator || project.coordinator === filterCoordinator;
 
     // Status filter
-    let matchesStatus = true;
-    if (filterStatus === 'em_andamento') {
-      matchesStatus = !project.end_date || new Date(project.end_date) > new Date();
+    let matchesStatus = true;    if (filterStatus === 'em_andamento') {
+      matchesStatus = project.status !== PROJECT_STATUS.CONCLUIDO && project.status !== PROJECT_STATUS.CANCELADO;
     } else if (filterStatus === 'concluido') {
-      matchesStatus = project.end_date && new Date(project.end_date) <= new Date();
+      matchesStatus = project.status === PROJECT_STATUS.CONCLUIDO;
+    } else if (filterStatus === 'pausado') {
+      matchesStatus = project.status === PROJECT_STATUS.PAUSADO;
+    } else if (filterStatus === 'cancelado') {
+      matchesStatus = project.status === PROJECT_STATUS.CANCELADO;
     }
 
     return matchesSearch && matchesClient && matchesCoordinator && matchesStatus;
@@ -305,7 +308,7 @@ const Projects = () => {
     { header: 'Fim', accessor: 'end_date', render: row => row.end_date ? new Date(row.end_date).toLocaleDateString('pt-BR') : '-' },
     {
       header: 'Status', accessor: 'status', render: row => (
-        <StatusBadge status={row.status || PROJECT_STATUS.EM_ANDAMENTO} />
+        <StatusBadge status={row.status || PROJECT_STATUS.APROVADO} />
       )
     },
   ];
@@ -455,13 +458,12 @@ const Projects = () => {
                   <select
                     name="status"
                     className="input"
-                    value={formData.status || PROJECT_STATUS.EM_ANDAMENTO}
+                    value={formData.status || PROJECT_STATUS.APROVADO}
                     onChange={handleChange}
                   >
                     {PROJECT_STATUS_OPTIONS.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
-                    <option value="Suspenso">Suspenso</option>
                   </select>
                 </div>
                 <div className="form-group">
@@ -610,7 +612,7 @@ const Projects = () => {
               </div>
               <div className="form-actions">
                 <button type="button" className="btn btn-secondary" onClick={handleCancelForm}>
-                  Cancelar
+                   Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary">
                   {editingId ? 'Salvar Alterações' : 'Criar Projeto'}
@@ -673,8 +675,10 @@ const Projects = () => {
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
                 <option value="">Todos</option>
-                <option value="em_andamento">{PROJECT_STATUS.EM_ANDAMENTO}</option>
-                <option value="concluido">{PROJECT_STATUS.CONCLUIDO}</option>
+                <option value="em_andamento">Ativos</option>
+                <option value="concluido">Concluídos</option>
+                <option value="pausado">Pausados</option>
+                <option value="cancelado">Cancelados</option>
               </select>
             </div>
           </div>

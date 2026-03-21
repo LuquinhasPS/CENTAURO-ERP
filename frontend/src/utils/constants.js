@@ -7,16 +7,28 @@
 // PROJECT STATUS
 // ============================================
 export const PROJECT_STATUS = {
-  EM_ANDAMENTO: 'Em Andamento',
-  CONCLUIDO: 'Concluído',
+  APROVADO: 'Aprovado',
+  KICK_OFF: 'Kick Off',
+  INTEGRACAO: 'Integração',
+  SUPRIMENTOS: 'Suprimentos',
+  EM_EXECUCAO: 'Em Execução',
   PAUSADO: 'Pausado',
+  DOCUMENTACAO: 'Documentação',
+  FATURANDO: 'Faturando',
+  CONCLUIDO: 'Concluído',
   CANCELADO: 'Cancelado',
 };
 
 export const PROJECT_STATUS_OPTIONS = [
-  { value: 'Em Andamento', label: 'Em Andamento' },
-  { value: 'Concluído', label: 'Concluído' },
+  { value: 'Aprovado', label: 'Aprovado' },
+  { value: 'Kick Off', label: 'Kick Off' },
+  { value: 'Integração', label: 'Integração' },
+  { value: 'Suprimentos', label: 'Suprimentos' },
+  { value: 'Em Execução', label: 'Em Execução' },
   { value: 'Pausado', label: 'Pausado' },
+  { value: 'Documentação', label: 'Documentação' },
+  { value: 'Faturando', label: 'Faturando' },
+  { value: 'Concluído', label: 'Concluído' },
   { value: 'Cancelado', label: 'Cancelado' },
 ];
 
@@ -99,14 +111,14 @@ export const BILLING_STATUS = {
 // ============================================
 export const STATUS_COLORS = {
   // Green (success/active)
-  green: ['ACTIVE', 'ATIVO', 'VALID', 'VÁLIDO', 'COMPLETED', 'CONCLUÍDO', 'PAID', 'PAGO', 'APPROVED', 'APROVADO', 'Concluído', 'Ativo'],
+  green: ['ACTIVE', 'ATIVO', 'VALID', 'VÁLIDO', 'COMPLETED', 'CONCLUÍDO', 'PAID', 'PAGO', 'APPROVED', 'APROVADO', 'Concluído', 'Ativo', 'Aprovado', 'Faturando'],
 
   // Yellow/Amber (warning/pending)
-  yellow: ['PENDING', 'PENDENTE', 'WARNING', 'IN_PROGRESS', 'EM ANDAMENTO', 'Em Andamento', 'Pausado'],
+  yellow: ['PENDING', 'PENDENTE', 'WARNING', 'IN_PROGRESS', 'EM ANDAMENTO', 'Em Andamento', 'Pausado', 'Em Execução'],
 
   // Red (danger/error)
   red: ['INACTIVE', 'INATIVO', 'EXPIRED', 'VENCIDO', 'REJECTED', 'REJEITADO', 'CANCELLED', 'CANCELADO', 'Vencido', 'Cancelado'],
 
   // Blue (info)
-  blue: ['EMITIDA', 'COMPRADO'],
+  blue: ['EMITIDA', 'COMPRADO', 'Kick Off', 'Integração', 'Suprimentos', 'Documentação'],
 };

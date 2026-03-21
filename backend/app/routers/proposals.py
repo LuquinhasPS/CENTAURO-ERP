@@ -277,7 +277,7 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             name=proposal.title,
             scope=convert_data.project_scope or proposal.description,
             coordinator=convert_data.coordinator,
-            status="Em Andamento",
+            status="Aprovado",
             client_id=client_id,
             service_value=service_value,
             material_value=material_value,

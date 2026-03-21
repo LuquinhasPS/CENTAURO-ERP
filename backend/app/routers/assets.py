@@ -67,7 +67,7 @@ async def update_fleet_item(
         from sqlalchemy import or_
         active_allocations_query = select(ProjectVehicle).join(Project, ProjectVehicle.project_id == Project.id).where(
             ProjectVehicle.vehicle_id == fleet_id,
-            Project.status == "Em Andamento",
+            Project.status != "Concluído",
             or_(ProjectVehicle.end_date >= fleet.deactivation_date, ProjectVehicle.end_date.is_(None))
         )
         result_allocations = await db.execute(active_allocations_query)
@@ -211,7 +211,7 @@ async def update_tool(tool_id: int, tool: schemas.ToolCreate, db: AsyncSession =
         from sqlalchemy import or_
         active_allocations_query = select(ProjectTool).join(Project, ProjectTool.project_id == Project.id).where(
             ProjectTool.tool_id == tool_id,
-            Project.status == "Em Andamento",
+            Project.status != "Concluído",
             or_(ProjectTool.end_date >= tool.deactivation_date, ProjectTool.end_date.is_(None))
         )
         result_allocations = await db.execute(active_allocations_query)

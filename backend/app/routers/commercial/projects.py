@@ -32,15 +32,16 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(models.Project).where(
             models.Project.end_date < today,
-            models.Project.status != "Finalizado",
-            models.Project.status != "Cancelado" # Optional: don't touch cancelled ones
+            models.Project.status != "Concluído",
+            models.Project.status != "Cancelado",
+            models.Project.status != "Pausado"
         )
     )
     expired_projects = result.scalars().all()
     
     if expired_projects:
         for project in expired_projects:
-            project.status = "Finalizado"
+            project.status = "Concluído"
         await db.commit()
 
     result = await db.execute(
