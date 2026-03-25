@@ -24,7 +24,8 @@ async def get_purchase_with_approvers(db: AsyncSession, purchase_id: int):
         selectinload(models.PurchaseRequest.tech_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.control_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.finance_approver).selectinload(User.collaborator),
-        selectinload(models.PurchaseRequest.rejected_by).selectinload(User.collaborator)
+        selectinload(models.PurchaseRequest.rejected_by).selectinload(User.collaborator),
+        selectinload(models.PurchaseRequest.observations).selectinload(models.PurchaseObservation.user).selectinload(User.collaborator)
     ).where(models.PurchaseRequest.id == purchase_id)
     result = await db.execute(query)
     return result.scalar_one_or_none()
@@ -46,7 +47,18 @@ def purchase_to_response(purchase: models.PurchaseRequest) -> dict:
         "service_end_date": purchase.service_end_date,
         "is_indefinite_term": purchase.is_indefinite_term,
         "arrival_forecast": purchase.arrival_forecast,
+        "notes": purchase.notes,
         "created_at": purchase.created_at,
+        "observations": [
+            {
+                "id": obs.id,
+                "purchase_id": obs.purchase_id,
+                "user_id": obs.user_id,
+                "message": obs.message,
+                "created_at": obs.created_at,
+                "user_name": obs.user.collaborator.name if obs.user and obs.user.collaborator else (obs.user.email if obs.user else None)
+            } for obs in purchase.observations
+        ] if hasattr(purchase, 'observations') and purchase.observations else [],
         "items": purchase.items,
         "tech_approval_at": purchase.tech_approval_at,
         "tech_approver_id": purchase.tech_approver_id,
@@ -75,7 +87,8 @@ async def get_purchases(
         selectinload(models.PurchaseRequest.tech_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.control_approver).selectinload(User.collaborator),
         selectinload(models.PurchaseRequest.finance_approver).selectinload(User.collaborator),
-        selectinload(models.PurchaseRequest.rejected_by).selectinload(User.collaborator)
+        selectinload(models.PurchaseRequest.rejected_by).selectinload(User.collaborator),
+        selectinload(models.PurchaseRequest.observations).selectinload(models.PurchaseObservation.user).selectinload(User.collaborator)
     )
     if project_id:
         query = query.where(models.PurchaseRequest.project_id == project_id)
@@ -96,7 +109,8 @@ async def create_purchase(purchase: schemas.PurchaseRequestCreate, db: AsyncSess
         service_start_date=purchase.service_start_date,
         service_end_date=purchase.service_end_date,
         is_indefinite_term=purchase.is_indefinite_term,
-        arrival_forecast=purchase.arrival_forecast
+        arrival_forecast=purchase.arrival_forecast,
+        notes=purchase.notes
     )
     db.add(db_request)
     await db.commit()
@@ -200,6 +214,7 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     db_purchase.service_end_date = purchase.service_end_date
     db_purchase.is_indefinite_term = purchase.is_indefinite_term
     db_purchase.arrival_forecast = purchase.arrival_forecast
+    db_purchase.notes = purchase.notes
     
     # Update Items (Full replacement strategy for simplicity in this prototype)
     # Delete existing items
@@ -347,6 +362,13 @@ async def reject_purchase(
     purchase.rejected_by_id = current_user.id
     purchase.rejected_at = now_brazil()
     
+    # Log Rejection
+    db.add(models.PurchaseObservation(
+        purchase_id=id,
+        user_id=current_user.id,
+        message=f"--- SISTEMA ---\n❌ Solicitação REJEITADA.\nMotivo: {rejection.reason}"
+    ))
+
     # Recalculate (will set to rejected)
     recalculate_purchase_status(purchase)
     
@@ -377,6 +399,13 @@ async def clear_rejection(
     purchase.rejected_at = None
     purchase.status = "pending"
     
+    # Log Reopen
+    db.add(models.PurchaseObservation(
+        purchase_id=id,
+        user_id=current_user.id,
+        message="--- SISTEMA ---\n🔄 A rejeição foi desfeita. A solicitação foi REABERTA e retornou para a análise Técnica."
+    ))
+
     await db.commit()
     
     purchase_obj = await get_purchase_with_approvers(db, id)
@@ -602,3 +631,44 @@ async def get_purchase_withdrawals(
         ))
     
     return response
+
+# ================================
+# OBSERVATION CHAT ENDPOINTS
+# ================================
+
+@router.post("/purchases/{id}/observations", response_model=schemas.PurchaseObservationResponse)
+async def create_purchase_observation(
+    id: int, 
+    observation: schemas.PurchaseObservationCreate, 
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    result = await db.execute(select(models.PurchaseRequest).where(models.PurchaseRequest.id == id))
+    purchase = result.scalar_one_or_none()
+    if not purchase:
+        raise HTTPException(status_code=404, detail="Purchase request not found")
+
+    db_obs = models.PurchaseObservation(
+        purchase_id=id,
+        user_id=current_user.id,
+        message=observation.message
+    )
+    db.add(db_obs)
+    await db.commit()
+    await db.refresh(db_obs)
+    
+    # Reload with relations
+    query = select(models.PurchaseObservation).options(
+        selectinload(models.PurchaseObservation.user).selectinload(User.collaborator)
+    ).where(models.PurchaseObservation.id == db_obs.id)
+    result = await db.execute(query)
+    db_obs = result.scalar_one()
+    
+    return {
+        "id": db_obs.id,
+        "purchase_id": db_obs.purchase_id,
+        "user_id": db_obs.user_id,
+        "message": db_obs.message,
+        "created_at": db_obs.created_at,
+        "user_name": db_obs.user.collaborator.name if db_obs.user and hasattr(db_obs.user, 'collaborator') and db_obs.user.collaborator else (db_obs.user.email if db_obs.user else None)
+    }

@@ -126,6 +126,7 @@ export {
   clearPurchaseRejection,
   withdrawPurchase,
   getWithdrawals,
+  addPurchaseObservation,
   // Tickets
   getTickets,
   createTicket,

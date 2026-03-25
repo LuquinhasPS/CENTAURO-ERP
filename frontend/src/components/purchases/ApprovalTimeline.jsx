@@ -161,6 +161,7 @@ const ApprovalTimeline = ({ request, onUpdate }) => {
             {steps.map((step, index) => {
               const isApproved = !!step.approvedAt;
               const isPending = !isApproved && !isRejected;
+              const isLockedByTech = !request.tech_approval_at && step.key !== 'TECH';
 
               return (
                 <div key={step.key} className={`timeline-step ${isApproved ? 'approved' : ''} ${isRejected ? 'rejected' : ''}`}>
@@ -198,11 +199,12 @@ const ApprovalTimeline = ({ request, onUpdate }) => {
                     {isPending && step.canApprove && (
                       <div className="step-actions">
                         <button
-                          className="btn btn-sm btn-success"
-                          onClick={() => handleApprove(step.key)}
-                          disabled={loading === step.key}
+                          className={`btn btn-sm ${isLockedByTech ? 'btn-secondary text-slate-500 opacity-60 cursor-not-allowed' : 'btn-success'}`}
+                          onClick={() => !isLockedByTech && handleApprove(step.key)}
+                          disabled={loading === step.key || isLockedByTech}
+                          title={isLockedByTech ? "Aguardando aprovação da Engenharia" : "Clique para aprovar"}
                         >
-                          {loading === step.key ? 'Aprovando...' : 'Aprovar'}
+                          {loading === step.key ? 'Aprovando...' : (isLockedByTech ? 'Aguardando Eng.' : 'Aprovar')}
                         </button>
                       </div>
                     )}

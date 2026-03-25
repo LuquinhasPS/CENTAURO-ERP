@@ -55,16 +55,16 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
   // Handle Escape Key
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !selectedRequest) {
         onClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, selectedRequest]);
 
-  const loadAllData = async () => {
-    setLoading(true);
+  const loadAllData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [
         projRes, clientsRes, collabsRes, toolsRes, fleetRes,
@@ -100,10 +100,15 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
       setPurchases(purchasesRes.data);
       setFeedbacks(feedbacksRes.data);
 
+      if (selectedRequest) {
+        const updatedReq = purchasesRes.data.find(req => req.id === selectedRequest.id);
+        if (updatedReq) setSelectedRequest(updatedReq);
+      }
+
     } catch (error) {
       console.error("Error loading project data", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -241,7 +246,7 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
                 onSelectRequest={(req) => setSelectedRequest(req)}
                 onCreateRequest={() => { }} // Now handled internally by ProjectPurchasesTab
                 getClientName={(id) => clients.find(c => c.id === id)?.name}
-                onUpdate={loadAllData}
+                onUpdate={() => loadAllData(true)}
               />
             )}
             {activeTab === 'feedback' && (
@@ -261,7 +266,7 @@ const ProjectModal = ({ project: initialProject, onClose, onUpdate, onEdit }) =>
           <RequestDetailsModal
             request={selectedRequest}
             onClose={() => setSelectedRequest(null)}
-            onUpdate={loadAllData}
+            onUpdate={() => loadAllData(true)}
             context="projects"
             readOnly={!canEdit}
           />

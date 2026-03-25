@@ -22,6 +22,7 @@ class PurchaseRequest(Base):
     
     # Material Fields
     arrival_forecast = Column(Date, nullable=True) # Data prevista para chegada do material
+    notes = Column(String, nullable=True) # Observações gerais do pedido
 
     created_at = Column(DateTime, default=now_brazil)
     
@@ -44,6 +45,7 @@ class PurchaseRequest(Base):
     
     # Relationships
     items = relationship("PurchaseItem", back_populates="request", cascade="all, delete-orphan")
+    observations = relationship("PurchaseObservation", back_populates="purchase", cascade="all, delete-orphan")
     tech_approver = relationship("app.models.users.User", foreign_keys=[tech_approver_id])
     control_approver = relationship("app.models.users.User", foreign_keys=[control_approver_id])
     finance_approver = relationship("app.models.users.User", foreign_keys=[finance_approver_id])
@@ -101,4 +103,18 @@ class PurchaseWithdrawalItem(Base):
     # Relationships
     withdrawal = relationship("PurchaseWithdrawal", back_populates="items")
     item = relationship("PurchaseItem")
+
+
+class PurchaseObservation(Base):
+    __tablename__ = "purchase_observations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    purchase_id = Column(Integer, ForeignKey("purchase_requests.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    message = Column(String, nullable=False)
+    created_at = Column(DateTime, default=now_brazil)
+
+    # Relationships
+    purchase = relationship("PurchaseRequest", back_populates="observations")
+    user = relationship("app.models.users.User")
 

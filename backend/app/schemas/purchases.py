@@ -44,6 +44,7 @@ class PurchaseRequestBase(BaseModel):
     
     # Material Fields
     arrival_forecast: Optional[date] = None
+    notes: Optional[str] = None
     
 class PurchaseRequestCreate(PurchaseRequestBase):
     items: Optional[list[PurchaseItemCreate]] = []
@@ -63,6 +64,7 @@ class PurchaseRequestResponse(PurchaseRequestBase):
     client_name: Optional[str] = None
     created_at: datetime
     items: list[PurchaseItemResponse] = []
+    observations: list['PurchaseObservationResponse'] = []
     
     # Technical Approval
     tech_approval_at: Optional[datetime] = None
@@ -132,3 +134,18 @@ class WithdrawalResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class PurchaseObservationBase(BaseModel):
+    message: str
+
+class PurchaseObservationCreate(PurchaseObservationBase):
+    pass
+
+class PurchaseObservationResponse(PurchaseObservationBase):
+    id: int
+    purchase_id: int
+    user_id: int
+    user_name: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

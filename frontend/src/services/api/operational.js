@@ -88,6 +88,7 @@ export const rejectPurchase = (id, reason) => api.put(`/purchases/purchases/${id
 export const clearPurchaseRejection = (id) => api.put(`/purchases/purchases/${id}/clear-rejection`);
 export const withdrawPurchase = (id, data) => api.post(`/purchases/purchases/${id}/withdraw`, data);
 export const getWithdrawals = (id) => api.get(`/purchases/purchases/${id}/withdrawals`);
+export const addPurchaseObservation = (id, data) => api.post(`/purchases/purchases/${id}/observations`, data);
 
 // Tickets
 export const getTickets = () => api.get('/tickets/tickets');
