@@ -154,6 +154,8 @@ async def startup():
             ("purchase_items", "status", "VARCHAR DEFAULT 'pending'"),
             ("purchase_items", "expected_date", "DATE"),
             ("purchase_items", "notes", "VARCHAR"),
+            ("purchase_items", "link_original", "VARCHAR"),
+            ("purchase_items", "link_compras", "VARCHAR"),
             
             # Purchase Requests new fields
             ("purchase_requests", "category", "VARCHAR DEFAULT 'MATERIAL'"),

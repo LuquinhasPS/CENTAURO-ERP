@@ -127,6 +127,7 @@ export {
   withdrawPurchase,
   getWithdrawals,
   addPurchaseObservation,
+  getFinancialSummary,
   // Tickets
   getTickets,
   createTicket,
