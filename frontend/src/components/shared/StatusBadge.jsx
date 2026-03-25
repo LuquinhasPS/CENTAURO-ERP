@@ -35,7 +35,7 @@ const StatusBadge = ({ status, type = 'default' }) => {
     if (['PENDING', 'PENDENTE', 'PROCESSING', 'PROCESSANDO', 'MAINTENANCE', 'MANUTENÇÃO', 'ON_HOLD'].includes(s)) {
       return { bg: '#fef9c3', color: '#854d0e', border: '#fde047' };
     }
-    if (['DRAFT', 'RASCUNHO'].includes(s)) {
+    if (['DRAFT', 'RASCUNHO', 'ELABORACAO'].includes(s)) {
       return { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' };
     }
 

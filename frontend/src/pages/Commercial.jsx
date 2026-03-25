@@ -31,7 +31,7 @@ import Modal from '../components/shared/Modal';
 const COLUMNS = [
   { id: 'LEAD', title: 'Lead', color: '#8b5cf6' },
   { id: 'VISITA_TECNICA', title: 'Visita Técnica', color: '#06b6d4' },
-  { id: 'RASCUNHO', title: 'Rascunho', color: '#64748b' },
+  { id: 'ELABORACAO', title: 'Elaboração', color: '#64748b' },
   { id: 'APROVACAO_INTERNA', title: 'Aprovação Interna', color: '#f97316' },
   { id: 'ENVIADA', title: 'Enviada', color: '#3b82f6' },
   { id: 'NEGOCIACAO', title: 'Negociação', color: '#f59e0b' },

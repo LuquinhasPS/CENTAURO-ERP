@@ -9,7 +9,7 @@ class ProposalStatus(str, Enum):
     """9 status do funil de vendas em ordem de progressão"""
     LEAD = "LEAD"
     VISITA_TECNICA = "VISITA_TECNICA"
-    RASCUNHO = "RASCUNHO"
+    ELABORACAO = "ELABORACAO"
     APROVACAO_INTERNA = "APROVACAO_INTERNA"
     ENVIADA = "ENVIADA"
     NEGOCIACAO = "NEGOCIACAO"
