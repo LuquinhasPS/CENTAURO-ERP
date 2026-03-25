@@ -140,10 +140,39 @@ async def startup():
             # Material Taxes
             ("project_billings", "tax_icms", "NUMERIC(10, 2) DEFAULT 0"),
             ("project_billings", "tax_ipi", "NUMERIC(10, 2) DEFAULT 0"),
-            ("project_billings", "value_st", "NUMERIC(10, 2) DEFAULT 0"),
-            
-            # Purchase Withdrawals
+            # Purchase Withdrawals and Item Fields
+            ("purchase_items", "manufacturer", "VARCHAR"),
+            ("purchase_items", "model", "VARCHAR"),
+            ("purchase_items", "unit", "VARCHAR DEFAULT 'un'"),
+            ("purchase_items", "unit_price", "NUMERIC(10, 2) DEFAULT 0"),
+            ("purchase_items", "total_price", "NUMERIC(10, 2) DEFAULT 0"),
+            ("purchase_items", "quantity", "INTEGER DEFAULT 1"),
             ("purchase_items", "quantity_withdrawn", "INTEGER DEFAULT 0"),
+            ("purchase_items", "supplier", "VARCHAR"),
+            ("purchase_items", "payment_method", "VARCHAR"),
+            ("purchase_items", "installment_count", "INTEGER DEFAULT 1"),
+            ("purchase_items", "status", "VARCHAR DEFAULT 'pending'"),
+            ("purchase_items", "expected_date", "DATE"),
+            ("purchase_items", "notes", "VARCHAR"),
+            
+            # Purchase Requests new fields
+            ("purchase_requests", "category", "VARCHAR DEFAULT 'MATERIAL'"),
+            ("purchase_requests", "service_start_date", "DATE"),
+            ("purchase_requests", "service_end_date", "DATE"),
+            ("purchase_requests", "is_indefinite_term", "BOOLEAN DEFAULT FALSE"),
+            ("purchase_requests", "arrival_forecast", "DATE"),
+            ("purchase_requests", "notes", "VARCHAR"),
+            
+            # Purchase Requests Approval Workflow
+            ("purchase_requests", "tech_approval_at", "TIMESTAMP"),
+            ("purchase_requests", "tech_approver_id", "INTEGER"),
+            ("purchase_requests", "control_approval_at", "TIMESTAMP"),
+            ("purchase_requests", "control_approver_id", "INTEGER"),
+            ("purchase_requests", "finance_approval_at", "TIMESTAMP"),
+            ("purchase_requests", "finance_approver_id", "INTEGER"),
+            ("purchase_requests", "rejection_reason", "VARCHAR"),
+            ("purchase_requests", "rejected_by_id", "INTEGER"),
+            ("purchase_requests", "rejected_at", "TIMESTAMP"),
         ]
 
         for table, col, dtype in columns_to_add:
