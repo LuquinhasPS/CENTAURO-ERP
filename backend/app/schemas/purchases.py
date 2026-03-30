@@ -45,6 +45,7 @@ class PurchaseRequestBase(BaseModel):
     # Material Fields
     arrival_forecast: Optional[date] = None
     notes: Optional[str] = None
+    directory_url: Optional[str] = None
     
 class PurchaseRequestCreate(PurchaseRequestBase):
     items: Optional[list[PurchaseItemCreate]] = []
@@ -61,6 +62,7 @@ class PurchaseRequestResponse(PurchaseRequestBase):
     id: int
     project_tag: Optional[str] = None
     project_name: Optional[str] = None
+    project_directory_url: Optional[str] = None
     client_name: Optional[str] = None
     created_at: datetime
     items: list[PurchaseItemResponse] = []

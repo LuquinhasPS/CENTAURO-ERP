@@ -201,7 +201,8 @@ const Commercial = () => {
           manager_name: '',
           project_scope: proposal.description || proposal.title,
           budget: proposal.value,
-          estimated_days: 30
+          estimated_days: 30,
+          directory_url: ''
         });
         setShowConvertModal(true);
       }
@@ -281,7 +282,8 @@ const Commercial = () => {
         client_id: convertFormData.client_id ? parseInt(convertFormData.client_id) : selectedProposal.client_id,
         estimated_days: parseInt(convertFormData.estimated_days),
         budget: parseFloat(convertFormData.budget),
-        project_scope: convertFormData.project_scope
+        project_scope: convertFormData.project_scope,
+        directory_url: convertFormData.directory_url
       };
 
       if (!payload.client_id && !selectedProposal.client_id) {
@@ -591,6 +593,10 @@ const Commercial = () => {
             <div className="form-group" style={{ gridColumn: '1 / -1', marginBottom: 0 }}>
               <label className="label">Escopo do Projeto</label>
               <textarea className="input" value={convertFormData.project_scope} onChange={e => setConvertFormData({ ...convertFormData, project_scope: e.target.value })} rows={4} />
+            </div>
+            <div className="form-group" style={{ gridColumn: '1 / -1', marginBottom: 0 }}>
+              <label className="label">URL do Diretório do Projeto (Opcional)</label>
+              <input className="input" type="url" value={convertFormData.directory_url || ''} onChange={e => setConvertFormData({ ...convertFormData, directory_url: e.target.value })} placeholder="Ex: https://1drv.ms/f/s!..." />
             </div>
 
             {(!selectedProposal || (!selectedProposal.client_id && !convertFormData.client_id)) && (

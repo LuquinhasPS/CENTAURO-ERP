@@ -48,6 +48,8 @@ def purchase_to_response(purchase: models.PurchaseRequest) -> dict:
         "is_indefinite_term": purchase.is_indefinite_term,
         "arrival_forecast": purchase.arrival_forecast,
         "notes": purchase.notes,
+        "directory_url": getattr(purchase, 'directory_url', None),
+        "project_directory_url": getattr(purchase.project, 'directory_url', None) if purchase.project else None,
         "created_at": purchase.created_at,
         "observations": [
             {
@@ -110,7 +112,8 @@ async def create_purchase(purchase: schemas.PurchaseRequestCreate, db: AsyncSess
         service_end_date=purchase.service_end_date,
         is_indefinite_term=purchase.is_indefinite_term,
         arrival_forecast=purchase.arrival_forecast,
-        notes=purchase.notes
+        notes=purchase.notes,
+        directory_url=purchase.directory_url
     )
     db.add(db_request)
     await db.commit()
@@ -215,6 +218,7 @@ async def update_purchase(id: int, purchase: schemas.PurchaseRequestCreate, db: 
     db_purchase.is_indefinite_term = purchase.is_indefinite_term
     db_purchase.arrival_forecast = purchase.arrival_forecast
     db_purchase.notes = purchase.notes
+    db_purchase.directory_url = purchase.directory_url
     
     # Update Items (Full replacement strategy for simplicity in this prototype)
     # Delete existing items

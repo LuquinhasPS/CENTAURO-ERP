@@ -144,6 +144,16 @@ async def startup():
             
             # Purchase Withdrawals
             ("purchase_items", "quantity_withdrawn", "INTEGER DEFAULT 0"),
+
+            # Purchase Requests - Notes & Directory URL
+            ("purchase_requests", "notes", "TEXT"),
+            ("purchase_requests", "directory_url", "VARCHAR"),
+
+            # Projects - Directory URL
+            ("projects", "directory_url", "VARCHAR"),
+
+            # Contracts - Directory URL
+            ("contracts", "directory_url", "VARCHAR"),
         ]
 
         for table, col, dtype in columns_to_add:

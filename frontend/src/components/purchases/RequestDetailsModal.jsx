@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Save, PackageCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Plus, Trash2, Save, PackageCheck, ChevronDown, ChevronUp, Link as LinkIcon } from 'lucide-react';
 import { updatePurchase, deletePurchase, createPurchase, getWithdrawals, addPurchaseObservation } from '../../services/api';
 import ApprovalTimeline from './ApprovalTimeline';
 import WithdrawalModal from './WithdrawalModal';
@@ -275,8 +275,20 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 m-0 leading-none">
                 {request ? `Solicitação #${request.id}` : 'Nova Solicitação'}
                 {(request?.project_tag || request?.project_name) && (
-                  <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded">
+                  <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded flex items-center gap-1">
                     {request.project_tag} {request.project_name ? `- ${request.project_name}` : ''}
+                    {request?.project_directory_url && (
+                      <a
+                        href={request.project_directory_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ color: '#2563eb', display: 'flex', alignItems: 'center', padding: '1px' }}
+                        title="Abrir pasta do projeto"
+                      >
+                        <LinkIcon size={12} />
+                      </a>
+                    )}
                   </span>
                 )}
                 {request?.client_name && (

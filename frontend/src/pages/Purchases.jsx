@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Plus, Filter, Package } from 'lucide-react';
+import { ShoppingCart, Plus, Filter, Package, Link as LinkIcon } from 'lucide-react';
 import { getPurchases, createPurchase, getProjects } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import RequestDetailsModal from '../components/purchases/RequestDetailsModal';
@@ -173,7 +173,30 @@ const Purchases = () => {
         <DataTable
           columns={[
             { header: 'ID', accessor: 'id', render: row => <span style={{ color: '#64748b' }}>#{row.id}</span> },
-            { header: 'Descrição / Pacote', accessor: 'description', render: row => <strong>{row.description}</strong> },
+            { header: 'Descrição / Pacote', accessor: 'description', render: row => row.project_directory_url ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <strong>{row.description}</strong>
+                  <a
+                    href={row.project_directory_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      color: '#2563eb',
+                      display: 'flex',
+                      alignItems: 'center',
+                      textDecoration: 'none',
+                      padding: '2px',
+                    }}
+                    title="Abrir pasta do projeto"
+                  >
+                    <LinkIcon size={14} />
+                  </a>
+                </div>
+              ) : (
+                <strong>{row.description}</strong>
+              ) 
+            },
             { header: 'Solicitante', accessor: 'requester', render: row => row.requester || '-' },
             { header: 'Projeto', accessor: 'project_id', render: row => getProjectName(row.project_id) },
             { header: 'Data', accessor: 'created_at', render: row => new Date(row.created_at).toLocaleDateString('pt-BR') },

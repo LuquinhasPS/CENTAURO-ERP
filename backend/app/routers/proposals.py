@@ -288,7 +288,8 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             company_id=convert_data.company_id,
             estimated_days=convert_data.estimated_days,
             warranty_months=convert_data.warranty_months,
-            estimated_start_date=convert_data.start_date
+            estimated_start_date=convert_data.start_date,
+            directory_url=convert_data.directory_url
         )
         entity_type = "Projeto"
         

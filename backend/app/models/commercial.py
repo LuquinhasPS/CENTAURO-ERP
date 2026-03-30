@@ -50,6 +50,7 @@ class Contract(Base):
     due_day = Column(Integer, nullable=True)
     readjustment_index = Column(String, nullable=True)
     company_id = Column(Integer, nullable=True)  # 1=Engenharia, 2=Telecom, etc.
+    directory_url = Column(String, nullable=True)
 
     client = relationship("Client", back_populates="contracts")
     projects = relationship("Project", back_populates="contract")
@@ -87,6 +88,9 @@ class Project(Base):
     
     # Warranty
     warranty_months = Column(Integer, nullable=True)  # Warranty period in months from end_date
+
+    # URL
+    directory_url = Column(String, nullable=True)
 
     # Relationships
     contract = relationship("Contract", back_populates="projects")

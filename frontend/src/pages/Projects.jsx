@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit, Eye } from 'lucide-react';
+import { Plus, Trash2, Edit, Eye, Link as LinkIcon } from 'lucide-react';
 import { getProjects, createProject, updateProject, deleteProject, getContracts, getClients, getCollaborators } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/shared/ConfirmModal';
@@ -46,6 +46,7 @@ const Projects = () => {
     warranty_months: '',
     company_id: '',
     estimated_days: '',
+    directory_url: '',
   });
 
   useEffect(() => {
@@ -123,6 +124,7 @@ const Projects = () => {
         warranty_months: formData.warranty_months ? parseInt(formData.warranty_months) : null,
         company_id: formData.company_id ? parseInt(formData.company_id) : null,
         estimated_days: formData.estimated_days ? parseInt(formData.estimated_days) : null,
+        directory_url: formData.directory_url || null,
       };
 
       if (editingId) {
@@ -171,6 +173,7 @@ const Projects = () => {
       status: project.status,
       company_id: project.company_id || '',
       estimated_days: project.estimated_days || '',
+      directory_url: project.directory_url || '',
     });
     setEditingId(project.id);
     setShowForm(true);
@@ -227,6 +230,7 @@ const Projects = () => {
       company_id: '',
       estimated_days: '',
       status: PROJECT_STATUS.APROVADO,
+      directory_url: '',
     });
   };
 
@@ -298,7 +302,33 @@ const Projects = () => {
 
   const columns = [
     { header: 'Nº', accessor: 'project_number', render: row => row.project_number || '-' },
-    { header: 'Tag', accessor: 'tag', render: row => <code>{row.tag}</code> },
+    { 
+      header: 'Tag', 
+      accessor: 'tag', 
+      render: row => row.directory_url ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <code>{row.tag}</code>
+          <a 
+            href={row.directory_url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              color: '#2563eb', 
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              padding: '2px',
+            }}
+            title="Abrir diretório do projeto"
+          >
+            <LinkIcon size={14} />
+          </a>
+        </div>
+      ) : (
+        <code>{row.tag}</code>
+      )
+    },
     { header: 'Nome', accessor: 'name' },
     { header: 'Cliente', accessor: 'client_name', render: row => row.client_name || '-' },
     { header: 'Coordenador', accessor: 'coordinator', render: row => row.coordinator || '-' },
@@ -596,6 +626,17 @@ const Projects = () => {
                     className="input"
                     value={formData.end_date}
                     onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                  <label className="label">URL do Diretório do Projeto</label>
+                  <input
+                    type="url"
+                    name="directory_url"
+                    className="input"
+                    value={formData.directory_url || ''}
+                    onChange={handleChange}
+                    placeholder="Ex: https://1drv.ms/f/s!..."
                   />
                 </div>
               </div>

@@ -79,6 +79,7 @@ class ProposalConvertRequest(BaseModel):
     warranty_months: Optional[int] = 12
     project_scope: Optional[str] = None  # If user wants to override proposal description
     budget: Optional[Decimal] = None  # If user wants to override proposal value
+    directory_url: Optional[str] = None
 
 
 # --- Schemas para Tarefas de Follow-up ---

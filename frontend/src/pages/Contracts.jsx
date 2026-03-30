@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, FileText, Upload, Search, DollarSign, LayoutDashboard } from 'lucide-react';
+import { Plus, Trash2, FileText, Upload, Search, DollarSign, LayoutDashboard, Link as LinkIcon } from 'lucide-react';
 import { getContracts, createContract, updateContract, deleteContract, getClients, getProjects, getAllBillings, createProjectBilling, deleteProjectBilling } from '../services/api';
 import { formatDateUTC, formatCurrency } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
@@ -37,6 +37,7 @@ const Contracts = () => {
     due_day: '',
     readjustment_index: '',
     company_id: '',
+    directory_url: '',
   });
 
   // State for editing
@@ -146,11 +147,14 @@ const Contracts = () => {
       const payload = {
         ...formData,
         client_id: parseInt(formData.client_id),
+        signature_date: formData.signature_date || null,
+        end_date: formData.end_date || null,
         value: formData.contract_type === 'LPU' && formData.value ? parseFloat(formData.value) : null,
         monthly_value: formData.contract_type === 'RECORRENTE' && formData.monthly_value ? parseFloat(formData.monthly_value) : null,
         due_day: formData.contract_type === 'RECORRENTE' && formData.due_day ? parseInt(formData.due_day) : null,
-        readjustment_index: formData.contract_type === 'RECORRENTE' ? formData.readjustment_index : null,
+        readjustment_index: formData.contract_type === 'RECORRENTE' ? formData.readjustment_index || null : null,
         company_id: formData.company_id ? parseInt(formData.company_id) : null,
+        directory_url: formData.directory_url || null,
       };
 
       if (editingId) {
@@ -182,6 +186,7 @@ const Contracts = () => {
       due_day: '',
       readjustment_index: '',
       company_id: '',
+      directory_url: '',
     });
   };
 
@@ -204,6 +209,7 @@ const Contracts = () => {
       due_day: contract.due_day || '',
       readjustment_index: contract.readjustment_index || '',
       company_id: contract.company_id || '',
+      directory_url: contract.directory_url || '',
     });
     setEditingId(contract.id);
     setActiveTab('geral');
@@ -313,7 +319,29 @@ const Contracts = () => {
     {
       header: 'Tag',
       accessor: 'contract_number',
-      render: row => <span className="font-mono text-slate-700">{row.contract_number}</span>
+      render: row => row.directory_url ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span className="font-mono text-slate-700">{row.contract_number}</span>
+          <a
+            href={row.directory_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              color: '#2563eb',
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              padding: '2px',
+            }}
+            title="Abrir diretório ou anexo do contrato"
+          >
+            <LinkIcon size={14} />
+          </a>
+        </div>
+      ) : (
+        <span className="font-mono text-slate-700">{row.contract_number}</span>
+      )
     },
     {
       header: 'Título',
@@ -796,7 +824,7 @@ const Contracts = () => {
               )}
 
               <div className="form-group">
-                <label className="label">Anexo do Contrato</label>
+                <label className="label">Anexo do Contrato (Upload)</label>
                 <div style={{
                   border: '2px dashed #cbd5e1',
                   borderRadius: '0.5rem',
@@ -807,12 +835,25 @@ const Contracts = () => {
                   justifyContent: 'center',
                   color: '#64748b',
                   cursor: 'pointer',
-                  backgroundColor: '#f8fafc'
+                  backgroundColor: '#f8fafc',
+                  marginBottom: '1rem'
                 }}>
                   <Upload size={24} style={{ marginBottom: '0.5rem' }} />
                   <span>Clique para fazer upload</span>
                   <span style={{ fontSize: '0.75rem' }}>PDF, DOCX ou Imagens</span>
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label className="label">URL da Pasta do Contrato (Google Drive)</label>
+                <input
+                  type="url"
+                  name="directory_url"
+                  className="input"
+                  value={formData.directory_url}
+                  onChange={handleChange}
+                  placeholder="https://drive.google.com/..."
+                />
               </div>
             </div>
           </div>

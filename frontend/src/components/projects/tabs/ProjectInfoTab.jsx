@@ -61,6 +61,19 @@ const ProjectInfoTab = ({ project, clients, purchases, totalInvoiced, onEdit, ca
                 )}
               </span>
             </div>
+            {project.directory_url && (
+              <div>
+                <label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block' }}>Diretório</label>
+                <a 
+                  href={project.directory_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ fontWeight: '500', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <FileText size={14} /> Abrir Pasta do Projeto
+                </a>
+              </div>
+            )}
           </div>
         </div>
 

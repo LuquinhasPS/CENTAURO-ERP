@@ -78,6 +78,7 @@ async def get_projects(db: AsyncSession = Depends(get_db)):
             "status": p.status,
             "company_id": p.company_id,
             "estimated_days": p.estimated_days,
+            "directory_url": p.directory_url,
             "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in p.billings],
             "invoiced": invoiced
         }
@@ -162,6 +163,7 @@ async def create_project(project: schemas.ProjectCreate, db: AsyncSession = Depe
         "status": db_project.status,
         "company_id": db_project.company_id,
         "estimated_days": db_project.estimated_days,
+        "directory_url": db_project.directory_url,
         "billings": [],
         "invoiced": 0
     }
@@ -246,6 +248,7 @@ async def update_project(project_id: int, project: schemas.ProjectCreate, db: As
         "status": db_project.status,
         "company_id": db_project.company_id,
         "estimated_days": db_project.estimated_days,
+        "directory_url": db_project.directory_url,
         "billings": [{"id": b.id, "value": b.value, "date": b.date, "invoice_number": getattr(b, 'invoice_number', None), "description": b.description, "project_id": b.project_id} for b in billings],
         "invoiced": invoiced
     }

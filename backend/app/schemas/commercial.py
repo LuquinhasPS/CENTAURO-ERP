@@ -57,6 +57,7 @@ class ContractBase(BaseModel):
     due_day: Optional[int] = None
     readjustment_index: Optional[str] = None
     company_id: Optional[int] = None
+    directory_url: Optional[str] = None
 
 class ContractCreate(ContractBase):
     pass
@@ -90,6 +91,7 @@ class ProjectBase(BaseModel):
     company_id: Optional[int] = None
     estimated_days: Optional[int] = None
     warranty_months: Optional[int] = None  # Warranty period in months from end_date
+    directory_url: Optional[str] = None
 
 class ProjectCreate(ProjectBase):
     project_number: Optional[int] = None

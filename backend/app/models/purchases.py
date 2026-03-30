@@ -23,6 +23,7 @@ class PurchaseRequest(Base):
     # Material Fields
     arrival_forecast = Column(Date, nullable=True) # Data prevista para chegada do material
     notes = Column(String, nullable=True) # Observações gerais do pedido
+    directory_url = Column(String, nullable=True) # Link para pasta ou anexo
 
     created_at = Column(DateTime, default=now_brazil)
     
