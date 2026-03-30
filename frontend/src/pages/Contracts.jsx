@@ -823,26 +823,7 @@ const Contracts = () => {
                 </>
               )}
 
-              <div className="form-group">
-                <label className="label">Anexo do Contrato (Upload)</label>
-                <div style={{
-                  border: '2px dashed #cbd5e1',
-                  borderRadius: '0.5rem',
-                  padding: '2rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#64748b',
-                  cursor: 'pointer',
-                  backgroundColor: '#f8fafc',
-                  marginBottom: '1rem'
-                }}>
-                  <Upload size={24} style={{ marginBottom: '0.5rem' }} />
-                  <span>Clique para fazer upload</span>
-                  <span style={{ fontSize: '0.75rem' }}>PDF, DOCX ou Imagens</span>
-                </div>
-              </div>
+
 
               <div className="form-group">
                 <label className="label">URL da Pasta do Contrato (Google Drive)</label>
