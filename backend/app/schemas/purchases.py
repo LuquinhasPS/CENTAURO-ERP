@@ -18,6 +18,8 @@ class PurchaseItemBase(BaseModel):
     expected_date: Optional[date] = None
     notes: Optional[str] = None
     quantity_withdrawn: int = 0
+    link_original: Optional[str] = None
+    link_compras: Optional[str] = None
 
 class PurchaseItemCreate(PurchaseItemBase):
     pass
@@ -151,3 +153,13 @@ class PurchaseObservationResponse(PurchaseObservationBase):
 
     class Config:
         from_attributes = True
+
+# ================================
+# FINANCIAL SUMMARY SCHEMA
+# ================================
+
+class PurchaseFinancialSummary(BaseModel):
+    orcamento_previsto_material: float
+    saldo_atual_disponivel: float
+    valor_desta_solicitacao: float
+    saldo_restante_previsto: float

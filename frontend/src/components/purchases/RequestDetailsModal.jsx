@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Save, PackageCheck, ChevronDown, ChevronUp, Link as LinkIcon } from 'lucide-react';
-import { updatePurchase, deletePurchase, createPurchase, getWithdrawals, addPurchaseObservation } from '../../services/api';
+import { X, Plus, Trash2, Save, PackageCheck, ChevronDown, ChevronUp, Link as LinkIcon, Maximize, Minimize } from 'lucide-react';
+import { updatePurchase, deletePurchase, createPurchase, getWithdrawals, addPurchaseObservation, getFinancialSummary } from '../../services/api';
 import ApprovalTimeline from './ApprovalTimeline';
 import WithdrawalModal from './WithdrawalModal';
 import { useAuth } from '../../context/AuthContext';
@@ -41,6 +41,40 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
   const [sendingObs, setSendingObs] = useState(false);
   const [showWithdrawalHistory, setShowWithdrawalHistory] = useState(false);
   const [activeTab, setActiveTab] = useState('items'); // 'items' | 'history' | 'withdrawals'
+  const [financialSummary, setFinancialSummary] = useState(null);
+  const [isSummaryCollapsed, setIsSummaryCollapsed] = useState(false);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
+
+  const handleEditLink = (index, item) => {
+    if (isProjectsContext) {
+      const link = window.prompt("Insira o link do item (Sugestão da Engenharia):", item.link_original || '');
+      if (link !== null) {
+        handleItemChange(index, 'link_original', link);
+      }
+    } else {
+      const defaultValue = item.link_compras === null ? (item.link_original || '') : (item.link_compras || '');
+      const link = window.prompt("Insira o link final (Definido por Suprimentos):", defaultValue);
+      if (link !== null) {
+        handleItemChange(index, 'link_compras', link);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchFinancialSummary = async () => {
+      const pid = request?.project_id || project?.id;
+      if (!pid) return;
+      try {
+        const res = await getFinancialSummary(pid, request?.id || '');
+        setFinancialSummary(res.data);
+      } catch (err) {
+        console.error('Error fetching financial summary', err);
+      }
+    };
+    if (formData.category === 'MATERIAL') {
+      fetchFinancialSummary();
+    }
+  }, [request?.id, request?.project_id, project?.id, formData.category]);
 
   useEffect(() => {
     if (request) {
@@ -198,7 +232,9 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
           payment_method: '',
           installment_count: 1,
           expected_date: '',
-          status: 'pending'
+          status: 'pending',
+          link_original: '',
+          link_compras: ''
         }
       ]
     }));
@@ -232,7 +268,9 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
           unit_price: parseFloat(item.unit_price),
           total_price: parseFloat(item.total_price),
           installment_count: parseInt(item.installment_count) || 1,
-          expected_date: item.expected_date || null
+          expected_date: item.expected_date || null,
+          link_original: item.link_original || null,
+          link_compras: item.link_compras || null
         }))
       };
 
@@ -265,11 +303,12 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 z-[99]">
-      <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col w-[95vw] max-w-[1400px] h-[85vh] max-h-[900px]" onClick={e => e.stopPropagation()}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm z-[99] ${isTableExpanded ? 'p-0' : 'p-4'}`}>
+      <div className={`bg-white shadow-2xl overflow-hidden flex flex-col w-full h-full transition-all duration-300 ${isTableExpanded ? 'rounded-none max-w-none max-h-none' : 'w-[95vw] max-w-[1400px] h-[85vh] max-h-[900px] rounded-xl'}`} onClick={e => e.stopPropagation()}>
         
         {/* COMPACT HEADER */}
-        <div className="flex flex-col border-b border-slate-200 bg-white shrink-0">
+        {!isTableExpanded && (
+          <div className="flex flex-col border-b border-slate-200 bg-white shrink-0">
           <div className="flex justify-between items-center px-6 py-4 border-b border-slate-100">
             <div>
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 m-0 leading-none">
@@ -406,9 +445,71 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
             </div>
           </div>
         </div>
+        )}
+
+        {/* FINANCIAL SUMMARY CARD */}
+        {financialSummary && formData.category === 'MATERIAL' && !isTableExpanded && (
+          <div className="bg-slate-50 border-b border-slate-200 shrink-0 shadow-inner">
+            <div 
+              className="px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors"
+              onClick={() => setIsSummaryCollapsed(!isSummaryCollapsed)}
+            >
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2 m-0">
+                Resumo Financeiro do Projeto (Materiais)
+              </h4>
+              <button className="text-slate-400 hover:text-slate-600 transition-colors">
+                {isSummaryCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+              </button>
+            </div>
+            
+            {!isSummaryCollapsed && (
+              <div className="px-6 pb-4 pt-1 grid grid-cols-4 gap-4 animate-in fade-in flex flex-col slide-in-from-top-2 duration-200">
+                <div className="bg-white border text-center p-3 rounded-lg border-slate-200 shadow-sm">
+                  <span className="block text-xs font-medium text-slate-500 mb-1">Orçamento Previsto</span>
+                  <span className="block text-sm font-bold text-slate-800">
+                    R$ {financialSummary.orcamento_previsto_material.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="bg-white border text-center p-3 rounded-lg border-slate-200 shadow-sm">
+                  <span className="block text-xs font-medium text-slate-500 mb-1">Saldo Atual</span>
+                  <span className="block text-sm font-bold text-slate-800">
+                    R$ {financialSummary.saldo_atual_disponivel.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="bg-blue-50 border border-blue-100 text-center p-3 rounded-lg shadow-sm">
+                  <span className="block text-xs font-medium text-blue-600 mb-1">Valor Desta Solicitação</span>
+                  <span className="block text-sm font-bold text-blue-700">
+                    R$ {calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className={`border text-center p-3 rounded-lg shadow-sm ${
+                  (financialSummary.saldo_atual_disponivel - calculateTotal()) < 0 
+                    ? 'bg-rose-50 border-rose-200' 
+                    : 'bg-emerald-50 border-emerald-100'
+                }`}>
+                  <span className={`block text-xs font-semibold mb-1 ${
+                    (financialSummary.saldo_atual_disponivel - calculateTotal()) < 0 
+                      ? 'text-rose-600' 
+                      : 'text-emerald-700'
+                  }`}>
+                    Saldo Restante
+                  </span>
+                  <span className={`block text-base font-black ${
+                    (financialSummary.saldo_atual_disponivel - calculateTotal()) < 0 
+                      ? 'text-rose-600' 
+                      : 'text-emerald-600'
+                  }`}>
+                    R$ {(financialSummary.saldo_atual_disponivel - calculateTotal()).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* TABS NAVIGATION */}
-        <div className="flex gap-8 px-8 border-b border-slate-200 shrink-0 bg-white">
+        {!isTableExpanded && (
+          <div className="flex gap-8 px-8 border-b border-slate-200 shrink-0 bg-white">
           <button
             className={`py-3 text-sm font-semibold border-b-2 transition-colors duration-200 ${
               activeTab === 'items' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -434,27 +535,37 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
             Retiradas
           </button>
         </div>
+        )}
 
         {/* TAB CONTENT (Scrollable Area) */}
-        <div className="flex-1 overflow-y-auto bg-slate-50/50 p-6">
+        <div className="flex-1 overflow-y-auto bg-slate-50/50 p-6 flex flex-col">
           
           {/* TAB 1: ITENS DO PEDIDO */}
         {activeTab === 'items' && (
-          <div className="items-section m-0 shadow-sm border border-slate-200 bg-white rounded-lg p-4">
+          <div className="items-section m-0 shadow-sm border border-slate-200 bg-white rounded-lg p-4 flex-1 flex flex-col">
             <div className="items-header">
-              <h4>Itens da Solicitação</h4>
+              <div className="flex items-center gap-3">
+                <h4>Itens da Solicitação</h4>
+                <button
+                  type="button"
+                  onClick={() => setIsTableExpanded(!isTableExpanded)}
+                  className="p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors"
+                  title={isTableExpanded ? "Restaurar tamanho" : "Expandir tabela para Tela Cheia"}
+                >
+                  {isTableExpanded ? <Minimize size={18} /> : <Maximize size={18} />}
+                </button>
+              </div>
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                <div className="shipping-input-container">
-                  <label style={{ fontSize: '0.85rem', marginRight: '8px', color: '#666' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-slate-600">
                     {formData.category === 'SERVICE' ? 'Mobilização (R$):' : 'Valor do Frete (R$):'}
-                  </label>
+                  </span>
                   <input
                     type="number"
                     name="shipping_cost"
                     value={formData.shipping_cost}
                     onChange={handleHeaderChange}
-                    className="input"
-                    style={{ width: '100px', padding: '4px 8px' }}
+                    className="px-3 py-1.5 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 disabled:bg-slate-100 disabled:text-slate-500 w-[120px]"
                     disabled={isProjectsContext || readOnly}
                     step="0.01"
                     min="0"
@@ -488,15 +599,65 @@ const RequestDetailsModal = ({ request, project, onClose, onUpdate, context = 'p
                 <tbody>
                   {formData.items.map((item, index) => (
                     <tr key={index} className={item.status === 'cancelled' ? 'item-row cancelled' : 'item-row'}>
-                      <td>
-                        <input
-                          type="text"
-                          value={item.description}
-                          onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-                          placeholder="Descrição do item"
-                          className="input-cell"
-                          disabled={!isProjectsContext || readOnly}
-                        />
+                      <td className="relative group">
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            value={item.description}
+                            onChange={(e) => handleItemChange(index, 'description', e.target.value)}
+                            placeholder="Descrição do item"
+                            className="input-cell font-medium text-slate-800 pr-10"
+                            disabled={!isProjectsContext || readOnly}
+                          />
+                          <div className="absolute right-1 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+                            {(() => {
+                              const original = item.link_original?.trim();
+                              const compras = item.link_compras?.trim();
+                              let targetUrl = compras || original;
+                              let showLink = false;
+                              let linkColor = 'text-slate-400 hover:text-blue-600';
+                              
+                              if (item.link_compras === '') {
+                                showLink = false;
+                              } else if (compras && compras !== original) {
+                                showLink = true;
+                                linkColor = 'text-orange-500 hover:text-orange-600';
+                              } else if (original) {
+                                showLink = true;
+                                linkColor = 'text-blue-500 hover:text-blue-700';
+                              }
+
+                              return (
+                                <div className="flex items-center gap-0.5">
+                                  {/* ICON TO OPEN LINK */}
+                                  {showLink && targetUrl && (
+                                    <a 
+                                      href={targetUrl.startsWith('http') ? targetUrl : `https://${targetUrl}`} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      title="Acessar link do item" 
+                                      className={`transition-colors p-1 rounded hover:bg-slate-200 ${linkColor}`}
+                                    >
+                                      <LinkIcon size={14} />
+                                    </a>
+                                  )}
+                                  
+                                  {/* ICON TO EDIT LINK (VISIBLE ON HOVER & IF EDITABLE) */}
+                                  {!readOnly && (
+                                    <button
+                                      className={`p-1 rounded hover:bg-slate-200 transition-colors ${showLink ? 'text-slate-300 hover:text-slate-600' : 'text-slate-400 hover:text-blue-600'}`}
+                                      onClick={(e) => { e.preventDefault(); handleEditLink(index, item); }}
+                                      title={showLink ? "Editar link (abre prompt)" : "Adicionar link ao item"}
+                                    >
+                                      <LinkIcon size={14} className={showLink ? "opacity-40" : "opacity-100"} />
+                                      {!showLink && <Plus size={10} className="absolute -top-1 -right-1" />}
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
                       </td>
                       <td>
                         <div className="double-input">

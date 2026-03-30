@@ -72,6 +72,8 @@ class PurchaseItem(Base):
     expected_date = Column(Date, nullable=True)  # Prazo de entrega
     notes = Column(String, nullable=True)
     quantity_withdrawn = Column(Integer, default=0)  # Acumulador de retiradas
+    link_original = Column(String, nullable=True) # Sugestão da engenharia
+    link_compras = Column(String, nullable=True) # Link definido por suprimentos
 
     request = relationship("PurchaseRequest", back_populates="items")
 

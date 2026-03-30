@@ -138,6 +138,54 @@ async def get_purchase(id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Purchase request not found")
     return purchase_to_response(purchase)
 
+@router.get("/financial-summary", response_model=schemas.PurchaseFinancialSummary)
+async def get_purchase_financial_summary(
+    project_id: int, 
+    exclude_request_id: Optional[int] = Query(None), 
+    db: AsyncSession = Depends(get_db)
+):
+    # Load project
+    result = await db.execute(
+        select(Project)
+        .where(Project.id == project_id)
+    )
+    project = result.scalar_one_or_none()
+    
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+        
+    orcamento = 0.0
+    if project.material_value:
+        orcamento = float(project.material_value)
+        
+    # Somar todas as compras "MATERIAL" já realizadas neste projeto
+    total_realizado = 0.0
+    
+    query = (
+        select(models.PurchaseItem.total_price)
+        .join(models.PurchaseRequest)
+        .where(models.PurchaseRequest.project_id == project_id)
+        .where(models.PurchaseRequest.category == 'MATERIAL')
+        .where(models.PurchaseItem.status != 'cancelled')
+        .where(models.PurchaseRequest.status != 'cancelled')
+        .where(models.PurchaseRequest.status != 'rejected')
+    )
+    
+    if exclude_request_id:
+        query = query.where(models.PurchaseRequest.id != exclude_request_id)
+        
+    items_query = await db.execute(query)
+    total_realizado = sum([price or 0.0 for price in items_query.scalars().all()])
+        
+    saldo_atual = orcamento - total_realizado
+    
+    return {
+        "orcamento_previsto_material": orcamento,
+        "saldo_atual_disponivel": saldo_atual,
+        "valor_desta_solicitacao": 0.0, # Frontend will override this
+        "saldo_restante_previsto": saldo_atual # Frontend will calculate this
+    }
+
 # Helper to recalculate status based on approvals and items
 def recalculate_purchase_status(purchase: models.PurchaseRequest):
     # 1. Rejected takes precedence
