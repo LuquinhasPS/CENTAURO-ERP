@@ -16,3 +16,4 @@ from .project_resources import ProjectCollaborator, ProjectTool, ProjectVehicle
 from .purchases import PurchaseRequest, PurchaseWithdrawal, PurchaseWithdrawalItem
 from .proposals import CommercialProposal, ProposalTask
 from .users import User
+from .asset_requests import AssetRequest

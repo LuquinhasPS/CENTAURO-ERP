@@ -60,7 +60,7 @@
   top: 0.25rem;
   bottom: 0.25rem;
   left: 0.25rem;
-  width: calc(50% - 0.25rem);
+  width: calc(33.33% - 0.25rem);
   background: white;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -70,6 +70,10 @@
 
 .tab-glider.insurance {
   transform: translateX(100%);
+}
+
+.tab-glider.requests {
+  transform: translateX(200%);
 }
 
 .tab-btn {

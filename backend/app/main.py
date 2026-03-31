@@ -12,7 +12,7 @@ if hasattr(time, 'tzset'):
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import assets, operational, tickets, kanban, project_resources, purchases, roles, auth, teams, maintenance, finance_payroll, proposals
+from app.routers import assets, operational, tickets, kanban, project_resources, purchases, roles, auth, teams, maintenance, finance_payroll, proposals, asset_requests
 from app.routers import commercial  # Package import
 from app.routers import finance     # Package import
 from app.database import engine, Base
@@ -56,6 +56,7 @@ app.include_router(roles.router, prefix="/roles", tags=["Roles"])
 app.include_router(auth.router, tags=["Authentication"])
 app.include_router(teams.router, prefix="/teams", tags=["Teams"])
 app.include_router(maintenance.router, prefix="/maintenance", tags=["Maintenance"])
+app.include_router(asset_requests.router, prefix="/asset-requests", tags=["Asset Requests"])
 
 from app.routers import dashboard, ai
 app.include_router(dashboard.router, tags=["Dashboard"])
@@ -180,6 +181,20 @@ async def startup():
             ("purchase_requests", "directory_url", "VARCHAR"),
             ("projects", "directory_url", "VARCHAR"),
             ("contracts", "directory_url", "VARCHAR"),
+
+            # Asset Requests
+            ("asset_requests", "requester_id", "INTEGER"),
+            ("asset_requests", "project_id", "INTEGER"),
+            ("asset_requests", "asset_type", "VARCHAR"),
+            ("asset_requests", "description", "TEXT"),
+            ("asset_requests", "start_date", "DATE"),
+            ("asset_requests", "end_date", "DATE"),
+            ("asset_requests", "include_weekends", "BOOLEAN DEFAULT 0"),
+            ("asset_requests", "status", "VARCHAR DEFAULT 'PENDING'"),
+            ("asset_requests", "assigned_vehicle_id", "INTEGER"),
+            ("asset_requests", "assigned_tool_id", "INTEGER"),
+            ("asset_requests", "rejection_reason", "VARCHAR"),
+            ("asset_requests", "created_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"),
         ]
 
         for table, col, dtype in columns_to_add:

@@ -106,3 +106,10 @@ export const deleteTask = (id) => api.delete(`/kanban/tasks/${id}`);
 
 // AI
 export const chatAI = (message) => api.post('/api/ai/chat', { message });
+
+// Asset Requests
+export const getAssetRequests = (params = {}) => api.get('/asset-requests/asset-requests', { params });
+export const createAssetRequest = (data) => api.post('/asset-requests/asset-requests', data);
+export const approveAssetRequest = (id, data) => api.patch(`/asset-requests/asset-requests/${id}/approve`, data);
+export const rejectAssetRequest = (id, data) => api.patch(`/asset-requests/asset-requests/${id}/reject`, data);
+

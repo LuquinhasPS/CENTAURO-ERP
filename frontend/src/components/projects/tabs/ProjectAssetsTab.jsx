@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Wrench, Truck, Plus, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
-import { addProjectTool, addProjectVehicle } from '../../../services/api';
+import { Wrench, Truck, Plus, Calendar, ChevronDown, ChevronUp, Send } from 'lucide-react';
+import { addProjectTool, addProjectVehicle, createAssetRequest } from '../../../services/api';
 import { formatDateUTC } from '../../../utils/formatters';
 
 const ProjectAssetsTab = ({ project, projectTools, projectVehicles, availableTools, availableVehicles, canEdit, onUpdate }) => {
@@ -11,6 +11,16 @@ const ProjectAssetsTab = ({ project, projectTools, projectVehicles, availableToo
   // Vehicles State
   const [showVehicleForm, setShowVehicleForm] = useState(false);
   const [vehicleFormData, setVehicleFormData] = useState({ vehicle_id: '', start_date: '', end_date: '', include_weekends: false });
+
+  // Asset Request State
+  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [requestFormData, setRequestFormData] = useState({
+    description: '',
+    start_date: '',
+    end_date: '',
+    include_weekends: false,
+  });
+  const [submittingRequest, setSubmittingRequest] = useState(false);
 
   // UI State
   const [activeSubTab, setActiveSubTab] = useState('tools');
@@ -48,7 +58,30 @@ const ProjectAssetsTab = ({ project, projectTools, projectVehicles, availableToo
     } catch (err) { alert('Erro ao adicionar veículo: ' + err.message); }
   };
 
+  const handleSubmitRequest = async (e) => {
+    e.preventDefault();
+    setSubmittingRequest(true);
+    try {
+      await createAssetRequest({
+        project_id: project.id,
+        asset_type: activeSubTab === 'tools' ? 'TOOL' : 'VEHICLE',
+        description: requestFormData.description,
+        start_date: requestFormData.start_date,
+        end_date: requestFormData.end_date,
+        include_weekends: requestFormData.include_weekends,
+      });
+      setShowRequestForm(false);
+      setRequestFormData({ description: '', start_date: '', end_date: '', include_weekends: false });
+      alert('Solicitação enviada com sucesso! O coordenador será notificado.');
+      onUpdate();
+    } catch (err) {
+      alert('Erro ao enviar solicitação: ' + (err.response?.data?.detail || err.message));
+    } finally {
+      setSubmittingRequest(false);
+    }
+  };
 
+  const requestTypeLabel = activeSubTab === 'tools' ? 'Ferramenta' : 'Veículo';
 
   return (
     <div className="tab-content" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -90,8 +123,59 @@ const ProjectAssetsTab = ({ project, projectTools, projectVehicles, availableToo
         <div className="resource-section">
           <div className="tab-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>Gerenciar Ferramentas</h3>
-
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => { setShowRequestForm(!showRequestForm); setShowToolForm(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Send size={16} /> Solicitar Ferramenta
+            </button>
           </div>
+
+          {/* Request Form */}
+          {showRequestForm && (
+            <form onSubmit={handleSubmitRequest} style={{
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%)',
+              padding: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #fbbf24',
+              marginBottom: '1rem',
+            }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#92400e', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Send size={14} /> Solicitar {requestTypeLabel}
+              </div>
+              <div style={{ marginBottom: '0.75rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Descreva sua necessidade *</label>
+                <textarea
+                  value={requestFormData.description}
+                  onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
+                  required
+                  placeholder={`Ex: Preciso de uma ${activeSubTab === 'tools' ? 'máquina de fusão para emendas internas' : 'picape para levar escadas e material'}...`}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706', minHeight: '60px', resize: 'vertical', fontSize: '0.85rem' }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Data Início *</label>
+                  <input type="date" value={requestFormData.start_date} onChange={e => setRequestFormData({ ...requestFormData, start_date: e.target.value })} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Data Fim *</label>
+                  <input type="date" value={requestFormData.end_date} onChange={e => setRequestFormData({ ...requestFormData, end_date: e.target.value })} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706' }} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <label htmlFor="req-weekends" style={{ marginBottom: 0, cursor: 'pointer', fontSize: '0.8rem', color: '#78350f' }}>Incluir Finais de Semana</label>
+                <input type="checkbox" checked={requestFormData.include_weekends} onChange={e => setRequestFormData({ ...requestFormData, include_weekends: e.target.checked })} id="req-weekends" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowRequestForm(false)}>Cancelar</button>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={submittingRequest} style={{ background: '#d97706', borderColor: '#d97706' }}>
+                  {submittingRequest ? 'Enviando...' : 'Enviar Solicitação'}
+                </button>
+              </div>
+            </form>
+          )}
 
           {showToolForm && (
             <form onSubmit={handleAddTool} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
@@ -190,8 +274,59 @@ const ProjectAssetsTab = ({ project, projectTools, projectVehicles, availableToo
         <div className="resource-section">
           <div className="tab-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>Gerenciar Veículos</h3>
-
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => { setShowRequestForm(!showRequestForm); setShowVehicleForm(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Send size={16} /> Solicitar Veículo
+            </button>
           </div>
+
+          {/* Request Form (same component, adapts to active sub-tab) */}
+          {showRequestForm && (
+            <form onSubmit={handleSubmitRequest} style={{
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%)',
+              padding: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #fbbf24',
+              marginBottom: '1rem',
+            }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#92400e', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Send size={14} /> Solicitar {requestTypeLabel}
+              </div>
+              <div style={{ marginBottom: '0.75rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Descreva sua necessidade *</label>
+                <textarea
+                  value={requestFormData.description}
+                  onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
+                  required
+                  placeholder={`Ex: Preciso de uma ${activeSubTab === 'tools' ? 'máquina de fusão para emendas internas' : 'picape para levar escadas e material'}...`}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706', minHeight: '60px', resize: 'vertical', fontSize: '0.85rem' }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Data Início *</label>
+                  <input type="date" value={requestFormData.start_date} onChange={e => setRequestFormData({ ...requestFormData, start_date: e.target.value })} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '500', color: '#78350f', marginBottom: '4px' }}>Data Fim *</label>
+                  <input type="date" value={requestFormData.end_date} onChange={e => setRequestFormData({ ...requestFormData, end_date: e.target.value })} required style={{ width: '100%', padding: '0.5rem', borderRadius: '6px', border: '1px solid #d97706' }} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <label htmlFor="req-weekends-v" style={{ marginBottom: 0, cursor: 'pointer', fontSize: '0.8rem', color: '#78350f' }}>Incluir Finais de Semana</label>
+                <input type="checkbox" checked={requestFormData.include_weekends} onChange={e => setRequestFormData({ ...requestFormData, include_weekends: e.target.checked })} id="req-weekends-v" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowRequestForm(false)}>Cancelar</button>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={submittingRequest} style={{ background: '#d97706', borderColor: '#d97706' }}>
+                  {submittingRequest ? 'Enviando...' : 'Enviar Solicitação'}
+                </button>
+              </div>
+            </form>
+          )}
 
           {showVehicleForm && (
             <form onSubmit={handleAddVehicle} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>

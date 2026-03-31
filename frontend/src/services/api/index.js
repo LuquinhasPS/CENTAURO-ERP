@@ -140,4 +140,9 @@ export {
   deleteTask,
   // AI
   chatAI,
+  // Asset Requests
+  getAssetRequests,
+  createAssetRequest,
+  approveAssetRequest,
+  rejectAssetRequest,
 } from './operational';
