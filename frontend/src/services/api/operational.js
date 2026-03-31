@@ -112,4 +112,5 @@ export const getAssetRequests = (params = {}) => api.get('/asset-requests/asset-
 export const createAssetRequest = (data) => api.post('/asset-requests/asset-requests', data);
 export const approveAssetRequest = (id, data) => api.patch(`/asset-requests/asset-requests/${id}/approve`, data);
 export const rejectAssetRequest = (id, data) => api.patch(`/asset-requests/asset-requests/${id}/reject`, data);
+export const checkAssetAvailability = (params) => api.get('/asset-requests/check-availability', { params });
 

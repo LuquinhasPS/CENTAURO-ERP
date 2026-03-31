@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Car, Shield, Upload, MapPin, Search, Trash2, Send, Check, X, Clock, FileText } from 'lucide-react';
-import api, { getFleet, deleteFleet, getInsurances, deleteInsurance, updateInsurance, createInsurance, getAssetRequests, approveAssetRequest, rejectAssetRequest } from '../services/api';
+import api, { getFleet, deleteFleet, getInsurances, deleteInsurance, updateInsurance, createInsurance, getAssetRequests, approveAssetRequest, rejectAssetRequest, checkAssetAvailability } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/shared/ConfirmModal';
 import DataTable from '../components/shared/DataTable';
@@ -30,6 +30,8 @@ const Fleet = () => {
   const [rejectReason, setRejectReason] = useState('');
   const [processingRequest, setProcessingRequest] = useState(false);
   const [requestFilter, setRequestFilter] = useState('PENDING');
+  const [availabilityResult, setAvailabilityResult] = useState(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
 
   // Form States
   const [showVehicleModal, setShowVehicleModal] = useState(false);
@@ -83,6 +85,35 @@ const Fleet = () => {
       setInsurances(i.data);
     } catch (e) { console.error(e); } finally { setLoading(false); }
   };
+
+  const checkAvailability = async (vId) => {
+    if (!vId || !selectedRequest) {
+      setAvailabilityResult(null);
+      return;
+    }
+    setCheckingAvailability(true);
+    try {
+      const res = await checkAssetAvailability({
+        resource_type: 'VEHICLE',
+        resource_id: vId,
+        start_date: selectedRequest.start_date,
+        end_date: selectedRequest.end_date
+      });
+      setAvailabilityResult(res.data);
+    } catch (e) {
+      console.error('Error checking availability:', e);
+    } finally {
+      setCheckingAvailability(false);
+    }
+  };
+
+  useEffect(() => {
+    if (approveModalOpen && approveVehicleId) {
+      checkAvailability(approveVehicleId);
+    } else {
+      setAvailabilityResult(null);
+    }
+  }, [approveVehicleId, approveModalOpen]);
 
   const loadAssetRequests = async () => {
     setRequestsLoading(true);
@@ -523,6 +554,18 @@ const Fleet = () => {
                   <option key={v.id} value={v.id}>{v.model} - {v.license_plate}</option>
                 ))}
               </select>
+              {checkingAvailability && <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Verificando disponibilidade...</div>}
+              {availabilityResult && !availabilityResult.available && (
+                <div style={{
+                  marginTop: '0.75rem', padding: '0.75rem', background: '#fef2f2',
+                  border: '1px solid #fecaca', borderRadius: '6px', color: '#991b1b', fontSize: '0.8rem'
+                }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>⚠️ Conflito de Disponibilidade</div>
+                  Este veículo já possui alocações no período solicitado. 
+                  Arquivos no scheduler: {availabilityResult.conflicts.slice(0, 5).join(', ')}
+                  {availabilityResult.conflicts.length > 5 && '...'}
+                </div>
+              )}
             </div>
             <div className="form-actions">
               <button type="button" className="btn btn-secondary" onClick={() => setApproveModalOpen(false)}>Cancelar</button>
@@ -530,8 +573,11 @@ const Fleet = () => {
                 type="button"
                 className="btn btn-primary"
                 onClick={handleApproveRequest}
-                disabled={processingRequest || !approveVehicleId}
-                style={{ background: '#059669', borderColor: '#059669' }}
+                disabled={processingRequest || !approveVehicleId || checkingAvailability || (availabilityResult && !availabilityResult.available)}
+                style={{
+                  background: (availabilityResult && !availabilityResult.available) ? '#94a3b8' : '#059669',
+                  borderColor: (availabilityResult && !availabilityResult.available) ? '#94a3b8' : '#059669'
+                }}
               >
                 {processingRequest ? 'Processando...' : 'Confirmar Aprovação'}
               </button>

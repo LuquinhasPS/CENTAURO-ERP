@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Wrench, MapPin, User, Edit, LayoutGrid, List, Search, AlertTriangle, Calendar, Send, Check, X, Clock } from 'lucide-react';
-import { getTools, createTool, deleteTool, updateTool, getCollaborators, getProjects, getAssetRequests, approveAssetRequest, rejectAssetRequest } from '../services/api';
+import { getTools, createTool, deleteTool, updateTool, getCollaborators, getProjects, getAssetRequests, approveAssetRequest, rejectAssetRequest, checkAssetAvailability } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/shared/ConfirmModal';
 import Modal from '../components/shared/Modal';
@@ -34,6 +34,8 @@ const Tools = () => {
   const [rejectReason, setRejectReason] = useState('');
   const [processingRequest, setProcessingRequest] = useState(false);
   const [requestFilter, setRequestFilter] = useState('PENDING');
+  const [availabilityResult, setAvailabilityResult] = useState(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
 
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -100,6 +102,35 @@ const Tools = () => {
     } catch (e) { console.error('Error loading asset requests:', e); }
     finally { setRequestsLoading(false); }
   };
+
+  const checkAvailability = async (tId) => {
+    if (!tId || !selectedRequest) {
+      setAvailabilityResult(null);
+      return;
+    }
+    setCheckingAvailability(true);
+    try {
+      const res = await checkAssetAvailability({
+        resource_type: 'TOOL',
+        resource_id: tId,
+        start_date: selectedRequest.start_date,
+        end_date: selectedRequest.end_date
+      });
+      setAvailabilityResult(res.data);
+    } catch (e) {
+      console.error('Error checking availability:', e);
+    } finally {
+      setCheckingAvailability(false);
+    }
+  };
+
+  useEffect(() => {
+    if (approveModalOpen && approveToolId) {
+      checkAvailability(approveToolId);
+    } else {
+      setAvailabilityResult(null);
+    }
+  }, [approveToolId, approveModalOpen]);
 
   const handleApproveToolRequest = async () => {
     if (!approveToolId) { alert('Selecione uma ferramenta para alocar.'); return; }
@@ -858,6 +889,18 @@ const Tools = () => {
                   <option key={t.id} value={t.id}>{t.name} ({t.serial_number})</option>
                 ))}
               </select>
+              {checkingAvailability && <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Verificando disponibilidade...</div>}
+              {availabilityResult && !availabilityResult.available && (
+                <div style={{
+                  marginTop: '0.75rem', padding: '0.75rem', background: '#fef2f2',
+                  border: '1px solid #fecaca', borderRadius: '6px', color: '#991b1b', fontSize: '0.8rem'
+                }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>⚠️ Conflito de Disponibilidade</div>
+                  Esta ferramenta já possui alocações no período solicitado. 
+                  Arquivos no scheduler: {availabilityResult.conflicts.slice(0, 5).join(', ')}
+                  {availabilityResult.conflicts.length > 5 && '...'}
+                </div>
+              )}
             </div>
             <div className="form-actions">
               <button type="button" className="btn btn-secondary" onClick={() => setApproveModalOpen(false)}>Cancelar</button>
@@ -865,8 +908,11 @@ const Tools = () => {
                 type="button"
                 className="btn btn-primary"
                 onClick={handleApproveToolRequest}
-                disabled={processingRequest || !approveToolId}
-                style={{ background: '#059669', borderColor: '#059669' }}
+                disabled={processingRequest || !approveToolId || checkingAvailability || (availabilityResult && !availabilityResult.available)}
+                style={{
+                  background: (availabilityResult && !availabilityResult.available) ? '#94a3b8' : '#059669',
+                  borderColor: (availabilityResult && !availabilityResult.available) ? '#94a3b8' : '#059669'
+                }}
               >
                 {processingRequest ? 'Processando...' : 'Confirmar Aprovação'}
               </button>

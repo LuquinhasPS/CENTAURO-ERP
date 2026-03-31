@@ -131,6 +131,39 @@ async def list_asset_requests(
     return enriched
 
 
+@router.get("/check-availability")
+async def check_resource_availability(
+    resource_type: str,
+    resource_id: int,
+    start_date: str,
+    end_date: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Checks if a resource has any allocations in the given period."""
+    from datetime import datetime
+    try:
+        sd = datetime.strptime(start_date, '%Y-%m-%d').date()
+        ed = datetime.strptime(end_date, '%Y-%m-%d').date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato de data inválido. Use YYYY-MM-DD.")
+
+    r_type = "CAR" if resource_type == "VEHICLE" else "TOOL"
+    
+    query = select(Allocation).where(
+        Allocation.resource_type == r_type,
+        Allocation.resource_id == resource_id,
+        Allocation.date >= sd,
+        Allocation.date <= ed
+    )
+    result = await db.execute(query)
+    conflicts = result.scalars().all()
+    
+    return {
+        "available": len(conflicts) == 0,
+        "conflicts": [c.date.strftime('%Y-%m-%d') for c in conflicts]
+    }
+
+
 @router.patch("/asset-requests/{request_id}/approve", response_model=AssetRequestResponse)
 async def approve_asset_request(
     request_id: int,
@@ -151,7 +184,31 @@ async def approve_asset_request(
     if req.status != AssetRequestStatus.PENDING:
         raise HTTPException(status_code=400, detail="Solicitação já foi processada")
 
-    # Validate that the correct asset type was provided
+    # Resource identification
+    r_type = "CAR" if req.asset_type == AssetType.VEHICLE else "TOOL"
+    r_id = data.assigned_vehicle_id if req.asset_type == AssetType.VEHICLE else data.assigned_tool_id
+
+    if not r_id:
+        raise HTTPException(status_code=400, detail="ID do ativo não fornecido")
+
+    # Check for conflicts in the scheduler (Allocation table)
+    conflict_query = select(Allocation).where(
+        Allocation.resource_type == r_type,
+        Allocation.resource_id == r_id,
+        Allocation.date >= req.start_date,
+        Allocation.date <= req.end_date
+    )
+    conflicts_result = await db.execute(conflict_query)
+    conflicts = conflicts_result.scalars().all()
+    
+    if conflicts:
+        conflict_dates = [c.date.strftime('%d/%m/%Y') for c in conflicts[:3]]
+        msg = f"O ativo selecionado já possui alocações no período. Datas: {', '.join(conflict_dates)}"
+        if len(conflicts) > 3:
+            msg += "..."
+        raise HTTPException(status_code=400, detail=msg)
+
+    # Validate and setup resource specific data
     if req.asset_type == AssetType.VEHICLE:
         if not data.assigned_vehicle_id:
             raise HTTPException(status_code=400, detail="Informe o veículo a ser alocado (assigned_vehicle_id)")

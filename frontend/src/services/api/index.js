@@ -145,4 +145,5 @@ export {
   createAssetRequest,
   approveAssetRequest,
   rejectAssetRequest,
+  checkAssetAvailability,
 } from './operational';
