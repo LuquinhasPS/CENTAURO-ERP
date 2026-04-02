@@ -16,6 +16,7 @@ import Tools from './pages/Tools';
 import Tickets from './pages/Tickets';
 import AccountsReceivable from './pages/AccountsReceivable';
 import Payroll from './pages/Finance/Payroll';
+import Engineering from './pages/Engineering';
 
 import Login from './pages/Login';
 import PrivateRoute from './components/shared/PrivateRoute';
@@ -45,6 +46,7 @@ function App() {
           <Route path="/scheduler" element={<PrivateRoute requiredPermission="scheduler"><Layout><Scheduler /></Layout></PrivateRoute>} />
           <Route path="/kanban" element={<PrivateRoute requiredPermission="kanban"><Layout><Kanban /></Layout></PrivateRoute>} />
           <Route path="/commercial" element={<PrivateRoute requiredPermission="commercial"><Layout><Commercial /></Layout></PrivateRoute>} />
+          <Route path="/engineering" element={<PrivateRoute requiredPermission="commercial"><Layout><Engineering /></Layout></PrivateRoute>} />
           <Route path="/clients" element={<PrivateRoute requiredPermission="clients"><Layout><Clients /></Layout></PrivateRoute>} />
           <Route path="/contracts" element={<PrivateRoute requiredPermission="contracts"><Layout><Contracts /></Layout></PrivateRoute>} />
           <Route path="/collaborators" element={<PrivateRoute requiredPermission="collaborators"><Layout><Collaborators /></Layout></PrivateRoute>} />

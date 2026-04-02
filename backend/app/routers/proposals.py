@@ -26,12 +26,16 @@ async def get_proposals(
     status: Optional[List[schemas.ProposalStatus]] = Query(None),
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),
+    company_id: Optional[int] = Query(None),
     db: AsyncSession = Depends(get_db)
 ):
     stmt = select(models.CommercialProposal)
 
     if status:
         stmt = stmt.where(models.CommercialProposal.status.in_(status))
+
+    if company_id is not None:
+        stmt = stmt.where(models.CommercialProposal.company_id == company_id)
 
     if start_date or end_date:
         # Check if the filtering is strictly for GANHA/PERDIDA to use decision_date

@@ -10,9 +10,10 @@ from app.utils.timezone import today_brazil, end_of_day_brazil
 # Configure Resend API key
 resend.api_key = settings.RESEND_API_KEY
 
-# Default sender and recipient
+# Default sender and recipients
 DEFAULT_SENDER = settings.MAIL_FROM or "onboarding@resend.dev"
 DEFAULT_BRIEFING_EMAIL = "comercial@centaurotelecom.com.br"
+ENGINEERING_BRIEFING_EMAIL = "engenharia@centaurotelecom.com.br"
 
 
 class EmailService:
@@ -83,9 +84,11 @@ class EmailService:
         """
         return html
 
-    async def get_pending_tasks_from_db(self) -> list:
+    async def get_pending_tasks_from_db(self, company_id: int = None) -> list:
         """
         Busca tarefas pendentes (vencidas ou para hoje) do banco de dados.
+        Se company_id for informado, filtra as propostas daquela empresa.
+        Para Comercial (company_id=None), filtra tudo que NÃO for da empresa 1 (Engenharia).
         """
         today = today_brazil()
         end_of_day = end_of_day_brazil(today).replace(tzinfo=None)  # Make naive for PostgreSQL
@@ -101,10 +104,17 @@ class EmailService:
                     models.ProposalTask.is_completed == False,
                     models.ProposalTask.due_date <= end_of_day
                 )
-                .order_by(models.ProposalTask.due_date)
             )
 
-            result = await db.execute(stmt)
+            # Filtering logic by department
+            if company_id is not None:
+                # Engineering (or specific)
+                stmt = stmt.where(models.CommercialProposal.company_id == company_id)
+            else:
+                # Commercial (Default): Everything EXCEPT company_id 1
+                stmt = stmt.where(models.CommercialProposal.company_id != 1)
+
+            result = await db.execute(stmt.order_by(models.ProposalTask.due_date))
             tasks = result.scalars().all()
 
             response = []
@@ -130,14 +140,16 @@ class EmailService:
 
             return response
 
-    async def send_daily_briefing(self, email_to: str = None):
+    async def send_daily_briefing(self, email_to: str = None, company_id: int = None):
         """
         Envia o resumo diário com tarefas reais do banco de dados via Resend.
         """
-        recipient = email_to or DEFAULT_BRIEFING_EMAIL
+        # Determine recipient and label
+        dept_name = "Engenharia" if company_id == 1 else "Comercial"
+        recipient = email_to or (ENGINEERING_BRIEFING_EMAIL if company_id == 1 else DEFAULT_BRIEFING_EMAIL)
 
-        # 1. Get real tasks from database
-        tasks = await self.get_pending_tasks_from_db()
+        # 1. Get real tasks from database for this department
+        tasks = await self.get_pending_tasks_from_db(company_id=company_id)
 
         print(f"[EmailService] Sending daily briefing to {recipient} with {len(tasks)} tasks")
 
@@ -148,7 +160,7 @@ class EmailService:
         params = {
             "from": DEFAULT_SENDER,
             "to": [recipient],
-            "subject": f"📋 Resumo Diário - {len(tasks)} Tarefas Pendentes",
+            "subject": f"📋 [{dept_name}] Resumo Diário - {len(tasks)} Tarefas Pendentes",
             "html": html_body,
         }
 
