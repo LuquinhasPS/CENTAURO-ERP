@@ -514,6 +514,7 @@ const Engineering = () => {
         proposal={selectedProposal}
         onSuccess={loadData}
         initialClients={clients}
+        defaultCompanyId="1"
         maxWidth="1000px"
       />
 

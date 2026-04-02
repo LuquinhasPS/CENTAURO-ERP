@@ -136,6 +136,9 @@ const Commercial = () => {
       filterStatuses.forEach(status => queryParams.append('status', status));
       if (filterStartDate) queryParams.append('start_date', filterStartDate);
       if (filterEndDate) queryParams.append('end_date', filterEndDate);
+      
+      // Exclude Engineering from Commercial CRM
+      queryParams.append('exclude_company_id', '1');
 
       const [propRes, cliRes, colRes] = await Promise.all([
         getProposals(queryParams),
