@@ -47,6 +47,7 @@ const Contracts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterClient, setFilterClient] = useState('');
   const [filterType, setFilterType] = useState('');
+  const [filterStatus, setFilterStatus] = useState('Ativo');
   const [activeTab, setActiveTab] = useState('geral');
 
   // Financial tab state
@@ -310,7 +311,16 @@ const Contracts = () => {
     const matchesClient = filterClient ? contract.client_id === parseInt(filterClient) : true;
     const matchesType = filterType ? contract.contract_type === filterType : true;
 
-    return matchesSearch && matchesClient && matchesType;
+    // Status Filter logic
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const endDate = contract.end_date ? new Date(contract.end_date + 'T12:00:00') : null;
+    const isExpired = endDate && endDate < today;
+    const contractStatus = isExpired ? 'Vencido' : 'Ativo';
+    
+    const matchesStatus = filterStatus ? contractStatus === filterStatus : true;
+
+    return matchesSearch && matchesClient && matchesType && matchesStatus;
   });
 
 
@@ -457,9 +467,21 @@ const Contracts = () => {
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                 >
-                  <option value="">Todos</option>
+                  <option value="">Todos os tipos</option>
                   <option value="LPU">LPU</option>
                   <option value="RECORRENTE">Recorrente</option>
+                </select>
+              </div>
+              <div className="filter-group">
+                <label className="label">Status</label>
+                <select
+                  className="input"
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="Ativo">Ativos / Vigentes</option>
+                  <option value="Vencido">Vencidos</option>
                 </select>
               </div>
             </div>
