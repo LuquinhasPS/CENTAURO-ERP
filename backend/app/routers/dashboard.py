@@ -193,13 +193,10 @@ async def get_hr_dashboard(
     today = date.today()
     warning_date = today + timedelta(days=45)
     
-    # 1. Expiring Certifications
+    # 1. Expiring & Expired Certifications
     query_certs = select(Certification, Collaborator).join(Collaborator).where(
-        and_(
-            Certification.validity <= warning_date,
-            Certification.validity >= today
-        )
-    )
+        Certification.validity <= warning_date
+    ).order_by(Certification.validity.asc())
     res_certs = await db.execute(query_certs)
     expiring_certs_rows = res_certs.all() # returns List[(Certification, Collaborator)]
     

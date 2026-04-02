@@ -5,17 +5,29 @@ import os
 from datetime import datetime
 from sqlalchemy import select
 
+from dotenv import load_dotenv
+
 # Configura caminhos relativos ao script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
+
+# Carrega o .env da pasta backend antes de qualquer coisa
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Adicionar o diretório atual ao sys.path para importar 'app'
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
-# Forçar o uso do banco de dados na pasta backend
+# Se não estiver no terminal nem no .env, usa o SQLite local
 if "DATABASE_URL" not in os.environ:
     os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{os.path.join(BASE_DIR, 'centauro.db')}"
+
+# Debug: mostra qual banco estamos usando (mas só o início pra segurança)
+db_url = os.environ.get("DATABASE_URL", "")
+if "postgresql" in db_url:
+    print(f"🚀 Conectando ao Banco de DEPLOY (PostgreSQL)...")
+else:
+    print(f"🏠 Conectando ao Banco LOCAL (SQLite): {db_url}")
 
 from app.database import AsyncSessionLocal
 from app.models.operational import Collaborator, Certification, CertificationType
