@@ -6,9 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlalchemy import select
 from app.database import get_db
-from app.auth import authenticate_user, create_access_token, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES
-from app.schemas.auth import Token, UserResponse, LoginRequest
-from app.models.users import User
+from app.auth import authenticate_user, create_access_token, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES, get_password_hash
+from app.schemas.auth import Token, UserResponse, LoginRequest, ForgotPasswordRequest, ResetPasswordRequest
+from app.models.users import User, PasswordResetToken
+from app.services.email_service import email_service
+import uuid
+from datetime import datetime, timedelta
+from sqlalchemy import text
 
 router = APIRouter()
 
@@ -61,3 +65,61 @@ async def read_users_me(
         collaborator_id=final_user.collaborator_id,
         collaborator_name=collaborator_name
     )
+
+@router.post("/forgot-password")
+async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)):
+    # 1. Verify user exists
+    query = select(User).where(User.email == request.email)
+    result = await db.execute(query)
+    user = result.scalar_one_or_none()
+    
+    # We return success even if user not found for security (avoid enumeration)
+    # but only send email if user exists
+    if user:
+        # 2. Create token
+        token = str(uuid.uuid4())
+        # Set expiration (1 hour)
+        expires_at = datetime.utcnow() + timedelta(hours=1)
+        
+        # 3. Save token (or replace if one already exists for this email)
+        # Clear old tokens for this email first
+        await db.execute(text("DELETE FROM password_reset_tokens WHERE email = :e"), {"e": request.email})
+        
+        db_token = PasswordResetToken(email=request.email, token=token, expires_at=expires_at)
+        db.add(db_token)
+        await db.commit()
+        
+        # 4. Send email
+        await email_service.send_password_reset_email(request.email, token)
+        
+    return {"message": "Se o email estiver cadastrado, um link de recuperação será enviado."}
+
+@router.post("/reset-password")
+async def reset_password(request: ResetPasswordRequest, db: AsyncSession = Depends(get_db)):
+    # 1. Find token
+    query = select(PasswordResetToken).where(PasswordResetToken.token == request.token)
+    result = await db.execute(query)
+    db_token = result.scalar_one_or_none()
+    
+    if not db_token:
+        raise HTTPException(status_code=400, detail="Token inválido ou expirado.")
+    
+    # 2. Check expiration
+    if db_token.expires_at < datetime.utcnow():
+        await db.delete(db_token)
+        await db.commit()
+        raise HTTPException(status_code=400, detail="O link de recuperação expirou.")
+    
+    # 3. Update password
+    query = select(User).where(User.email == db_token.email)
+    result = await db.execute(query)
+    user = result.scalar_one_or_none()
+    
+    if user:
+        user.password_hash = get_password_hash(request.new_password)
+        # 4. Delete token
+        await db.delete(db_token)
+        await db.commit()
+        return {"message": "Senha atualizada com sucesso!"}
+    
+    raise HTTPException(status_code=404, detail="Usuário não encontrado.")

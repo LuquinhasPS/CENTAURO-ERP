@@ -19,6 +19,8 @@ import Payroll from './pages/Finance/Payroll';
 import Engineering from './pages/Engineering';
 
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import PrivateRoute from './components/shared/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -30,6 +32,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/" element={
             <PrivateRoute requiredPermission="dashboard">

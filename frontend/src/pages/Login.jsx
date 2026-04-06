@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
@@ -58,8 +58,12 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="senha"
-              disabled={isLoading}
             />
+          </div>
+          <div className="login-forgot" style={{ textAlign: 'right', marginBottom: '20px' }}>
+            <Link to="/forgot-password" style={{ color: '#3b82f6', fontSize: '0.875rem', textDecoration: 'none' }}>
+              Esqueci minha senha
+            </Link>
           </div>
           <button type="submit" className="login-btn" disabled={isLoading}>
             {isLoading ? 'Entrando...' : 'Entrar'}

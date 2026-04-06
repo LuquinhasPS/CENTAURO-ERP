@@ -205,4 +205,53 @@ class EmailService:
         return {"message": "Email enviado com sucesso!", "resend_id": response.get("id")}
 
 
+    async def send_password_reset_email(self, email_to: str, token: str):
+        """
+        Envia o email com o link de redefinição de senha.
+        """
+        # A URL oficial do sistema
+        frontend_url = "https://www1.centaurotelecom.com.br" 
+        reset_link = f"{frontend_url}/reset-password?token={token}"
+
+        html_body = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <h2 style="color: #1e293b; border-bottom: 2px solid #3b82f6; padding-bottom: 10px;">Recuperação de Senha - Centauro ERP</h2>
+                    <p>Olá,</p>
+                    <p>Recebemos uma solicitação para redefinir a senha da sua conta no sistema <strong>Centauro ERP</strong>.</p>
+                    <p>Para prosseguir, clique no botão abaixo:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="{reset_link}" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+                            Redefinir Minha Senha
+                        </a>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #64748b;">
+                        Este link expirará em 1 hora por motivos de segurança. 
+                        Se você não solicitou esta alteração, pode ignorar este email com segurança.
+                    </p>
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+                    <p style="font-size: 0.8rem; color: #94a3b8; text-align: center;">
+                        Este é um email automático do sistema Centauro ERP.
+                    </p>
+                </div>
+            </body>
+        </html>
+        """
+
+        params = {
+            "from": DEFAULT_SENDER,
+            "to": [email_to],
+            "subject": "🔑 Recuperação de Senha - Centauro ERP",
+            "html": html_body,
+        }
+
+        try:
+            response = resend.Emails.send(params)
+            print(f"[EmailService] Reset email sent to {email_to}: {response}")
+            return True
+        except Exception as e:
+            print(f"[EmailService] ERROR sending reset email: {e}")
+            return False
+
 email_service = EmailService()
