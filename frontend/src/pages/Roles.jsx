@@ -219,6 +219,16 @@ const Roles = () => {
                       />
                       Edit
                     </label>
+                    {module.key === 'collaborators' && (
+                      <label className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', cursor: 'pointer', color: '#dc2626', fontWeight: 'bold' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.permissions?.[module.key]?.includes('read_all') || false}
+                          onChange={(e) => handlePermissionChange(module.key, 'read_all', e.target.checked)}
+                        />
+                        Ver Tudo
+                      </label>
+                    )}
                   </div>
                 </div>
               ))}

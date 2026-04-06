@@ -494,7 +494,10 @@ async def get_collaborators(
         selectinload(models.Collaborator.teams)
     )
 
-    if not current_user.is_superuser:
+    from app.auth import check_permission
+    has_read_all = check_permission(current_user, 'collaborators', 'read_all')
+
+    if not current_user.is_superuser and not has_read_all:
         if not current_user.collaborator_id:
             return []
             
