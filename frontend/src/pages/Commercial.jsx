@@ -42,7 +42,7 @@ const COLUMNS = [
 
 const Commercial = () => {
   const { hasPermission } = useAuth();
-  const canEdit = true; // Temporary bypass for prototype
+  const canEdit = hasPermission('commercial', 'write');
 
   const [proposals, setProposals] = useState([]);
   const [clients, setClients] = useState([]);
@@ -168,6 +168,7 @@ const Commercial = () => {
   };
 
   const handleDragEnd = async (event) => {
+    if (!canEdit) return;
     const { active, over } = event;
     setActiveId(null);
 
@@ -434,9 +435,11 @@ const Commercial = () => {
             )}
           </div>
 
-          <button className="btn btn-primary" onClick={handleNewProposal}>
-            <Plus size={18} /> Nova Proposta
-          </button>
+          {canEdit && (
+            <button className="btn btn-primary" onClick={handleNewProposal}>
+              <Plus size={18} /> Nova Proposta
+            </button>
+          )}
         </div>
       </header>
 

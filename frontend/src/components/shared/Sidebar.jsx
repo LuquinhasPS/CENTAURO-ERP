@@ -28,7 +28,7 @@ const Sidebar = ({ onLogout }) => {
     { name: 'Scheduler', icon: Calendar, path: '/scheduler', permission: 'scheduler' },
     { name: 'Kanban', icon: KanbanSquare, path: '/kanban', permission: 'kanban' },
     { name: 'Comercial/CRM', icon: TrendingUp, path: '/commercial', permission: 'commercial' },
-    { name: 'Engenharia/CRM', icon: TrendingUp, path: '/engineering', permission: 'commercial' },
+    { name: 'Engenharia/CRM', icon: TrendingUp, path: '/engineering', permission: 'engineering_crm' },
     { name: 'Clientes', icon: Users, path: '/clients', permission: 'clients' },
     { name: 'Colaboradores', icon: UserCircle, path: '/collaborators', permission: 'collaborators' },
     { name: 'Contratos', icon: FileText, path: '/contracts', permission: 'contracts' },

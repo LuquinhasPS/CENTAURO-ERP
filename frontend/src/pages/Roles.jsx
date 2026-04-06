@@ -187,6 +187,7 @@ const Roles = () => {
                 { key: 'scheduler', label: 'Scheduler' },
                 { key: 'kanban', label: 'Kanban' },
                 { key: 'commercial', label: 'Comercial / CRM' },
+                { key: 'engineering_crm', label: 'Engenharia / CRM' },
                 { key: 'clients', label: 'Clientes' },
                 { key: 'collaborators', label: 'Colaboradores' },
                 { key: 'contracts', label: 'Contratos' },
