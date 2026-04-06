@@ -46,7 +46,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@centauro.com"
+              placeholder="email@centaurotelecom.com.br"
               disabled={isLoading}
             />
           </div>
@@ -57,7 +57,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="senha123"
+              placeholder="senha"
               disabled={isLoading}
             />
           </div>
