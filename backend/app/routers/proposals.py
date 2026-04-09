@@ -260,7 +260,7 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             title=proposal.title,
             description=convert_data.project_scope or proposal.description,
             contract_number=tag,
-            signature_date=convert_data.start_date,
+            signature_date=convert_data.start_date or convert_data.estimated_start_date,
             value=proposal.value,
             monthly_value=proposal.value if contract_type == commercial_models.ContractType.RECORRENTE else None,
             contract_type=contract_type,
@@ -302,10 +302,12 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             material_value=material_value,
             budget=budget,
             start_date=convert_data.start_date,
+            end_date=None,
+            estimated_start_date=convert_data.estimated_start_date,
+            estimated_end_date=convert_data.estimated_end_date,
             company_id=convert_data.company_id,
             estimated_days=convert_data.estimated_days,
             warranty_months=convert_data.warranty_months,
-            estimated_start_date=convert_data.start_date,
             directory_url=convert_data.directory_url
         )
         entity_type = "Projeto"

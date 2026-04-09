@@ -73,7 +73,9 @@ class ProposalResponse(ProposalBase):
 
 class ProposalConvertRequest(BaseModel):
     tag: str  # TAG manual (geração automática suspensa)
-    start_date: date
+    start_date: Optional[date] = None  # Data Real (Opcional)
+    estimated_start_date: Optional[date] = None  # Data Prevista Início (Opcional)
+    estimated_end_date: Optional[date] = None    # Data Prevista Fim (Opcional)
     coordinator: Optional[str] = None
     company_id: Optional[int] = None  # To determine TAG prefix
     client_id: Optional[int] = None  # If proposal didn't have it set

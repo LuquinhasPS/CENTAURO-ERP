@@ -240,10 +240,11 @@ const Commercial = () => {
         setSelectedProposal(proposal);
         setConvertFormData({
           tag: '',
-          start_date: new Date().toISOString().split('T')[0],
           manager_name: '',
           project_scope: proposal.description || proposal.title,
           budget: proposal.value,
+          estimated_start_date: new Date().toISOString().split('T')[0],
+          estimated_end_date: '',
           estimated_days: 30,
           directory_url: ''
         });
@@ -332,13 +333,14 @@ const Commercial = () => {
     e.preventDefault();
     try {
       const payload = {
-        tag: convertFormData.tag, // TAG manual obrigatória
-        start_date: convertFormData.start_date,
+        tag: convertFormData.tag,
+        estimated_start_date: convertFormData.estimated_start_date || null,
+        estimated_end_date: convertFormData.estimated_end_date || null,
         coordinator: convertFormData.coordinator,
         company_id: parseInt(convertFormData.company_id),
         client_id: convertFormData.client_id ? parseInt(convertFormData.client_id) : selectedProposal.client_id,
         estimated_days: parseInt(convertFormData.estimated_days),
-        budget: parseFloat(convertFormData.budget),
+        budget: parseFloat(selectedProposal.value || 0), // Use original proposal value
         project_scope: convertFormData.project_scope,
         directory_url: convertFormData.directory_url
       };
@@ -660,12 +662,22 @@ const Commercial = () => {
               </select>
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="label">Data de Início Real *</label>
-              <input className="input" type="date" required value={convertFormData.start_date} onChange={e => setConvertFormData({ ...convertFormData, start_date: e.target.value })} />
+              <label className="label">Data Prevista Início</label>
+              <input className="input" type="date" value={convertFormData.estimated_start_date} onChange={e => setConvertFormData({ ...convertFormData, estimated_start_date: e.target.value })} />
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="label">Data Prevista Fim</label>
+              <input className="input" type="date" value={convertFormData.estimated_end_date} onChange={e => setConvertFormData({ ...convertFormData, estimated_end_date: e.target.value })} />
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="label">Orçamento Aprovado (R$)</label>
-              <input className="input" type="number" step="0.01" value={convertFormData.budget} onChange={e => setConvertFormData({ ...convertFormData, budget: e.target.value })} />
+              <input 
+                className="input" 
+                type="text" 
+                readOnly 
+                value={parseFloat(selectedProposal?.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} 
+                style={{ backgroundColor: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }}
+              />
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="label">Previsão (Dias)</label>
