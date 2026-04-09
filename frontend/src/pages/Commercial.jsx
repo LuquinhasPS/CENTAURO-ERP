@@ -60,6 +60,12 @@ const Commercial = () => {
   const [convertFormData, setConvertFormData] = useState({});
   const [pendingLossProposalId, setPendingLossProposalId] = useState(null);
   const [lossReason, setLossReason] = useState('');
+  
+  // Security lock for moving GANHA/PERDIDA
+  const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
+  const [pendingMoveData, setPendingMoveData] = useState(null);
+  const [countdown, setCountdown] = useState(0);
+  const countdownInterval = useRef(null);
 
   // Drag-to-scroll state
   const boardRef = useRef(null);
@@ -190,7 +196,39 @@ const Commercial = () => {
     if (!COLUMNS.some(c => c.id === newStatus)) return;
 
     if (proposal.status !== newStatus) {
-      const oldStatus = proposal.status;
+      // SECURITY LOCK: If proposal is already GANHA or PERDIDA, ask for confirmation
+      if (proposal.status === 'GANHA' || proposal.status === 'PERDIDA') {
+        setPendingMoveData({ 
+          activeIdVal, 
+          newStatus, 
+          oldStatus: proposal.status,
+          proposalTitle: proposal.title
+        });
+        setCountdown(3);
+        setShowConfirmMoveModal(true);
+        
+        // Start countdown
+        if (countdownInterval.current) clearInterval(countdownInterval.current);
+        countdownInterval.current = setInterval(() => {
+          setCountdown(prev => {
+            if (prev <= 1) {
+              clearInterval(countdownInterval.current);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        
+        return; // Stop here, wait for modal
+      }
+
+      executeMove(activeIdVal, newStatus, proposal.status);
+    }
+  };
+
+  const executeMove = async (activeIdVal, newStatus, oldStatus) => {
+    const proposal = proposals.find(p => p.id === activeIdVal);
+    if (!proposal) return;
 
       // Optimistic Update
       setProposals(prev => prev.map(p =>
@@ -227,9 +265,23 @@ const Commercial = () => {
           setProposals(prev => prev.map(p =>
             p.id === activeIdVal ? { ...p, status: oldStatus } : p
           ));
-        }
       }
     }
+  };
+
+  const confirmMove = () => {
+    if (pendingMoveData) {
+      executeMove(pendingMoveData.activeIdVal, pendingMoveData.newStatus, pendingMoveData.oldStatus);
+      setShowConfirmMoveModal(false);
+      setPendingMoveData(null);
+    }
+  };
+
+  const cancelMove = () => {
+    setShowConfirmMoveModal(false);
+    setPendingMoveData(null);
+    if (countdownInterval.current) clearInterval(countdownInterval.current);
+    loadData(); // Revert UI
   };
 
   // --- LOSS MODAL HANDLERS ---
@@ -467,18 +519,39 @@ const Commercial = () => {
                     {filteredProposals.filter(p => p.status === col.id).length}
                   </span>
                 </div>
-                {(col.id === 'GANHA' || col.id === 'PERDIDA') && (() => {
+                {(() => {
                   const total = filteredProposals
                     .filter(p => p.status === col.id)
                     .reduce((sum, p) => sum + parseFloat(p.value || 0), 0);
+                  
+                  // Definir cores baseadas no status
+                  let bgColor = '#f1f5f9'; // gray-100 padrão
+                  let textColor = '#475569'; // gray-600 padrão
+                  
+                  if (col.id === 'GANHA') {
+                    bgColor = '#dcfce7'; 
+                    textColor = '#166534';
+                  } else if (col.id === 'PERDIDA') {
+                    bgColor = '#fee2e2';
+                    textColor = '#991b1b';
+                  }
+
                   return total > 0 ? (
                     <div className="text-xs font-semibold text-center py-1 px-2" style={{
-                      backgroundColor: col.id === 'GANHA' ? '#dcfce7' : '#fee2e2',
-                      color: col.id === 'GANHA' ? '#166534' : '#991b1b'
+                      backgroundColor: bgColor,
+                      color: textColor
                     }}>
                       Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </div>
-                  ) : null;
+                  ) : (
+                    <div className="text-xs font-semibold text-center py-1 px-2" style={{
+                      backgroundColor: bgColor,
+                      color: textColor,
+                      opacity: 0.6
+                    }}>
+                      Total: R$ 0,00
+                    </div>
+                  );
                 })()}
 
                 <SortableContext
@@ -622,6 +695,35 @@ const Commercial = () => {
             <button type="submit" className="btn btn-primary" style={{ background: '#16a34a' }}>Confirmar e Gerar</button>
           </div>
         </form>
+      </Modal>
+
+      {/* CONFIRM MOVE MODAL (Security Lock) */}
+      <Modal
+        isOpen={showConfirmMoveModal}
+        onClose={cancelMove}
+        title="Confirmar Alteração de Status"
+        maxWidth="450px"
+      >
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <AlertCircle size={48} color="#f59e0b" style={{ marginBottom: '10px' }} />
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>Esta proposta já está finalizada!</h3>
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+            A proposta <strong>"{pendingMoveData?.proposalTitle}"</strong> já possui o status <strong>{pendingMoveData?.oldStatus}</strong>.
+            Tem certeza que deseja movê-la para <strong>{pendingMoveData?.newStatus}</strong>?
+          </p>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          <button type="button" className="btn btn-secondary" onClick={cancelMove}>Cancelar</button>
+          <button 
+            type="button" 
+            className="btn btn-primary" 
+            onClick={confirmMove}
+            disabled={countdown > 0}
+            style={{ minWidth: '120px' }}
+          >
+            {countdown > 0 ? `Aguarde (${countdown}s)` : 'Sim, mover'}
+          </button>
+        </div>
       </Modal>
     </div>
   );
