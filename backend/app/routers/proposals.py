@@ -286,8 +286,8 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             material_value = 0
             budget = convert_data.budget
         else:
-            service_value = proposal.labor_value or (proposal.value or 0)
-            material_value = proposal.material_value or 0
+            service_value = proposal.labor_value if proposal.labor_value is not None else (proposal.value or 0)
+            material_value = proposal.material_value if proposal.material_value is not None else 0
             budget = proposal.value or 0
 
         new_entity = commercial_models.Project(
