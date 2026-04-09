@@ -22,7 +22,7 @@ from fastapi import Query
 @router.get("/", response_model=List[schemas.ProposalResponse])
 async def get_proposals(
     skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    limit: int = Query(2000, ge=1, le=5000),
     status: Optional[List[schemas.ProposalStatus]] = Query(None),
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),

@@ -139,6 +139,7 @@ const Engineering = () => {
       
       // Engineering CRM Filter
       queryParams.append('department', 'ENGENHARIA');
+      queryParams.append('limit', '2000');
 
       const [propRes, cliRes, colRes] = await Promise.all([
         getProposals(queryParams),

@@ -139,6 +139,7 @@ const Commercial = () => {
       
       // Commercial CRM Filter
       queryParams.append('department', 'COMERCIAL');
+      queryParams.append('limit', '2000');
 
       const [propRes, cliRes, colRes] = await Promise.all([
         getProposals(queryParams),
