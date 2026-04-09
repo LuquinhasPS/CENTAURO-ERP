@@ -238,7 +238,7 @@ const Collaborators = () => {
       )}
 
       {viewMode === 'teams' ? (
-        <Teams ref={teamsRef} embedded={true} />
+        <Teams ref={teamsRef} embedded={true} canEdit={canEdit} />
       ) : (
         <div style={{ padding: '0 2rem 2rem 2rem' }}>
           {loading ? (

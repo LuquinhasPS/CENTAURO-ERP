@@ -21,9 +21,11 @@ async def get_teams(
     
     # Base query
     query = select(models.Team)
+    from app.auth import check_permission
+    has_read_all = check_permission(current_user, 'collaborators', 'read_all')
     
     # Permission Check
-    if not current_user.is_superuser:
+    if not current_user.is_superuser and not has_read_all:
         if not current_user.collaborator_id:
             # User not linked to collaborator -> Should see nothing (unless we default to something else)
             return []

@@ -76,8 +76,11 @@ async def get_allocations(
     from app.models.collaborator_teams import collaborator_teams
     
     # Permission Check: Filter allowed teams for non-superusers
+    from app.auth import check_permission
+    has_collaborators_read_all = check_permission(current_user, 'collaborators', 'read_all')
+
     allowed_team_ids = None
-    if not current_user.is_superuser:
+    if not current_user.is_superuser and not has_collaborators_read_all:
         if not current_user.collaborator_id:
             # Not a collaborator, sees nothing (or only non-person resources if we decide)
              return [] # Or return empty list of allocations

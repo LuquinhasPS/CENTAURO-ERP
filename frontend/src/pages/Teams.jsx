@@ -5,7 +5,7 @@ import ConfirmModal from '../components/shared/ConfirmModal';
 import Modal from '../components/shared/Modal';
 import './Teams.css';
 
-const Teams = forwardRef(({ embedded = false }, ref) => {
+const Teams = forwardRef(({ embedded = false, canEdit = true }, ref) => {
   const [teams, setTeams] = useState([]);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +131,7 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
         title={editingId ? 'Editar Time' : 'Novo Time'}
         maxWidth="1000px"
         headerActions={
-          editingId && (
+          editingId && canEdit && (
             <button
               type="button"
               className="std-modal-close-btn danger"
@@ -154,6 +154,7 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
+                disabled={!canEdit}
                 placeholder="Ex: Infraestrutura"
               />
             </div>
@@ -165,6 +166,7 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
                 className="input"
                 value={formData.leader_id}
                 onChange={(e) => setFormData({ ...formData, leader_id: e.target.value })}
+                disabled={!canEdit}
               >
                 <option value="">Sem líder definido</option>
                 {collaborators.map(c => (
@@ -182,6 +184,7 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Descrição das atividades..."
                 rows="3"
+                disabled={!canEdit}
               />
             </div>
           </div>
@@ -226,12 +229,14 @@ const Teams = forwardRef(({ embedded = false }, ref) => {
           )}
 
           <div className="form-actions" style={{ marginTop: '2rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
-            <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
-              Cancelar
+             <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
+              {canEdit ? 'Cancelar' : 'Fechar'}
             </button>
-            <button type="submit" className="btn btn-primary">
-              {editingId ? 'Salvar Alterações' : 'Criar Time'}
-            </button>
+            {canEdit && (
+              <button type="submit" className="btn btn-primary">
+                {editingId ? 'Salvar Alterações' : 'Criar Time'}
+              </button>
+            )}
           </div>
         </form>
       </Modal>
