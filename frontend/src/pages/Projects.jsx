@@ -435,7 +435,7 @@ const Projects = () => {
                     <option value="">Sem contrato</option>
                     {filteredContracts.map((contract) => (
                       <option key={contract.id} value={contract.id}>
-                        {contract.description}
+                        {contract.title}
                       </option>
                     ))}
                   </select>

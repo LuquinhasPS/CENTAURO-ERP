@@ -207,7 +207,7 @@ const Tickets = () => {
                 <option value="">Selecione um contrato</option>
                 {contracts.map((contract) => (
                   <option key={contract.id} value={contract.id}>
-                    {contract.description}
+                    {contract.title}
                   </option>
                 ))}
               </select>
