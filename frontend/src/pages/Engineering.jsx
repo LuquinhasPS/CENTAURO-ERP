@@ -243,7 +243,7 @@ const Engineering = () => {
           manager_name: '',
           project_scope: proposal.description || proposal.title,
           budget: proposal.value,
-          estimated_start_date: new Date().toISOString().split('T')[0],
+          estimated_start_date: '',
           estimated_end_date: '',
           estimated_days: 30,
           directory_url: ''

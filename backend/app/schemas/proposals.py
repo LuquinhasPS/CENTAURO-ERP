@@ -29,6 +29,7 @@ class ProposalBase(BaseModel):
     labor_value: Optional[Decimal] = None
     material_value: Optional[Decimal] = None
     proposal_type: Optional[str] = None
+    contract_id: Optional[int] = None
     company_id: Optional[int] = None
     crm_department: str = "COMERCIAL"
     status: ProposalStatus = ProposalStatus.LEAD
@@ -51,6 +52,7 @@ class ProposalUpdate(BaseModel):
     labor_value: Optional[Decimal] = None
     material_value: Optional[Decimal] = None
     proposal_type: Optional[str] = None
+    contract_id: Optional[int] = None
     company_id: Optional[int] = None
     crm_department: Optional[str] = None
     status: Optional[ProposalStatus] = None

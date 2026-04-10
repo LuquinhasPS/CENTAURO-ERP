@@ -197,7 +197,10 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
          raise HTTPException(status_code=404, detail="Cliente não encontrado.")
 
     # 3. Determine if it's a Contract or Project
-    is_contract = proposal.proposal_type in ["RECORRENTE", "LPU"]
+    if proposal.crm_department == "ENGENHARIA" or proposal.contract_id:
+        is_contract = False
+    else:
+        is_contract = proposal.proposal_type in ["RECORRENTE", "LPU"]
     
     # ============================================================
     # [SUSPENSA] Geração automática de TAG suspensa até fim do ano.
@@ -298,6 +301,7 @@ async def convert_proposal_to_project(id: int, convert_data: schemas.ProposalCon
             coordinator=convert_data.coordinator,
             status="Aprovado",
             client_id=client_id,
+            contract_id=proposal.contract_id,
             service_value=service_value,
             material_value=material_value,
             budget=budget,

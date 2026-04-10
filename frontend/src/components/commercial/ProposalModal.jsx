@@ -81,7 +81,7 @@ import {
   createProposal, updateProposal, deleteProposal,
   getProposalTasks, createProposalTask, deleteProposalTask,
   completeProposalTask, stopTaskRecurrence,
-  getClients, getCollaborators
+  getClients, getCollaborators, getContracts
 } from '../../services/api'; // Adjust path based on location
 import ConfirmModal from '../shared/ConfirmModal';
 import Modal from '../shared/Modal';
@@ -97,6 +97,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
     labor_value: '0.00',
     material_value: '0.00',
     proposal_type: '',
+    contract_id: '',
     company_id: '',
     description: '',
     status: 'LEAD'
@@ -104,6 +105,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
 
   const [clients, setClients] = useState(initialClients);
   const [collaborators, setCollaborators] = useState([]);
+  const [contracts, setContracts] = useState([]);
   const [tasks, setTasks] = useState([]);
 
   // New Task State
@@ -126,6 +128,8 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
           value: proposal.value ? parseFloat(proposal.value).toFixed(2) : '0.00',
           labor_value: proposal.labor_value ? parseFloat(proposal.labor_value).toFixed(2) : '0.00',
           material_value: proposal.material_value ? parseFloat(proposal.material_value).toFixed(2) : '0.00',
+          proposal_type: proposal.proposal_type || '',
+          contract_id: proposal.contract_id || '',
           client_name: proposal.client_name || (proposal.client?.name) || '',
           responsible: proposal.responsible || ''
         });
@@ -141,7 +145,8 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
           value: '0.00',
           labor_value: '0.00',
           material_value: '0.00',
-          proposal_type: '',
+          proposal_type: defaultCrmDepartment === 'ENGENHARIA' ? 'LPU' : '',
+          contract_id: '',
           company_id: '',
           crm_department: defaultCrmDepartment,
           description: '',
@@ -157,6 +162,9 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
       }
       if (collaborators.length === 0) {
         fetchCollaborators();
+      }
+      if (defaultCrmDepartment === 'ENGENHARIA' && contracts.length === 0) {
+        fetchContracts();
       }
     }
   }, [isOpen, proposal]);
@@ -187,6 +195,15 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
       setCollaborators(res.data);
     } catch (error) {
       console.error("Error fetching collaborators:", error);
+    }
+  };
+
+  const fetchContracts = async () => {
+    try {
+      const res = await getContracts();
+      setContracts(res.data);
+    } catch (error) {
+      console.error("Error fetching contracts:", error);
     }
   };
 
@@ -242,6 +259,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
         material_value: parseFloat(formData.material_value) || 0,
         company_id: formData.company_id ? parseInt(formData.company_id) : null,
         proposal_type: formData.proposal_type || null,
+        contract_id: formData.contract_id ? parseInt(formData.contract_id) : null,
         client_id: formData.client_id ? parseInt(formData.client_id) : null,
         responsible: formData.responsible || null
       };
@@ -414,7 +432,7 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
                 onChange={e => setFormData({ ...formData, internal_id: e.target.value })}
                 readOnly={!!proposal}
                 disabled={!!proposal}
-                placeholder="Ex: PROP-XYZ-01"
+                placeholder="Ex: CEP1_2603_001_01"
                 style={{
                   width: '100%',
                   padding: '10px',
@@ -478,19 +496,39 @@ const ProposalModal = ({ isOpen, onClose, proposal, onSuccess, initialClients = 
               )}
             </div>
 
-            <div className="form-group" style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500, color: '#334155' }}>Tipo de Proposta</label>
-              <select
-                value={formData.proposal_type}
-                onChange={e => setFormData({ ...formData, proposal_type: e.target.value })}
-                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
-              >
-                <option value="">Selecione...</option>
-                <option value="RECORRENTE">Contrato Recorrente</option>
-                <option value="LPU">LPU</option>
-                <option value="AVULSA">Proposta Avulsa</option>
-              </select>
-            </div>
+            {defaultCrmDepartment === 'ENGENHARIA' ? (
+              <div className="form-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500, color: '#334155' }}>Contrato (LPU) *</label>
+                <select
+                  required
+                  value={formData.contract_id || ''}
+                  onChange={e => setFormData({ ...formData, contract_id: e.target.value, proposal_type: 'LPU' })}
+                  style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+                >
+                  <option value="">Selecione o contrato...</option>
+                  {contracts
+                    .filter(c => !formData.client_id || c.client_id === parseInt(formData.client_id))
+                    .map(c => (
+                      <option key={c.id} value={c.id}>{c.title}</option>
+                  ))}
+                </select>
+                {!formData.client_id && <small style={{ color: '#94a3b8', marginTop: '4px', display: 'block' }}>Selecione um cliente acima para filtrar os contratos.</small>}
+              </div>
+            ) : (
+              <div className="form-group" style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500, color: '#334155' }}>Tipo de Proposta</label>
+                <select
+                  value={formData.proposal_type}
+                  onChange={e => setFormData({ ...formData, proposal_type: e.target.value })}
+                  style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+                >
+                  <option value="">Selecione...</option>
+                  <option value="RECORRENTE">Contrato Recorrente</option>
+                  <option value="LPU">LPU</option>
+                  <option value="AVULSA">Proposta Avulsa</option>
+                </select>
+              </div>
+            )}
 
             <div className="form-group" style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500, color: '#334155' }}>CNPJ / Empresa (Opcional)</label>

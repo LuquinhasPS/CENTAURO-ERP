@@ -45,6 +45,7 @@ class CommercialProposal(Base):
     # Campo de perda - obrigatório quando status = PERDIDA
     loss_reason = Column(String, nullable=True)
     
+    contract_id = Column(Integer, ForeignKey("contracts.id"), nullable=True)
     converted_project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     converted_contract_id = Column(Integer, ForeignKey("contracts.id"), nullable=True)
 
