@@ -639,7 +639,7 @@ const Engineering = () => {
           <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             {/* TAG — campo manual obrigatório */}
             <div className="form-group" style={{ gridColumn: '1 / -1', marginBottom: 0 }}>
-              <label className="label">TAG do Projeto/Contrato *</label>
+              <label className="label">TAG do Projeto*</label>
               <input
                 className="input"
                 type="text"

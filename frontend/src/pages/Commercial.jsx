@@ -60,7 +60,7 @@ const Commercial = () => {
   const [convertFormData, setConvertFormData] = useState({});
   const [pendingLossProposalId, setPendingLossProposalId] = useState(null);
   const [lossReason, setLossReason] = useState('');
-  
+
   // Security lock for moving GANHA/PERDIDA
   const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
   const [pendingMoveData, setPendingMoveData] = useState(null);
@@ -142,7 +142,7 @@ const Commercial = () => {
       filterStatuses.forEach(status => queryParams.append('status', status));
       if (filterStartDate) queryParams.append('start_date', filterStartDate);
       if (filterEndDate) queryParams.append('end_date', filterEndDate);
-      
+
       // Commercial CRM Filter
       queryParams.append('department', 'COMERCIAL');
       queryParams.append('limit', '2000');
@@ -198,15 +198,15 @@ const Commercial = () => {
     if (proposal.status !== newStatus) {
       // SECURITY LOCK: If proposal is already GANHA or PERDIDA, ask for confirmation
       if (proposal.status === 'GANHA' || proposal.status === 'PERDIDA') {
-        setPendingMoveData({ 
-          activeIdVal, 
-          newStatus, 
+        setPendingMoveData({
+          activeIdVal,
+          newStatus,
           oldStatus: proposal.status,
           proposalTitle: proposal.title
         });
         setCountdown(3);
         setShowConfirmMoveModal(true);
-        
+
         // Start countdown
         if (countdownInterval.current) clearInterval(countdownInterval.current);
         countdownInterval.current = setInterval(() => {
@@ -218,7 +218,7 @@ const Commercial = () => {
             return prev - 1;
           });
         }, 1000);
-        
+
         return; // Stop here, wait for modal
       }
 
@@ -230,42 +230,42 @@ const Commercial = () => {
     const proposal = proposals.find(p => p.id === activeIdVal);
     if (!proposal) return;
 
-      // Optimistic Update
-      setProposals(prev => prev.map(p =>
-        p.id === activeIdVal ? { ...p, status: newStatus } : p
-      ));
+    // Optimistic Update
+    setProposals(prev => prev.map(p =>
+      p.id === activeIdVal ? { ...p, status: newStatus } : p
+    ));
 
-      // Special handling for GANHA - show convert modal
-      if (newStatus === 'GANHA' && !proposal.converted_project_id) {
-        setSelectedProposal(proposal);
-        setConvertFormData({
-          tag: '',
-          manager_name: '',
-          project_scope: proposal.description || proposal.title,
-          budget: proposal.value,
-          estimated_start_date: new Date().toISOString().split('T')[0],
-          estimated_end_date: '',
-          estimated_days: 30,
-          directory_url: ''
-        });
-        setShowConvertModal(true);
-      }
-      // Special handling for PERDIDA - show loss modal
-      else if (newStatus === 'PERDIDA') {
-        setPendingLossProposalId(activeIdVal);
-        setLossReason('');
-        setShowLossModal(true);
-      }
-      // Normal status update
-      else {
-        try {
-          await updateProposal(activeIdVal, { status: newStatus });
-        } catch (error) {
-          console.error("Error updating status:", error);
-          // Revert
-          setProposals(prev => prev.map(p =>
-            p.id === activeIdVal ? { ...p, status: oldStatus } : p
-          ));
+    // Special handling for GANHA - show convert modal
+    if (newStatus === 'GANHA' && !proposal.converted_project_id) {
+      setSelectedProposal(proposal);
+      setConvertFormData({
+        tag: '',
+        manager_name: '',
+        project_scope: proposal.description || proposal.title,
+        budget: proposal.value,
+        estimated_start_date: new Date().toISOString().split('T')[0],
+        estimated_end_date: '',
+        estimated_days: 30,
+        directory_url: ''
+      });
+      setShowConvertModal(true);
+    }
+    // Special handling for PERDIDA - show loss modal
+    else if (newStatus === 'PERDIDA') {
+      setPendingLossProposalId(activeIdVal);
+      setLossReason('');
+      setShowLossModal(true);
+    }
+    // Normal status update
+    else {
+      try {
+        await updateProposal(activeIdVal, { status: newStatus });
+      } catch (error) {
+        console.error("Error updating status:", error);
+        // Revert
+        setProposals(prev => prev.map(p =>
+          p.id === activeIdVal ? { ...p, status: oldStatus } : p
+        ));
       }
     }
   };
@@ -525,13 +525,13 @@ const Commercial = () => {
                   const total = filteredProposals
                     .filter(p => p.status === col.id)
                     .reduce((sum, p) => sum + parseFloat(p.value || 0), 0);
-                  
+
                   // Definir cores baseadas no status
                   let bgColor = '#f1f5f9'; // gray-100 padrão
                   let textColor = '#475569'; // gray-600 padrão
-                  
+
                   if (col.id === 'GANHA') {
-                    bgColor = '#dcfce7'; 
+                    bgColor = '#dcfce7';
                     textColor = '#166534';
                   } else if (col.id === 'PERDIDA') {
                     bgColor = '#fee2e2';
@@ -639,7 +639,7 @@ const Commercial = () => {
           <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             {/* TAG — campo manual obrigatório */}
             <div className="form-group" style={{ gridColumn: '1 / -1', marginBottom: 0 }}>
-              <label className="label">TAG do Projeto/Contrato *</label>
+              <label className="label">TAG do Projeto*</label>
               <input
                 className="input"
                 type="text"
@@ -671,11 +671,11 @@ const Commercial = () => {
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="label">Orçamento Aprovado (R$)</label>
-              <input 
-                className="input" 
-                type="text" 
-                readOnly 
-                value={parseFloat(selectedProposal?.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} 
+              <input
+                className="input"
+                type="text"
+                readOnly
+                value={parseFloat(selectedProposal?.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 style={{ backgroundColor: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }}
               />
             </div>
@@ -726,9 +726,9 @@ const Commercial = () => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
           <button type="button" className="btn btn-secondary" onClick={cancelMove}>Cancelar</button>
-          <button 
-            type="button" 
-            className="btn btn-primary" 
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={confirmMove}
             disabled={countdown > 0}
             style={{ minWidth: '120px' }}

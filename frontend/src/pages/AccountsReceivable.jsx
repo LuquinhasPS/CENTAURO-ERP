@@ -3,7 +3,7 @@ import {
   DollarSign, Calendar, FileText, Tag, Hash, MoreVertical,
   Filter, Download, Upload, Edit, CheckCircle, AlertCircle, XCircle, RefreshCw, Search
 } from 'lucide-react';
-import { getAllBillings, updateProjectBilling, getProjects, getClients, previewTaxesImport, confirmTaxesImport } from '../services/api';
+import { getAllBillings, updateProjectBilling, getProjects, getClients, getContracts, previewTaxesImport, confirmTaxesImport } from '../services/api';
 import DataTable from '../components/shared/DataTable';
 import Modal from '../components/shared/Modal';
 import './AccountsReceivable.css';
@@ -13,6 +13,7 @@ const AccountsReceivable = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [clients, setClients] = useState([]);
+  const [contracts, setContracts] = useState([]);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState('');
@@ -83,14 +84,16 @@ const AccountsReceivable = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [billingsRes, projectsRes, clientsRes] = await Promise.all([
+      const [billingsRes, projectsRes, clientsRes, contractsRes] = await Promise.all([
         getAllBillings(),
         getProjects(),
-        getClients()
+        getClients(),
+        getContracts()
       ]);
       setBillings(billingsRes.data);
       setProjects(projectsRes.data);
       setClients(clientsRes.data);
+      setContracts(contractsRes.data);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -362,6 +365,30 @@ const AccountsReceivable = () => {
             { header: 'Cliente', accessor: 'client_name', render: row => getClientName(row.project_id) },
             { header: 'Descrição', accessor: 'description' },
             { header: 'Vínculo (TAG)', accessor: 'tag', render: row => <><Tag size={14} /> {getProjectTag(row.project_id)}</> },
+            {
+              header: 'Tipo',
+              accessor: 'tipo',
+              render: row => {
+                const project = projects.find(p => p.id === row.project_id);
+                if (!project) return '-';
+                
+                let tipo = 'Projeto';
+                if (project.contract_id) {
+                  const contract = contracts.find(c => c.id === project.contract_id);
+                  if (contract && contract.contract_type) {
+                    tipo = contract.contract_type === 'RECORRENTE' ? 'Recorrente' : contract.contract_type;
+                  } else {
+                    tipo = 'Contrato'; // Fallback
+                  }
+                }
+                
+                return (
+                  <span style={{ fontSize: '0.85em', fontWeight: 600, color: '#64748b', backgroundColor: '#f1f5f9', padding: '2px 8px', borderRadius: '12px', display: 'inline-block' }}>
+                    {tipo}
+                  </span>
+                );
+              }
+            },
             {
               header: 'Valor',
               accessor: 'value',
